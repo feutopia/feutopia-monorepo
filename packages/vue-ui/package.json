@@ -1,6 +1,6 @@
 {
 	"name": "@feutopia/vue-ui",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"type": "module",
 	"description": "Vue3 UI Components Library",
 	"main": "dist/index.cjs",
@@ -34,7 +34,15 @@
 		"ui",
 		"components"
 	],
-	"author": "David Zheng. <280541464@qq.com>",
+	"author": "David Zheng",
+	"homepage": "https://github.com/feutopia/feutopia-monorepo",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+	},
+	"bugs": {
+		"url": "https://github.com/feutopia/feutopia-monorepo/issues"
+	},
 	"license": "MIT",
 	"peerDependencies": {
 		"vue": "^3.5.12"
