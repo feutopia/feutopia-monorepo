@@ -1,0 +1,21 @@
+{
+	"name": "@feutopia/vue-hooks",
+	"version": "0.0.1",
+	"description": "Vue3 Composable Hooks Collection",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "echo \"No build specified\""
+	},
+	"keywords": [
+		"vue3",
+		"hooks",
+		"composables"
+	],
+	"author": "",
+	"license": "ISC"
+}

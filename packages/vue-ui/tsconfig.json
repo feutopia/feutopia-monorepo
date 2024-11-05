@@ -1,0 +1,16 @@
+{
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"jsx": "preserve",
+		"jsxImportSource": "vue",
+		"jsxFactory": "h",
+		"jsxFragmentFactory": "Fragment",
+		"types": ["vue"],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"declaration": true,
+		"declarationDir": "./dist"
+	}
+}
