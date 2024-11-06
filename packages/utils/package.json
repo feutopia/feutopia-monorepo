@@ -1,20 +1,41 @@
 {
 	"name": "@feutopia/utils",
 	"version": "0.0.1",
+	"type": "module",
 	"description": "Common Utility Functions",
-	"main": "dist/index.js",
+	"main": "dist/index.cjs",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		},
+		"./*": "./*"
+	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"scripts": {
-		"build": "echo \"No build specified\""
+		"build": "pnpm run test && vite build",
+		"test": "vitest"
 	},
 	"keywords": [
 		"utils",
 		"helpers"
 	],
-	"author": "",
-	"license": "ISC"
+	"author": "David Zheng",
+	"homepage": "https://github.com/feutopia/feutopia-monorepo",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+	},
+	"bugs": {
+		"url": "https://github.com/feutopia/feutopia-monorepo/issues"
+	},
+	"license": "MIT"
 }
