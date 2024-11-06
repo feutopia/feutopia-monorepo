@@ -33,10 +33,6 @@ import "@feutopia/vue-ui/dist/style.css";
 </template>
 ```
 
-## Documentation
-
-For detailed documentation and examples, please visit our [documentation site](https://vue-ui.feutopia.com).
-
 ## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details.

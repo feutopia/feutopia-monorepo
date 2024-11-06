@@ -4,7 +4,7 @@ import { useNamespace } from "@/hooks";
 export const TabPane = defineComponent({
 	props: {
 		name: {
-			type: String,
+			type: [String, Number],
 			required: true,
 		},
 		label: {

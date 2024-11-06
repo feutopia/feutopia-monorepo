@@ -6,7 +6,7 @@ import "./style/index.scss";
 export const Tabs = defineComponent({
 	props: {
 		modelValue: {
-			type: String,
+			type: [String, Number],
 		},
 	},
 	setup(props, { slots, emit }) {

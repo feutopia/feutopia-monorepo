@@ -4,7 +4,7 @@ import { Tabs, TabPane } from "@/components/Tabs";
 import { nextTick, ref } from "vue";
 
 describe("Tabs", () => {
-	// 测试场景1：默认选中第一项
+	// 默认选中第一项
 	it("should render default tabs and switch correctly", async () => {
 		const wrapper = mount(() => (
 			<Tabs>
@@ -28,7 +28,7 @@ describe("Tabs", () => {
 		expect(wrapper.findAll(".fe-tabs__content div")[1].isVisible()).toBe(true);
 	});
 
-	// 测试场景2：v-model绑定，默认选中第二项
+	// v-model绑定string，初始选中第二项
 	it("should work with v-model binding", async () => {
 		const activeTab = ref("2");
 		const wrapper = mount(() => (
@@ -50,7 +50,29 @@ describe("Tabs", () => {
 		expect(activeTab.value).toBe("1");
 	});
 
-	// 测试场景3：插槽用法
+	// v-model绑定number，初始选中第二项
+	it("should work with v-model binding number", async () => {
+		const activeTab = ref(2);
+		const wrapper = mount(() => (
+			<Tabs v-model={activeTab.value}>
+				<TabPane label="Tab 1" name={1}>
+					Content 1
+				</TabPane>
+				<TabPane label="Tab 2" name={2}>
+					Content 2
+				</TabPane>
+			</Tabs>
+		));
+
+		// 验证默认选中第二项
+		expect(wrapper.findAll(".fe-tabs__content div")[1].isVisible()).toBe(true);
+
+		// 点击第一个tab
+		await wrapper.findAll(".fe-tabs__item")[0].trigger("click");
+		expect(activeTab.value).toBe(1);
+	});
+
+	// 插槽用法
 	it("should work with slot and active status", async () => {
 		const activeTab = ref("2");
 		const wrapper = mount(() => (
@@ -155,25 +177,4 @@ describe("Tabs", () => {
 
 		expect(wrapper.text()).toContain("Loaded Content");
 	});
-
-	// 禁用状态测试
-	// it("should handle disabled tabs", async () => {
-	// 	const wrapper = mount(() => (
-	// 		<Tabs>
-	// 			<TabPane label="Tab 1" name="1">
-	// 				Content 1
-	// 			</TabPane>
-	// 			<TabPane label="Tab 2" name="2" disabled>
-	// 				Content 2
-	// 			</TabPane>
-	// 		</Tabs>
-	// 	));
-
-	// 	const disabledTab = wrapper.findAll(".fe-tabs__item")[1];
-	// 	expect(disabledTab.classes()).toContain("is-disabled");
-
-	// 	await disabledTab.trigger("click");
-	// 	// 确保内容没有切换
-	// 	expect(wrapper.findAll(".fe-tabs__content div")[0].isVisible()).toBe(true);
-	// });
 });
