@@ -1,5 +1,7 @@
 # Vue UI 组件库
 
+**中文** | [English](./README.md)
+
 一个现代化的 Vue 3 UI 组件库，支持 TypeScript。
 
 ## 特性
@@ -32,11 +34,3 @@ import "@feutopia/vue-ui/dist/style.css";
 	</Tabs>
 </template>
 ```
-
-## 贡献指南
-
-欢迎贡献！请阅读我们的[贡献指南](./CONTRIBUTING.md)了解详情。
-
-## 许可证
-
-本项目基于 MIT 许可证开源。

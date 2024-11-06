@@ -1,5 +1,7 @@
 # Vue UI Component Library
 
+**English** | [中文](./README.zh-CN.md)
+
 A modern Vue 3 UI component library with TypeScript support.
 
 ## Features
@@ -32,11 +34,3 @@ import "@feutopia/vue-ui/dist/style.css";
 	</Tabs>
 </template>
 ```
-
-## Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details.
-
-## License
-
-This project is licensed under the MIT License.
