@@ -1,17 +1,29 @@
 import "../pollyfill";
 
+// 结果
 type Result<T> = {
 	readonly data?: T;
 	readonly error?: Error;
 	readonly cancelled: boolean;
 };
 
+// 服务函数
 type Service<T, K extends any[]> = (...params: K) => Promise<T> & {
 	cancel: () => void;
 };
 
+// 取消错误
 const CANCELED_ERROR = Object.freeze(new Error("PROMISE_CANCELLED"));
 
+/**
+ * 构建一个可取消的任务
+ * @param service - 服务函数
+ * @returns 可取消的任务
+ * @example
+ * const task = buildCancelableTask(fetchData);
+ * task.run(1, 2, 3);
+ * task.cancel();
+ */
 export const buildCancelableTask = <T, K extends any[]>(
 	service: Service<T, K>
 ) => {
