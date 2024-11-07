@@ -1,12 +1,17 @@
 import { computed, defineComponent, ref, VNode, VNodeArrayChildren } from "vue";
 import { TabVNode } from "./types";
 import { useNamespace } from "@/hooks";
-import "./style/index.scss";
 
 export const Tabs = defineComponent({
 	props: {
 		modelValue: {
 			type: [String, Number],
+		},
+		headerClass: {
+			type: String,
+		},
+		contentClass: {
+			type: String,
 		},
 	},
 	setup(props, { slots, emit }) {
@@ -48,7 +53,7 @@ export const Tabs = defineComponent({
 		});
 		return () => (
 			<div class={b()}>
-				<div class={[e("header")]}>
+				<div class={[e("header"), props.headerClass]}>
 					{defaultSlots.value?.map((vnode: TabVNode, index: number) => {
 						const handleClick = () => {
 							if (hasModelValue.value) {
@@ -72,7 +77,7 @@ export const Tabs = defineComponent({
 						);
 					})}
 				</div>
-				<div class={e("content")}>
+				<div class={[e("content"), props.contentClass]}>
 					{defaultSlots.value?.map((vnode: TabVNode, index: number) => ({
 						...vnode,
 						props: {

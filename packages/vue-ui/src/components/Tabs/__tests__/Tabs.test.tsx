@@ -209,4 +209,49 @@ describe("Tabs", () => {
 		await nextTick();
 		expect(wrapper.findAll(".fe-tabs__item").length).toBe(4);
 	});
+
+	// 测试 headerClass 和 contentClass props
+	it("should apply custom classes via headerClass and contentClass props", () => {
+		const wrapper = mount(() => (
+			<Tabs headerClass="custom-header" contentClass="custom-content">
+				<TabPane label="Tab 1" name="1">
+					Content 1
+				</TabPane>
+				<TabPane label="Tab 2" name="2">
+					Content 2
+				</TabPane>
+			</Tabs>
+		));
+
+		expect(wrapper.find(".fe-tabs__header").classes()).toContain(
+			"custom-header"
+		);
+		expect(wrapper.find(".fe-tabs__content").classes()).toContain(
+			"custom-content"
+		);
+	});
+
+	// 测试动态 class 绑定
+	it("should handle dynamic class bindings", async () => {
+		const headerClass = ref("header-1");
+		const contentClass = ref("content-1");
+
+		const wrapper = mount(() => (
+			<Tabs headerClass={headerClass.value} contentClass={contentClass.value}>
+				<TabPane label="Tab 1" name="1">
+					Content 1
+				</TabPane>
+			</Tabs>
+		));
+
+		expect(wrapper.find(".fe-tabs__header").classes()).toContain("header-1");
+		expect(wrapper.find(".fe-tabs__content").classes()).toContain("content-1");
+
+		headerClass.value = "header-2";
+		contentClass.value = "content-2";
+		await nextTick();
+
+		expect(wrapper.find(".fe-tabs__header").classes()).toContain("header-2");
+		expect(wrapper.find(".fe-tabs__content").classes()).toContain("content-2");
+	});
 });

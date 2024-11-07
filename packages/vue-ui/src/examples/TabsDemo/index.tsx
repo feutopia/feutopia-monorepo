@@ -1,5 +1,5 @@
-import { defineComponent, nextTick, onMounted, ref } from "vue";
-import { Tabs, TabPane } from "@/components";
+import { TabPane, Tabs } from "@/components";
+import { defineComponent, onMounted, ref } from "vue";
 import "./tabs.scss";
 
 export default defineComponent({
@@ -16,8 +16,6 @@ export default defineComponent({
 				label: "Tab 4",
 				content: "Content 4",
 			});
-			await nextTick();
-			console.log(document.querySelectorAll(".fe-tabs__item").length);
 		};
 
 		// 如果需要自动添加，可以使用 onMounted
@@ -30,7 +28,11 @@ export default defineComponent({
 				<h2>Basic Tabs Demo</h2>
 
 				{/* 基础用法 */}
-				<Tabs v-model={activeTab.value}>
+				<Tabs
+					v-model={activeTab.value}
+					headerClass="flex"
+					contentClass="color-red"
+				>
 					<TabPane name="tab1" label="Tab 1">
 						Content 1
 					</TabPane>
@@ -44,7 +46,7 @@ export default defineComponent({
 
 				{/* 自定义标签示例 */}
 				<h2>Custom Label Demo</h2>
-				<Tabs>
+				<Tabs headerClass="flex" contentClass="color-red">
 					<TabPane name="custom1">
 						{{
 							label: ({ active }: { active: boolean }) => (
@@ -69,7 +71,7 @@ export default defineComponent({
 
 				{/* 动态添加标签 */}
 				<h2>Dynamic Add Tab Demo</h2>
-				<Tabs>
+				<Tabs headerClass="flex" contentClass="color-red">
 					{list.value.map((item) => (
 						<TabPane name={item.name} label={item.label}>
 							{item.content}
