@@ -1,10 +1,29 @@
-import { defineComponent, ref } from "vue";
+import { defineComponent, nextTick, onMounted, ref } from "vue";
 import { Tabs, TabPane } from "@/components";
 import "./tabs.scss";
 
 export default defineComponent({
 	setup() {
 		const activeTab = ref("tab1");
+		const list = ref([
+			{ name: "1", label: "Tab 1", content: "Content 1" },
+			{ name: "2", label: "Tab 2", content: "Content 2" },
+			{ name: "3", label: "Tab 3", content: "Content 3" },
+		]);
+		const addTab = async () => {
+			list.value.push({
+				name: "4",
+				label: "Tab 4",
+				content: "Content 4",
+			});
+			await nextTick();
+			console.log(document.querySelectorAll(".fe-tabs__item").length);
+		};
+
+		// 如果需要自动添加，可以使用 onMounted
+		onMounted(() => {
+			addTab();
+		});
 
 		return () => (
 			<div style="padding: 20px">
@@ -13,13 +32,13 @@ export default defineComponent({
 				{/* 基础用法 */}
 				<Tabs v-model={activeTab.value}>
 					<TabPane name="tab1" label="Tab 1">
-						Content of Tab 1
+						Content 1
 					</TabPane>
 					<TabPane name="tab2" label="Tab 2">
-						Content of Tab 2
+						Content 2
 					</TabPane>
 					<TabPane name="tab3" label="Tab 3">
-						Content of Tab 3
+						Content 3
 					</TabPane>
 				</Tabs>
 
@@ -46,6 +65,16 @@ export default defineComponent({
 							default: () => <div>Custom Content 2</div>,
 						}}
 					</TabPane>
+				</Tabs>
+
+				{/* 动态添加标签 */}
+				<h2>Dynamic Add Tab Demo</h2>
+				<Tabs>
+					{list.value.map((item) => (
+						<TabPane name={item.name} label={item.label}>
+							{item.content}
+						</TabPane>
+					))}
 				</Tabs>
 			</div>
 		);

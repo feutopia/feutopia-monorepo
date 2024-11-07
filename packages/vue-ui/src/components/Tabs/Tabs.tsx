@@ -1,4 +1,4 @@
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, VNode, VNodeArrayChildren } from "vue";
 import { TabVNode } from "./types";
 import { useNamespace } from "@/hooks";
 import "./style/index.scss";
@@ -12,9 +12,31 @@ export const Tabs = defineComponent({
 	setup(props, { slots, emit }) {
 		const { e, b, is } = useNamespace("tabs");
 		const defaultSlots = computed(() => {
-			const slotsList = slots.default?.() || [];
-			// 过滤掉条件渲染的节点, 如 v-if
-			return slotsList.filter((vnode) => typeof vnode.type !== "symbol");
+			const children = slots.default?.() || [];
+			// 判断是否是具有 children 属性的 VNodeArrayChildren, 比如使用 v-for 渲染的组件
+			const isVNodeWithChildren = (
+				vnode: VNode | VNodeArrayChildren[number]
+			): vnode is VNodeArrayChildren & { children: VNodeArrayChildren[] } =>
+				Boolean(
+					vnode &&
+						typeof vnode === "object" &&
+						"type" in vnode &&
+						vnode.type.toString() === "Symbol(v-fgt)" &&
+						Array.isArray(vnode.children)
+				);
+			const flattenVNodes = (
+				children: VNode[] | VNodeArrayChildren
+			): (VNode | VNode[])[] => {
+				return children.map((vnode) => {
+					if (isVNodeWithChildren(vnode)) {
+						return flattenVNodes(vnode.children).flat();
+					}
+					return vnode as VNode;
+				});
+			};
+			return flattenVNodes(children)
+				.flat()
+				.filter((vnode) => typeof vnode.type !== "symbol");
 		});
 		const hasModelValue = computed(() => props.modelValue !== undefined);
 		const activeIndex = ref(0);

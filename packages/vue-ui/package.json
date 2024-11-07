@@ -1,6 +1,6 @@
 {
 	"name": "@feutopia/vue-ui",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"type": "module",
 	"description": "Vue3 UI Components Library",
 	"main": "dist/index.cjs",

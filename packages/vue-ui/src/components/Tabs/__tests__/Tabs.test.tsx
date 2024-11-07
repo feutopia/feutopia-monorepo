@@ -177,4 +177,36 @@ describe("Tabs", () => {
 
 		expect(wrapper.text()).toContain("Loaded Content");
 	});
+
+	// 循环渲染 TabPane
+	it("should work with v-for rendered TabPanes", async () => {
+		const list = ref([
+			{ name: "1", label: "Tab 1", content: "Content 1" },
+			{ name: "2", label: "Tab 2", content: "Content 2" },
+			{ name: "3", label: "Tab 3", content: "Content 3" },
+		]);
+		const activeTab = ref("1");
+
+		const wrapper = mount({
+			setup() {
+				return () => (
+					<Tabs v-model={activeTab.value}>
+						{{
+							default: () =>
+								list.value.map((item) => (
+									<TabPane key={item.name} name={item.name} label={item.label}>
+										{item.content}
+									</TabPane>
+								)),
+						}}
+					</Tabs>
+				);
+			},
+		});
+
+		expect(wrapper.findAll(".fe-tabs__item").length).toBe(3);
+		list.value.push({ name: "4", label: "Tab 4", content: "Content 4" });
+		await nextTick();
+		expect(wrapper.findAll(".fe-tabs__item").length).toBe(4);
+	});
 });
