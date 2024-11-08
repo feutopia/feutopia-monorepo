@@ -7,7 +7,8 @@
  * isExternalUrl("/about") // false
  * isExternalUrl("mailto:test@example.com") // true
  */
-export const isExternalUrl = (() => {
-	const reg = /^(https?:|mailto:|tel:)/;
-	return (url: string) => reg.test(url);
-})();
+const externalUrlPattern = /^(https?:|mailto:|tel:|\/\/)/;
+export const isExternalUrl = (url: string) => {
+	if (typeof url !== "string") return false;
+	return externalUrlPattern.test(url);
+};

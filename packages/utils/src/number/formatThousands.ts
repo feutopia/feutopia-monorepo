@@ -5,7 +5,10 @@
  * @example
  * formatNumber(123456789) // "123,456,789"
  */
-export const formatThousands = (() => {
-	const thousandsRegex = /\B(?=(\d{3})+(?!\d))/g;
-	return (num: number) => num.toLocaleString().replace(thousandsRegex, ",");
-})();
+const thousandsRegex = /\B(?=(\d{3})+(?!\d))/g;
+export const formatThousands = (num: number | string) => {
+	if (!["number", "string"].includes(typeof num)) return "";
+	// 处理 -0 的情况
+	if (Object.is(num, -0)) return "0";
+	return num.toString().replace(thousandsRegex, ",");
+};

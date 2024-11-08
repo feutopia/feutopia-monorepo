@@ -9,6 +9,9 @@ import { NonNullableProps } from "@/types";
 export function filterNonNilValues<T extends Record<string, any>>(
 	obj: T
 ): NonNullableProps<T> {
+	if (typeof obj !== "object" || obj === null) {
+		return {} as NonNullableProps<T>;
+	}
 	return Object.fromEntries(
 		Object.entries(obj).filter(
 			([_, value]) => value !== undefined && value !== null
