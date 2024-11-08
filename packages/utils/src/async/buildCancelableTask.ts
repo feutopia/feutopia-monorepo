@@ -1,13 +1,13 @@
 import "../pollyfill";
 
-// 结果
+// 返回的结果类型
 type Result<T> = {
 	readonly data?: T;
 	readonly error?: Error;
 	readonly cancelled: boolean;
 };
 
-// 服务函数
+// 入参 async 函数
 type Service<T, K extends any[]> = (...params: K) => Promise<T> & {
 	cancel: () => void;
 };
