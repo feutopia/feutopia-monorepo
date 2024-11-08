@@ -1,4 +1,4 @@
-import "../pollyfill";
+import "../pollyfill/promise-with-resolvers";
 
 // 返回的结果类型
 type Result<T> = {
@@ -9,11 +9,11 @@ type Result<T> = {
 
 // 入参 async 函数
 type Service<T, K extends any[]> = (...params: K) => Promise<T> & {
-	cancel: () => void;
+	cancel?: () => void;
 };
 
 // 取消错误
-const CANCELED_ERROR = Object.freeze(new Error("PROMISE_CANCELLED"));
+const CANCELED_ERROR = new Error("PROMISE_CANCELLED");
 
 /**
  * 构建一个可取消的任务
@@ -27,44 +27,40 @@ const CANCELED_ERROR = Object.freeze(new Error("PROMISE_CANCELLED"));
 export const buildCancelableTask = <T, K extends any[]>(
 	service: Service<T, K>
 ) => {
-	let isCancelled = false;
-	let isCompleted = false;
-	let servicePromise: ReturnType<Service<T, K>> | null = null;
-	const { promise, resolve, reject } = Promise.withResolvers<T>();
+	let cancelled = false; // 是否取消
+	let completed = false; // 是否完成
+	let servicePromise: ReturnType<Service<T, K>> | null = null; // promise 函数
+	const { promise, reject } = Promise.withResolvers<T>();
+	promise.catch(() => {}); // 当task先cancel后run时, 会出现未捕获的错误, 所以得加 catch 捕获
 
 	const run = (...params: K): Promise<Result<T>> => {
-		if (!isCancelled) {
-			servicePromise = service(...params);
-			servicePromise
-				.then((data) => resolve(data))
-				.catch((error) => reject(error));
+		if (cancelled) {
+			// 如果取消了, 直接返回 Promise, 不执行 service
+			return Promise.resolve({
+				cancelled: true,
+			});
 		}
-
-		return promise
+		servicePromise = service(...params);
+		return Promise.race([servicePromise, promise])
 			.then((data) => ({
 				data,
 				cancelled: false,
 			}))
-			.catch((error) => {
-				const cancelled = error === CANCELED_ERROR;
-				return {
-					error: cancelled ? undefined : error,
-					cancelled,
-				};
-			})
+			.catch((error) => ({
+				...(cancelled ? {} : { error }),
+				cancelled,
+			}))
 			.finally(() => {
-				isCompleted = true;
+				completed = true;
 			});
 	};
 
 	const cancel = () => {
-		if (isCompleted) return;
-		isCancelled = true;
+		if (completed) return;
+		cancelled = true;
 		reject(CANCELED_ERROR);
 		servicePromise?.cancel?.();
 	};
 
-	const isCanceled = () => isCancelled;
-
-	return { run, cancel, isCanceled };
+	return { run, cancel };
 };

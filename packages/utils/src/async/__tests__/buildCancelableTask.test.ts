@@ -57,7 +57,6 @@ describe("buildCancelableTask", () => {
 		expect(result).toEqual({
 			cancelled: true,
 		});
-		expect(task.isCanceled()).toBe(true);
 	});
 
 	it("should pass parameters to service function", async () => {
@@ -71,5 +70,33 @@ describe("buildCancelableTask", () => {
 		await task.run("param1", 123);
 
 		expect(mockService).toHaveBeenCalledWith("param1", 123);
+	});
+
+	it("should ignore cancel when task is already completed", async () => {
+		const mockService = vi.fn().mockResolvedValue("result");
+		const cancelFn = vi.fn();
+		const mockServiceWithCancel = Object.assign(mockService, {
+			cancel: cancelFn,
+		});
+
+		const task = buildCancelableTask(mockServiceWithCancel);
+		await task.run();
+		task.cancel(); // 任务已完成后调用 cancel
+
+		expect(cancelFn).not.toHaveBeenCalled();
+	});
+
+	it("should not execute service after cancellation", async () => {
+		const mockService = vi.fn().mockResolvedValue("result");
+		const cancelFn = vi.fn();
+		const mockServiceWithCancel = Object.assign(mockService, {
+			cancel: cancelFn,
+		});
+
+		const task = buildCancelableTask(mockServiceWithCancel);
+		task.cancel();
+		await task.run();
+
+		expect(mockService).not.toHaveBeenCalled();
 	});
 });
