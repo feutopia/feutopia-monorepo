@@ -2,6 +2,7 @@ import { defineComponent } from "vue";
 import { useNamespace } from "@/hooks";
 
 export const TabPane = defineComponent({
+	name: "TabPane",
 	props: {
 		name: {
 			type: [String, Number],

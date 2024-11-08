@@ -33,6 +33,7 @@ export default defineComponent({
 					headerClass="flex"
 					contentClass="color-red"
 				>
+					empty content
 					<TabPane name="tab1" label="Tab 1">
 						Content 1
 					</TabPane>
@@ -57,6 +58,7 @@ export default defineComponent({
 							default: () => <div>Custom Content 1</div>,
 						}}
 					</TabPane>
+
 					<TabPane name="custom2">
 						{{
 							label: ({ active }: { active: boolean }) => (

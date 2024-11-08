@@ -1,8 +1,18 @@
 import { computed, defineComponent, ref, VNode, VNodeArrayChildren } from "vue";
 import { TabVNode } from "./types";
 import { useNamespace } from "@/hooks";
+import { TabPane } from "./TabPane";
+
+const TAB_PANE_NAME = TabPane.name || "";
+
+type VNodeArrayItem = VNodeArrayChildren[number];
+type VNodeWithName = VNode & { type: { name: string } };
+
+const isVnodeWithType = (vnode: VNodeArrayItem) =>
+	vnode !== null && typeof vnode === "object" && "type" in vnode;
 
 export const Tabs = defineComponent({
+	name: "Tabs",
 	props: {
 		modelValue: {
 			type: [String, Number],
@@ -17,31 +27,36 @@ export const Tabs = defineComponent({
 	setup(props, { slots, emit }) {
 		const { e, b, is } = useNamespace("tabs");
 		const defaultSlots = computed(() => {
-			const children = slots.default?.() || [];
+			const slotChildren = slots.default?.() || [];
+
 			// 判断是否是具有 children 属性的 VNodeArrayChildren, 比如使用 v-for 渲染的组件
 			const isVNodeWithChildren = (
-				vnode: VNode | VNodeArrayChildren[number]
-			): vnode is VNodeArrayChildren & { children: VNodeArrayChildren[] } =>
-				Boolean(
-					vnode &&
-						typeof vnode === "object" &&
-						"type" in vnode &&
-						vnode.type.toString() === "Symbol(v-fgt)" &&
-						Array.isArray(vnode.children)
-				);
-			const flattenVNodes = (
-				children: VNode[] | VNodeArrayChildren
-			): (VNode | VNode[])[] => {
-				return children.map((vnode) => {
+				vnode: VNodeArrayItem
+			): vnode is VNodeArrayChildren & { children: VNodeArrayChildren } =>
+				isVnodeWithType(vnode) && Array.isArray(vnode.children);
+
+			// 判断是否是具有 name 属性的 VNode
+			const isVNodeWithName = (
+				vnode: VNodeArrayItem,
+				name: string
+			): vnode is VNodeWithName =>
+				isVnodeWithType(vnode) && (vnode as VNodeWithName).type?.name === name;
+
+			// 获取所有具有 name 属性是 TAB_PANE_NAME 的 VNode
+			const getTabPanes = (nodes: VNodeArrayChildren) => {
+				const vnodes: VNode[] = [];
+				for (const vnode of nodes) {
 					if (isVNodeWithChildren(vnode)) {
-						return flattenVNodes(vnode.children).flat();
+						vnodes.push(...getTabPanes(vnode.children));
+					} else {
+						if (isVNodeWithName(vnode, TAB_PANE_NAME)) {
+							vnodes.push(vnode);
+						}
 					}
-					return vnode as VNode;
-				});
+				}
+				return vnodes;
 			};
-			return flattenVNodes(children)
-				.flat()
-				.filter((vnode) => typeof vnode.type !== "symbol");
+			return getTabPanes(slotChildren);
 		});
 		const hasModelValue = computed(() => props.modelValue !== undefined);
 		const activeIndex = ref(0);

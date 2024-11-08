@@ -254,4 +254,22 @@ describe("Tabs", () => {
 		expect(wrapper.find(".fe-tabs__header").classes()).toContain("header-2");
 		expect(wrapper.find(".fe-tabs__content").classes()).toContain("content-2");
 	});
+
+	// 测试默认插槽内容不被渲染的情况
+	it("should not render non-TabPane default slot content", () => {
+		const wrapper = mount(() => (
+			<Tabs>
+				<TabPane label="Tab 1" name="1">
+					Content 1
+				</TabPane>
+				<div class="non-tab-content">This should not be rendered</div>
+				<span>This should also not be rendered</span>
+			</Tabs>
+		));
+
+		expect(wrapper.find(".non-tab-content").exists()).toBe(false);
+		expect(wrapper.text()).not.toContain("This should not be rendered");
+		expect(wrapper.text()).not.toContain("This should also not be rendered");
+		expect(wrapper.text()).toContain("Content 1");
+	});
 });
