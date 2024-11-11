@@ -22,7 +22,7 @@
 		"@vitejs/plugin-vue-jsx": "^4.0.1",
 		"@vitest/coverage-v8": "^2.1.4",
 		"@vue/test-utils": "^2.4.6",
-		"happy-dom": "^15.9.0",
+		"happy-dom": "^15.11.0",
 		"jsdom": "^25.0.1",
 		"sass": "^1.80.6",
 		"vite": "^5.4.10",
