@@ -16,8 +16,7 @@ export abstract class BaseHttp {
 	protected responseHandler?: ResponseHandler;
 	protected requestHandler?: RequestHandler;
 	protected errorHandler?: ErrorHandler;
-	private requestControllers: Map<number, AbortController> = new Map();
-	private requestUniqueId = 1;
+	private requestControllers: Map<Symbol, AbortController> = new Map();
 
 	constructor(options: BaseHttpOptions = {}) {
 		this.instance = axios.create(options.config || {});
@@ -39,7 +38,7 @@ export abstract class BaseHttp {
 					delete newConfig.params;
 				}
 				if (this.requestHandler) {
-					return await this.requestHandler.handle(newConfig);
+					return await this.requestHandler(newConfig);
 				}
 				return newConfig;
 			},
@@ -54,14 +53,13 @@ export abstract class BaseHttp {
 				}
 				// 使用注入的响应处理器处理业务响应
 				if (this.responseHandler) {
-					return await this.responseHandler.handle(response);
+					return await this.responseHandler(response);
 				}
 				return response;
 			},
 			async (error: HttpError) => {
-				// error.code !== ErrorCode.CANCELED
 				if (this.errorHandler) {
-					return await this.errorHandler?.handle(error);
+					await this.errorHandler(error);
 				}
 				return Promise.reject(error);
 			}
@@ -70,27 +68,27 @@ export abstract class BaseHttp {
 
 	request<T = any, R = unknown>(config: HttpRequestConfig): ResponseType<T, R> {
 		if (!config.signal) {
-			const requestUniqueId = this.requestUniqueId++;
 			const controller = new AbortController();
 			config.signal = controller.signal;
-			this.requestControllers.set(requestUniqueId, controller);
-
+			const requestKey = Symbol();
+			this.requestControllers.set(requestKey, controller);
 			const promise = this.instance.request(config).finally(() => {
-				this.requestControllers.delete(requestUniqueId);
+				this.requestControllers.delete(requestKey);
 			});
-
 			return Object.assign(promise, {
 				cancel: () => controller.abort(),
 			}) as ResponseType<T, R>;
 		}
-
+		// 已有 signal 的情况
 		return Object.assign(this.instance.request(config), {
-			cancel: () => {}, // 外部控制的 signal，不需要我们处理取消
+			cancel: () => {},
 		}) as ResponseType<T, R>;
 	}
 
 	cancelAllRequests(): void {
-		this.requestControllers.forEach((controller) => controller.abort());
+		for (const controller of this.requestControllers.values()) {
+			controller.abort();
+		}
 		this.requestControllers.clear();
 	}
 
@@ -119,6 +117,13 @@ export abstract class BaseHttp {
 		});
 	}
 
+	patch<T = any>(options: HttpRequestConfig) {
+		return this.request<T, ResponseHandler<T>>({
+			...options,
+			method: "PATCH",
+		});
+	}
+
 	// Add this new private helper method
 	private createFormData(data: File | FormData | any): FormData {
 		if (data instanceof File) {
@@ -126,11 +131,9 @@ export abstract class BaseHttp {
 			form.append("file", data);
 			return form;
 		}
-
 		if (data instanceof FormData) {
 			return data;
 		}
-
 		return new FormData();
 	}
 
@@ -143,7 +146,6 @@ export abstract class BaseHttp {
 			...otherOptions
 		} = options;
 		const formData = this.createFormData(data);
-
 		const uploadPromise = this.request<T, ResponseHandler<T>>({
 			...otherOptions,
 			method: "POST",
@@ -157,7 +159,6 @@ export abstract class BaseHttp {
 				}
 			},
 		});
-
 		return uploadPromise.then(onUploadComplete).catch(onUploadError);
 	}
 
@@ -166,7 +167,6 @@ export abstract class BaseHttp {
 			...options,
 			responseType: "blob",
 		});
-
 		const downloadPromise = promise.then((response) => {
 			const blob = new Blob([response.data], {
 				type: response.headers["content-type"],
@@ -180,12 +180,10 @@ export abstract class BaseHttp {
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
 		});
-
 		return Object.assign(downloadPromise, {
 			cancel: () => promise.cancel(),
 		});
 	}
-
 	private getFilenameFromResponse(response: HttpResponse): string {
 		const disposition = response.headers["content-disposition"];
 		if (disposition?.includes("attachment")) {

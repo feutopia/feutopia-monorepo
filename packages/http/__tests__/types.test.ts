@@ -2,40 +2,85 @@ import { describe, it, expect } from "vitest";
 import {
 	ResponseHandler,
 	RequestHandler,
-	ErrorHandler,
 	HttpResponse,
 	HttpRequestConfig,
 	HttpError,
 	BaseHttpOptions,
 	UploadRequestConfig,
-	ErrorCode,
+	ErrorHandler,
+	CancellablePromise,
 } from "../core/types";
 import { AxiosHeaders } from "axios";
+import { ErrorCode } from "../core/enums";
 
 describe("HTTP Types", () => {
 	describe("Handlers", () => {
 		it("should have correct ResponseHandler structure", async () => {
-			const handler: ResponseHandler<string> = {
-				handle: async (response: HttpResponse) => "processed",
-			};
-			const result = await handler.handle({ data: "test" } as HttpResponse);
+			const handler: ResponseHandler<string> = async (response: HttpResponse) =>
+				"processed";
+			const result = await handler({ data: "test" } as HttpResponse);
 			expect(result).toBe("processed");
 		});
 
 		it("should have correct RequestHandler structure", async () => {
-			const handler: RequestHandler = {
-				handle: async (config: HttpRequestConfig) => config,
-			};
+			const handler: RequestHandler = async (config: HttpRequestConfig) =>
+				config;
 			const config = { url: "/test" };
-			const result = await handler.handle(config);
+			const result = await handler(config);
 			expect(result).toEqual(config);
 		});
+		it("should handle sync ResponseHandler", () => {
+			const handler: ResponseHandler<number> = (response: HttpResponse) => 42;
+			const result = handler({ data: "test" } as HttpResponse);
+			expect(result).toBe(42);
+		});
 
-		it("should have correct ErrorHandler structure", () => {
-			const handler: ErrorHandler = {
-				handle: (error: HttpError) => {},
+		it("should handle ErrorHandler", async () => {
+			const handler: ErrorHandler = async (error: HttpError) => {
+				// Handle error
 			};
-			expect(typeof handler.handle).toBe("function");
+			const error: HttpError = {
+				name: "Error",
+				message: "Test error",
+				code: ErrorCode.NETWORK_ERROR,
+				isAxiosError: true,
+				toJSON: () => ({}),
+			};
+			await expect(handler(error)).resolves.toBeUndefined();
+		});
+	});
+
+	describe("CancellablePromise", () => {
+		it("should have cancel method", async () => {
+			const promise: CancellablePromise<number> = Object.assign(
+				Promise.resolve(42),
+				{ cancel: () => {} }
+			);
+
+			expect(typeof promise.cancel).toBe("function");
+			await expect(promise).resolves.toBe(42);
+		});
+	});
+
+	describe("ResponseType", () => {
+		it("should handle different response types", async () => {
+			// Test with custom response handler
+			type CustomResponse = { processed: boolean };
+			const customHandler: ResponseHandler<CustomResponse> = async () => ({
+				processed: true,
+			});
+
+			// Test with default response
+			type DefaultResponse = { raw: boolean };
+			const response: HttpResponse<DefaultResponse> = {
+				data: { raw: true },
+				status: 200,
+				statusText: "OK",
+				headers: {},
+				config: {} as any,
+			};
+
+			expect(response.data.raw).toBe(true);
 		});
 	});
 
@@ -75,9 +120,9 @@ describe("HTTP Types", () => {
 		it("should have correct UploadRequestConfig structure", () => {
 			const config: UploadRequestConfig = {
 				url: "/upload",
-				onProgress: (percentage) => {},
-				onUploadComplete: (response) => {},
-				onUploadError: (error) => {},
+				onProgress: () => {},
+				onUploadComplete: () => {},
+				onUploadError: () => {},
 			};
 
 			expect(typeof config.onProgress).toBe("function");
@@ -122,9 +167,7 @@ describe("HTTP Types", () => {
 					timeout: 5000,
 					showError: true,
 				},
-				responseHandler: {
-					handle: async (response) => response,
-				},
+				responseHandler: async (response) => response,
 			};
 
 			expect(options).toHaveProperty("config");

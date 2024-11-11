@@ -1,22 +1,9 @@
-import {
-	describe,
-	it,
-	expect,
-	vi,
-	beforeEach,
-	afterEach,
-	Mock,
-	vitest,
-} from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, Mock } from "vitest";
 import axios from "axios";
-import {
-	ErrorCode,
-	ErrorHandler,
-	RequestHandler,
-	ResponseHandler,
-} from "../core/types";
+import { ErrorHandler, RequestHandler, ResponseHandler } from "../core/types";
 import { TestHttp } from "./test-http";
 import { fail } from "assert";
+import { ErrorCode } from "../core/enums";
 
 // Mock axios
 vi.mock("axios", () => {
@@ -95,6 +82,57 @@ describe("BaseHttp", () => {
 				})
 			);
 		});
+
+		it("should make PUT request", async () => {
+			const mockResponse = { data: { message: "success" } };
+			mockRequest.mockResolvedValueOnce(mockResponse);
+
+			await http.put({
+				url: "/test",
+				data: { foo: "bar" },
+			});
+			expect(mockRequest).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: "/test",
+					method: "PUT",
+					data: { foo: "bar" },
+				})
+			);
+		});
+
+		it("should make DELETE request", async () => {
+			const mockResponse = { data: { message: "success" } };
+			mockRequest.mockResolvedValueOnce(mockResponse);
+
+			await http.delete({
+				url: "/test",
+				params: { id: 123 },
+			});
+			expect(mockRequest).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: "/test",
+					method: "DELETE",
+					params: { id: 123 },
+				})
+			);
+		});
+
+		it("should make PATCH request", async () => {
+			const mockResponse = { data: { message: "success" } };
+			mockRequest.mockResolvedValueOnce(mockResponse);
+
+			await http.patch({
+				url: "/test",
+				data: { status: "active" },
+			});
+			expect(mockRequest).toHaveBeenCalledWith(
+				expect.objectContaining({
+					url: "/test",
+					method: "PATCH",
+					data: { status: "active" },
+				})
+			);
+		});
 	});
 
 	describe("Request Handlers", () => {
@@ -102,10 +140,7 @@ describe("BaseHttp", () => {
 			// 创建一个 spy 函数作为请求处理器的 handle 方法
 			const handleSpy = vi.fn();
 
-			// 定义自定义请求处理器
-			const customHandler: RequestHandler = {
-				handle: handleSpy,
-			};
+			const customHandler: RequestHandler = handleSpy;
 
 			// 声明拦截器变量
 			let requestInterceptor: Function = () => {};
@@ -257,10 +292,7 @@ describe("BaseHttp", () => {
 				.fn()
 				.mockResolvedValue({ customData: "transformed" }); // 模拟处理后返回转换后的数据
 
-			// 定义一个自定义响应处理器，实现 ResponseHandler 接口
-			const customHandler: ResponseHandler = {
-				handle: handleSpy,
-			};
+			const customHandler: ResponseHandler = handleSpy;
 
 			// 声明拦截器变量，用于后续存储和访问拦截器函数
 			let requestInterceptor: Function = () => {}; // 请求拦截器
@@ -382,9 +414,7 @@ describe("BaseHttp", () => {
 
 			(axios.create as any).mockReturnValue(mockAxios);
 			new TestHttp({
-				responseHandler: {
-					handle: handleSpy,
-				},
+				responseHandler: handleSpy,
 			});
 
 			const mockResponse = {
@@ -408,9 +438,7 @@ describe("BaseHttp", () => {
 			const handleSpy = vi.fn();
 
 			// 定义自定义错误处理器
-			const customHandler: ErrorHandler = {
-				handle: handleSpy,
-			};
+			const customHandler: ErrorHandler = handleSpy;
 
 			const mockError = {
 				code: ErrorCode.NETWORK_ERROR,
@@ -449,10 +477,12 @@ describe("BaseHttp", () => {
 			try {
 				await httpWithHandler.get({ url: "/test" });
 			} catch (error) {
-				if (responseErrorInterceptor) {
-					await responseErrorInterceptor(error);
-				}
-				// 验证错误处理器是否被调用
+				try {
+					if (responseErrorInterceptor) {
+						await responseErrorInterceptor(error);
+					}
+				} catch (e) {}
+			} finally {
 				expect(handleSpy).toHaveBeenCalledWith(
 					expect.objectContaining({
 						code: ErrorCode.NETWORK_ERROR,
@@ -466,9 +496,7 @@ describe("BaseHttp", () => {
 
 		it("should not call error handler when request is cancelled", async () => {
 			const handleSpy = vi.fn();
-			const errorHandler: ErrorHandler = {
-				handle: handleSpy,
-			};
+			const errorHandler: ErrorHandler = handleSpy;
 
 			// 重新设置请求模拟函数
 			mockRequest = vi.fn().mockRejectedValue({ code: ErrorCode.CANCELED });
@@ -744,15 +772,13 @@ describe("BaseHttp", () => {
 		// 配置 axios.create 返回模拟实例
 		(axios.create as any).mockReturnValue(mockAxios);
 
-		const requestHandler: RequestHandler = {
-			handle: (config) => ({
-				...config,
-				headers: {
-					...config.headers,
-					"X-Custom-Header": "test-value",
-				},
-			}),
-		};
+		const requestHandler: RequestHandler = (config) => ({
+			...config,
+			headers: {
+				...config.headers,
+				"X-Custom-Header": "test-value",
+			},
+		});
 
 		const httpWithTransform = new TestHttp({ requestHandler });
 
