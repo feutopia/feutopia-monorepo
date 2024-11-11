@@ -5,3 +5,6 @@ dist
 .idea
 .vscode
 coverage
+
+# Vite 临时文件
+*.timestamp-*.mjs

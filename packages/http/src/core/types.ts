@@ -42,7 +42,7 @@ export type ResponseType<T, R> = CancellablePromise<
 >;
 
 // 5. 配置相关类型
-export interface BaseHttpOptions {
+export interface HttpClientOptions {
 	config?: CreateAxiosDefaults & RequestOptions;
 	requestHandler?: RequestHandler;
 	responseHandler?: ResponseHandler;

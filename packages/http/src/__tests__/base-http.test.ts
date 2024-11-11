@@ -295,9 +295,7 @@ describe("BaseHttp", () => {
 			const customHandler: ResponseHandler = handleSpy;
 
 			// 声明拦截器变量，用于后续存储和访问拦截器函数
-			let requestInterceptor: Function = () => {}; // 请求拦截器
 			let responseInterceptor: Function = () => {}; // 响应拦截器
-			let responseErrorInterceptor: Function = () => {}; // 响应错误拦截器
 
 			// 重新设置请求模拟函数
 			mockRequest = vi
@@ -309,15 +307,12 @@ describe("BaseHttp", () => {
 				interceptors: {
 					request: {
 						// 请求拦截器配置，当使用时保存拦截器函数
-						use: vi.fn((interceptor) => {
-							requestInterceptor = interceptor;
-						}),
+						use: vi.fn(),
 					},
 					response: {
 						// 响应拦截器配置，当使用时保存成功和错误处理函数
-						use: vi.fn((interceptor, error) => {
+						use: vi.fn((interceptor) => {
 							responseInterceptor = interceptor;
-							responseErrorInterceptor = error;
 						}),
 					},
 				},

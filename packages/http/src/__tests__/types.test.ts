@@ -5,7 +5,7 @@ import {
 	HttpResponse,
 	HttpRequestConfig,
 	HttpError,
-	BaseHttpOptions,
+	HttpClientOptions,
 	UploadRequestConfig,
 	ErrorHandler,
 	CancellablePromise,
@@ -16,8 +16,9 @@ import { ErrorCode } from "../core/enums";
 describe("HTTP Types", () => {
 	describe("Handlers", () => {
 		it("should have correct ResponseHandler structure", async () => {
-			const handler: ResponseHandler<string> = async (response: HttpResponse) =>
-				"processed";
+			const handler: ResponseHandler<string> = async (
+				_response: HttpResponse
+			) => "processed";
 			const result = await handler({ data: "test" } as HttpResponse);
 			expect(result).toBe("processed");
 		});
@@ -30,13 +31,13 @@ describe("HTTP Types", () => {
 			expect(result).toEqual(config);
 		});
 		it("should handle sync ResponseHandler", () => {
-			const handler: ResponseHandler<number> = (response: HttpResponse) => 42;
+			const handler: ResponseHandler<number> = (_response: HttpResponse) => 42;
 			const result = handler({ data: "test" } as HttpResponse);
 			expect(result).toBe(42);
 		});
 
 		it("should handle ErrorHandler", async () => {
-			const handler: ErrorHandler = async (error: HttpError) => {
+			const handler: ErrorHandler = async (_error: HttpError) => {
 				// Handle error
 			};
 			const error: HttpError = {
@@ -64,12 +65,6 @@ describe("HTTP Types", () => {
 
 	describe("ResponseType", () => {
 		it("should handle different response types", async () => {
-			// Test with custom response handler
-			type CustomResponse = { processed: boolean };
-			const customHandler: ResponseHandler<CustomResponse> = async () => ({
-				processed: true,
-			});
-
 			// Test with default response
 			type DefaultResponse = { raw: boolean };
 			const response: HttpResponse<DefaultResponse> = {
@@ -160,8 +155,8 @@ describe("HTTP Types", () => {
 	});
 
 	describe("BaseHttpOptions", () => {
-		it("should have correct BaseHttpOptions structure", () => {
-			const options: BaseHttpOptions = {
+		it("should have correct HttpClientOptions structure", () => {
+			const options: HttpClientOptions = {
 				config: {
 					baseURL: "https://api.example.com",
 					timeout: 5000,

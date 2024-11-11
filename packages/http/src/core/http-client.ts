@@ -5,20 +5,20 @@ import {
 	HttpResponse,
 	HttpRequestConfig,
 	UploadRequestConfig,
-	BaseHttpOptions,
+	HttpClientOptions,
 	ResponseHandler,
 	RequestHandler,
 	ErrorHandler,
 } from "./types";
 
-export abstract class BaseHttp {
+export abstract class HttpClient {
 	protected instance: AxiosInstance;
 	protected responseHandler?: ResponseHandler;
 	protected requestHandler?: RequestHandler;
 	protected errorHandler?: ErrorHandler;
 	private requestControllers: Map<Symbol, AbortController> = new Map();
 
-	constructor(options: BaseHttpOptions = {}) {
+	constructor(options: HttpClientOptions = {}) {
 		this.instance = axios.create(options.config || {});
 		this.requestHandler = options.requestHandler;
 		this.responseHandler = options.responseHandler;
