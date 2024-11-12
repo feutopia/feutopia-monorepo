@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
+import { generateRootIndex } from "../../plugins-vite/generateRootIndex";
+import { copyFiles } from "../../plugins-vite/copyFiles";
 
 export default defineConfig({
 	resolve: {
@@ -11,29 +13,35 @@ export default defineConfig({
 	plugins: [
 		dts({
 			entryRoot: "src",
-			outDir: "dist",
+			outDir: "dist/types",
 			include: ["src/index.ts", "src/**/*.ts"],
+			insertTypesEntry: true, // 根据package.json中的types字段生成 types 文件
 			exclude: ["src/**/__tests__/**/*"],
-			// 添加这个配置以确保生成根级别的类型文件
-			rollupTypes: true,
+			rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
 		}),
+		generateRootIndex(),
+		copyFiles(),
 	],
 	build: {
 		lib: {
 			entry: {
 				index: resolve(__dirname, "src/index.ts"),
 			},
-			formats: ["es", "cjs"],
+			name: "FeutopiaUtils",
+			formats: ["es", "cjs", "umd"],
 			fileName: (format, entryName) => {
-				const extension = format === "es" ? "mjs" : "cjs";
-				return `${entryName}.${extension}`;
+				const formatDirectoryMap = {
+					es: "esm",
+					cjs: "cjs",
+					umd: "umd",
+				};
+				const directory = formatDirectoryMap[format];
+				return `${directory}/${entryName}.js`;
 			},
 		},
 		rollupOptions: {
 			output: {
-				preserveModules: true,
-				preserveModulesRoot: "src",
-				exports: "named",
+				exports: "named", // 使用命名导出的方式，而不是默认导出
 			},
 		},
 		// 添加这个配置来禁止复制 public 目录

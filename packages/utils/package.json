@@ -2,26 +2,24 @@
 	"name": "@feutopia/utils",
 	"version": "0.0.2",
 	"type": "module",
-	"description": "Common Utility Functions",
-	"main": "dist/index.cjs",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
+	"description": "Utils Library",
+	"main": "./dist/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/types/index.d.ts",
+	"exports": {
+		"import": "./dist/esm/index.js",
+		"require": "./dist/cjs/index.js",
+		"umd": "./dist/umd/index.js"
+	},
 	"files": [
 		"dist"
 	],
-	"exports": {
-		".": {
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs",
-			"types": "./dist/index.d.ts"
-		},
-		"./*": "./*"
-	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"scripts": {
-		"build": "pnpm run test && vite build",
+		"build": "pnpm run test --run && pnpm run build:vite",
+		"build:vite": "vite build",
 		"test": "vitest"
 	},
 	"keywords": [
