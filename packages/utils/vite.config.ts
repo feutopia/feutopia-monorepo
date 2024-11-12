@@ -30,7 +30,6 @@ export default defineConfig({
 			},
 		},
 		rollupOptions: {
-			external: ["vue", "vue/jsx-runtime"],
 			output: {
 				preserveModules: true,
 				preserveModulesRoot: "src",
