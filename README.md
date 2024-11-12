@@ -10,10 +10,10 @@ A monorepo for modern frontend development tools and libraries.
 
 Includes:
 
-- Vue 3 UI components (@feutopia/vue-ui)
-- Vue 3 composables (@feutopia/vue-hooks)
-- React UI components (@feutopia/react-ui)
-- utility functions (@feutopia/utils).
+- Vue 3 UI components ([@feutopia/vue-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-ui#readme))
+- Vue 3 composables ([@feutopia/vue-hooks](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme))
+- React UI components ([@feutopia/react-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme))
+- utility functions ([@feutopia/utils](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/utils#readme)).
 
 ## Contributing
 
