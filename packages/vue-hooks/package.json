@@ -1,21 +1,42 @@
 {
-	"name": "@feutopia/vue-hooks",
-	"version": "0.0.1",
-	"description": "Vue3 Composable Hooks Collection",
-	"main": "dist/index.js",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
-	"publishConfig": {
-		"access": "public"
-	},
-	"scripts": {
-		"build": "echo \"No build specified\""
-	},
-	"keywords": [
-		"vue3",
-		"hooks",
-		"composables"
-	],
-	"author": "",
-	"license": "ISC"
+  "name": "@feutopia/vue-hooks",
+  "version": "0.0.1",
+  "description": "Vue3 Composable Hooks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js",
+    "umd": "./dist/umd/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run test --run && pnpm run build:vite",
+    "build:vite": "vite build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "utils",
+    "helpers"
+  ],
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "peerDependencies": {
+    "vue": ">=3.0.0"
+  },
+  "license": "MIT"
 }
