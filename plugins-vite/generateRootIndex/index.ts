@@ -4,7 +4,7 @@ import fs from "fs";
 
 export function generateRootIndex(): Plugin {
 	return {
-		name: "generate-root-index",
+		name: "vite-plugin-generate-root-index",
 		generateBundle() {
 			const templatePath = path.resolve(__dirname, "./index.template.js");
 			const content = fs.readFileSync(templatePath, "utf-8");

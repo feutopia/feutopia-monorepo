@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import dts from "vite-plugin-dts";
-import { generateRootIndex } from "../../plugins/generateRootIndex";
+import { generateRootIndex } from "../../plugins-vite/generateRootIndex";
+import { copyFiles } from "../../plugins-vite/copyFiles";
 
 export default defineConfig({
 	resolve: {
@@ -19,6 +20,7 @@ export default defineConfig({
 			rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
 		}),
 		generateRootIndex(),
+		copyFiles(),
 	],
 	build: {
 		lib: {
