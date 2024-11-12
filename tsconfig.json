@@ -1,36 +1,25 @@
 {
-	"compilerOptions": {
-		"target": "ESNext",
-		"useDefineForClassFields": true,
-		"module": "ESNext",
-		"lib": ["ESNext", "DOM", "DOM.Iterable"],
-		"skipLibCheck": true,
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": true,
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"allowJs": true,
-		"noEmit": true,
-		"forceConsistentCasingInFileNames": true,
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
-	},
-	"include": [
-		"packages/**/src/**/*.ts",
-		"packages/**/src/**/*.tsx",
-		"packages/**/src/**/*.vue",
-		"packages/**/src/**/*.d.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"packages/**/node_modules",
-		"packages/**/dist",
-		"**/*.js"
-	],
-	"references": [{ "path": "./tsconfig.node.json" }]
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "exclude": ["node_modules", "dist", "*.js"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

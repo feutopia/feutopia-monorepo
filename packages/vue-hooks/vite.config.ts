@@ -30,7 +30,8 @@ export default defineConfig({
           cjs: "cjs",
           umd: "umd",
         };
-        const directory = formatDirectoryMap[format];
+        const directory =
+          formatDirectoryMap[format as keyof typeof formatDirectoryMap];
         return `${directory}/${entryName}.js`;
       },
     },
