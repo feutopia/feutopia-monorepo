@@ -22,7 +22,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, "src/index.ts"),
       },
-      name: "FeutopiaUtils",
+      name: "FeutopiaVueHooks",
       formats: ["es", "cjs", "umd"],
       fileName: (format, entryName) => {
         const formatDirectoryMap = {

@@ -24,10 +24,10 @@ export default defineConfig({
   ],
   build: {
     lib: {
+      name: "FeutopiaUtils",
       entry: {
         index: resolve(__dirname, "src/index.ts"),
       },
-      name: "FeutopiaUtils",
       formats: ["es", "cjs", "umd"],
       fileName: (format, entryName) => {
         const formatDirectoryMap = {
