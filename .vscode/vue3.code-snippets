@@ -1,0 +1,14 @@
+{
+	"vue3模版": {
+		"scope": "vue",
+		"prefix": "vue3",
+		"body": [
+			"<script setup lang=\"ts\"></script>",
+			"",
+			"<template>",
+			"  <div>${1}</div>",
+			"</template>"
+		],
+		"description": "vue3模版"
+	}
+}
