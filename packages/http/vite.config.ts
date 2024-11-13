@@ -1,8 +1,6 @@
-import { defineConfig } from "vite";
 import { resolve } from "path";
+import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import { generateRootIndex } from "../../plugins-vite/generateRootIndex";
-import { copyFiles } from "../../plugins-vite/copyFiles";
 
 export default defineConfig({
   resolve: {
