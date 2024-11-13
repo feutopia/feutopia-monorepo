@@ -1,5 +1,7 @@
 # @feutopia/http
 
+**中文** | [English](./README.md)
+
 一个基于 Axios 的强大 HTTP 请求库，提供增强功能和更便捷的 API。
 
 ## 特性

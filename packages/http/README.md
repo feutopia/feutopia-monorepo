@@ -1,5 +1,7 @@
 # @feutopia/http
 
+**English** | [中文](https://github.com/feutopia/feutopia-monorepo/blob/main/packages/http/README.zh-CN.md)
+
 A powerful HTTP request library based on Axios, providing enhanced features and a more convenient API.
 
 ## Features

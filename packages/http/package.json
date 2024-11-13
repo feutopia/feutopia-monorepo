@@ -1,9 +1,14 @@
 {
   "name": "@feutopia/http",
-  "version": "0.0.1",
-  "type": "module",
+  "version": "0.0.2",
   "description": "HTTP Request Library, base on Axios",
-  "main": "./dist/index.js",
+  "keywords": [
+    "http",
+    "request",
+    "axios"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -25,11 +30,6 @@
     "build:vite": "vite build",
     "test": "vitest"
   },
-  "keywords": [
-    "http",
-    "request",
-    "axios"
-  ],
   "author": "David Zheng",
   "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/http#readme",
   "repository": {
@@ -39,8 +39,8 @@
   "bugs": {
     "url": "https://github.com/feutopia/feutopia-monorepo/issues"
   },
-  "license": "MIT",
   "dependencies": {
     "axios": "^1.7.0"
-  }
+  },
+  "license": "MIT"
 }
