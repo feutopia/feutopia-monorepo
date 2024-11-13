@@ -1,6 +1,6 @@
 # @feutopia/vue-hooks
 
-**English** | [中文](./README.zh-CN.md)
+**English** | [中文](https://github.com/feutopia/feutopia-monorepo/blob/main/packages/vue-hooks/README.zh-CN.md)
 
 A collection of composable Vue 3 hooks.
 

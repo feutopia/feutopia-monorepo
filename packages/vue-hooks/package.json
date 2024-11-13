@@ -1,9 +1,13 @@
 {
   "name": "@feutopia/vue-hooks",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Vue3 Composable Hooks",
+  "keywords": [
+    "utils",
+    "helpers"
+  ],
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -25,10 +29,6 @@
     "build:vite": "vite build",
     "test": "vitest"
   },
-  "keywords": [
-    "utils",
-    "helpers"
-  ],
   "author": "David Zheng",
   "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme",
   "repository": {
