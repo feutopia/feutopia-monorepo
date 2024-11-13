@@ -23,7 +23,7 @@ export function copyFiles(options: CopyPluginOptions = { files: [] }): Plugin {
             path.resolve(distDir, file)
           );
           console.log(`Copied: ${file}`);
-        } catch (error) {
+        } catch (error: any) {
           console.warn(`Failed to copy ${file}: ${error.message}`);
         }
       }

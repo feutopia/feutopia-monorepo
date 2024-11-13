@@ -1,39 +1,41 @@
 {
-	"name": "@feutopia/utils",
-	"version": "0.0.2",
-	"type": "module",
-	"description": "Utils Library",
-	"main": "./dist/index.js",
-	"module": "./dist/esm/index.js",
-	"types": "./dist/types/index.d.ts",
-	"exports": {
-		"import": "./dist/esm/index.js",
-		"require": "./dist/cjs/index.js",
-		"umd": "./dist/umd/index.js"
-	},
-	"files": [
-		"dist"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"scripts": {
-		"build": "pnpm run test --run && pnpm run build:vite",
-		"build:vite": "vite build",
-		"test": "vitest"
-	},
-	"keywords": [
-		"utils",
-		"helpers"
-	],
-	"author": "David Zheng",
-	"homepage": "https://github.com/feutopia/feutopia-monorepo",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/feutopia/feutopia-monorepo.git"
-	},
-	"bugs": {
-		"url": "https://github.com/feutopia/feutopia-monorepo/issues"
-	},
-	"license": "MIT"
+  "name": "@feutopia/utils",
+  "version": "0.0.2",
+  "type": "module",
+  "description": "Utils Library",
+  "main": "./dist/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "umd": "./dist/umd/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run test --run && pnpm run build:vite",
+    "build:vite": "vite build",
+    "test": "vitest"
+  },
+  "keywords": [
+    "utils",
+    "helpers"
+  ],
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "license": "MIT"
 }
