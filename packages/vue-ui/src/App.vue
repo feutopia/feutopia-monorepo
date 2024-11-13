@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TabsDemo from "./examples/TabsDemo/index.tsx";
+import TabsDemo from "./examples/TabsDemo";
 </script>
 
 <template>
-	<TabsDemo />
+  <TabsDemo />
 </template>
