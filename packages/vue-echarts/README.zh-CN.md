@@ -2,9 +2,6 @@
 
 **中文** | [English](./README.md)
 
-![npm version](https://badge.fury.io/js/@feutopia%2Fvue-echarts.svg)](<https://badge.fury.io/js/@feutopia%2Fvue-echarts>)
-[![License](https://img.shields.io/npm/l/@feutopia/vue-echarts.svg)](https://github.com/feutopia/vue-echarts/blob/main/LICENSE)
-
 基于 Apache ECharts 的 Vue.js 图表组件库。
 
 ## 特性
