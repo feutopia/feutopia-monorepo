@@ -16,7 +16,6 @@ export default defineConfig({
       outDir: "dist/types",
       include: ["src/index.ts", "src/**/*.ts"],
       insertTypesEntry: true, // 根据package.json中的types字段生成 types 文件
-      exclude: ["src/**/__tests__/**/*"],
       rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
     }),
     generateRootIndex(),
