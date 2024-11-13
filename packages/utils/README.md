@@ -1,6 +1,6 @@
 # @feutopia/utils
 
-**English** | [中文](./README.zh-CN.md)
+**English** | [中文](https://github.com/feutopia/feutopia-monorepo/blob/main/packages/utils/README.zh-CN.md)
 
 Common utility functions for JavaScript/TypeScript projects.
 

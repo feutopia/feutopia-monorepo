@@ -1,9 +1,13 @@
 {
   "name": "@feutopia/utils",
-  "version": "0.0.2",
-  "type": "module",
+  "version": "0.0.3",
   "description": "Utils Library",
-  "main": "./dist/index.js",
+  "keywords": [
+    "utils",
+    "helpers"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
@@ -25,12 +29,8 @@
     "build:vite": "vite build",
     "test": "vitest"
   },
-  "keywords": [
-    "utils",
-    "helpers"
-  ],
   "author": "David Zheng",
-  "homepage": "https://github.com/feutopia/feutopia-monorepo",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/utils#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
