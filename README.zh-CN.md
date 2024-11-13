@@ -10,6 +10,7 @@
 
 - Vue 3 UI 组件 ([@feutopia/vue-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-ui#readme))
 - Vue 3 组合式函数 ([@feutopia/vue-hooks](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme))
+- Vue 3 Echarts 组件 ([@feutopia/vue-echarts](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-echarts#readme))
 - React UI 组件 ([@feutopia/react-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme))
 - 实用工具函数 ([@feutopia/utils](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/utils#readme))
 

@@ -97,8 +97,10 @@ importers:
   packages/vue-echarts:
     specifiers:
       '@feutopia/vue-hooks': workspace:*
+      echarts: ^5.5.1
     dependencies:
       '@feutopia/vue-hooks': link:../vue-hooks
+      echarts: 5.5.1
 
   packages/vue-hooks:
     specifiers: {}

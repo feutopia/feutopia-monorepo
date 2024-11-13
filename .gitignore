@@ -4,3 +4,5 @@ dist
 *.log
 .idea
 coverage
+vite.config.ts.timestamp-*.mjs
+vitest.config.ts.timestamp-*.mjs

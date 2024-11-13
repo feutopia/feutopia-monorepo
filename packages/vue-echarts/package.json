@@ -1,0 +1,51 @@
+{
+  "name": "@feutopia/vue-echarts",
+  "version": "0.0.1",
+  "description": "Vue3 Echarts",
+  "keywords": [
+    "vue3",
+    "echarts"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "umd": "./dist/umd/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm run typecheck && pnpm run test --run && pnpm run build:vite",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest",
+    "build:vite": "vite build"
+  },
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-echarts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "peerDependencies": {
+    "vue": ">=3.0.0"
+  },
+  "dependencies": {
+    "@feutopia/vue-hooks": "workspace:*",
+    "echarts": "^5.5.1"
+  },
+  "license": "MIT"
+}
