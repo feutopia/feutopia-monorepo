@@ -41,5 +41,8 @@
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@feutopia/utils": "workspace:^0.0.3"
+  }
 }

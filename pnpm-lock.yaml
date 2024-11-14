@@ -103,7 +103,10 @@ importers:
       echarts: 5.5.1
 
   packages/vue-hooks:
-    specifiers: {}
+    specifiers:
+      '@feutopia/utils': workspace:^0.0.3
+    dependencies:
+      '@feutopia/utils': link:../utils
 
   packages/vue-ui:
     specifiers: {}
