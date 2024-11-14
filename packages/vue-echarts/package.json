@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/vue-echarts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vue3 Echarts",
   "keywords": [
     "vue3",
@@ -44,7 +44,7 @@
     "vue": ">=3.0.0"
   },
   "dependencies": {
-    "@feutopia/vue-hooks": "workspace:*",
+    "@feutopia/vue-hooks": "workspace:^0.0.3",
     "echarts": "^5.5.1"
   },
   "license": "MIT"
