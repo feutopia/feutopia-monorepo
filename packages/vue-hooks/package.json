@@ -44,6 +44,6 @@
   "license": "MIT",
   "dependencies": {
     "@feutopia/mitt": "workspace:^0.0.1",
-    "@feutopia/utils": "workspace:^0.0.3"
+    "@feutopia/utils": "workspace:^0.0.4"
   }
 }

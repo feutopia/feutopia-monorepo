@@ -1,17 +1,13 @@
 import { tryOnScopeDispose } from "@/utils";
 import mitt from "@feutopia/mitt";
-import {
-  EmitterEvents,
-  RequestCallbackOptions,
-  RequestOptions,
-  Service,
-} from "../types";
+import { EmitterEvents, RequestOptions, Service } from "../types";
 import { toValue } from "vue";
 import { usePolling, useReady, useRefresh } from "../hooks";
 import { Fetch } from "./Fetch";
+import { DeepUnwrapRef } from "@feutopia/utils";
 
-export function useRequest<TData, TParams extends unknown[]>(
-  service: Service<TData, TParams>,
+export function useRequest<TData, TParams extends any[]>(
+  service: Service<TData, DeepUnwrapRef<TParams>>,
   initOptions: RequestOptions<TData, TParams>
 ) {
   const defaultOptions = {
@@ -20,31 +16,30 @@ export function useRequest<TData, TParams extends unknown[]>(
     manual: false,
     refreshDeps: [],
     pollingInterval: 0,
-  } satisfies typeof initOptions | { params: [] };
+  } satisfies typeof initOptions;
   const options = { ...defaultOptions, ...initOptions };
-  const { params, ready, manual, refreshDeps, pollingInterval } = options;
 
   const emitter = mitt<EmitterEvents<TData>>();
-  const fetchInstance = new Fetch<TData, TParams>(
-    service,
-    params as RequestCallbackOptions<TData, TParams>,
-    emitter
-  );
-  useReady(emitter, { ready, manual });
-  useRefresh(emitter, { ready, refreshDeps });
+  const fetchInstance = new Fetch<TData, TParams>(service, options, emitter);
+
+  useReady(emitter, { ready: options.ready, manual: options.manual });
+  useRefresh(emitter, {
+    ready: options.ready,
+    refreshDeps: options.refreshDeps,
+  });
   usePolling(emitter, fetchInstance.state, {
-    ready,
-    pollingInterval,
+    ready: options.ready,
+    pollingInterval: options.pollingInterval,
   });
 
+  // 初始化
   const init = () => {
-    const canExecute = toValue(ready) && !toValue(manual);
+    const canExecute = toValue(options.ready) && !toValue(options.manual);
     if (canExecute) {
-      fetchInstance.run(...(params as TParams));
+      fetchInstance.run(...options.params);
     }
   };
   init();
-
   // 卸载
   tryOnScopeDispose(() => {
     fetchInstance.unmount();

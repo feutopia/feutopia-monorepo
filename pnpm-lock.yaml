@@ -111,7 +111,7 @@ importers:
   packages/vue-hooks:
     specifiers:
       '@feutopia/mitt': workspace:^0.0.1
-      '@feutopia/utils': workspace:^0.0.3
+      '@feutopia/utils': workspace:^0.0.4
     dependencies:
       '@feutopia/mitt': link:../mitt
       '@feutopia/utils': link:../utils

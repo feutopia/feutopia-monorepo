@@ -1,22 +1,21 @@
 import { MaybeRefOrGetter, shallowRef, toValue } from "vue";
-import { buildCancelableTask } from "@feutopia/utils";
+import { buildCancelableTask, DeepUnwrapRef, Noop } from "@feutopia/utils";
 import {
   Service,
   RequestCallbackOptions,
-  Noop,
-  UnwrapRefArray,
   EmitterInstance,
   FetchState,
   FetchStateData,
+  ValueOrEmptyArray,
 } from "../types";
 import { isNotRefObject } from "../utils";
 
 export class Fetch<TData, TParams extends any[]> {
-  private params: TParams;
+  private params: ValueOrEmptyArray<TParams>;
   private count = 0;
   private unsubscribes: Noop[] = [];
   private serviceTask: ReturnType<
-    typeof buildCancelableTask<TData, TParams>
+    typeof buildCancelableTask<TData, DeepUnwrapRef<TParams>>
   > | null = null;
   state: FetchState<TData> = {
     loading: shallowRef(false),
@@ -25,14 +24,14 @@ export class Fetch<TData, TParams extends any[]> {
     cancelled: shallowRef(false),
   };
   constructor(
-    private service: Service<TData, TParams>,
+    private service: Service<TData, DeepUnwrapRef<TParams>>,
     private options: RequestCallbackOptions<TData, TParams>,
     private emitter: EmitterInstance<TData>
   ) {
     this.service = service;
     this.options = options;
     this.emitter = emitter;
-    this.params = (options.params || []) as TParams;
+    this.params = this.options.params ?? [];
     this.subscribe();
   }
   private subscribe() {
@@ -41,12 +40,10 @@ export class Fetch<TData, TParams extends any[]> {
     });
     this.unsubscribes.push(stop);
   }
-  private setState(obj: Partial<FetchStateData<TData>>) {
-    for (const [key, value] of Object.entries(obj)) {
-      const item = this.state[key as keyof typeof this.state];
-      if (item) {
-        item.value = value;
-      }
+  private setState(state: Partial<FetchStateData<TData>>) {
+    for (const [key, value] of Object.entries(state)) {
+      const item = this.state[key as keyof typeof state];
+      item.value = value;
     }
   }
   private resolveObj(params: Record<string, MaybeRefOrGetter<any>>) {
@@ -58,10 +55,10 @@ export class Fetch<TData, TParams extends any[]> {
     }
     return obj;
   }
-  private resolveParams(params: TParams) {
+  private resolveParams(params: ValueOrEmptyArray<TParams>) {
     return params.map((param) =>
       isNotRefObject(param) ? this.resolveObj(param) : toValue(param)
-    ) as UnwrapRefArray<TParams>;
+    ) as DeepUnwrapRef<TParams>;
   }
   private cancelTask() {
     if (this.serviceTask) {
@@ -69,7 +66,7 @@ export class Fetch<TData, TParams extends any[]> {
       this.serviceTask = null;
     }
   }
-  private async send(...args: TParams) {
+  private async send(...args: ValueOrEmptyArray<TParams>) {
     const params = this.resolveParams(args);
     const currentCount = ++this.count;
     this.cancelTask();
@@ -119,7 +116,7 @@ export class Fetch<TData, TParams extends any[]> {
     }
     return this.state;
   }
-  run(...args: TParams) {
+  run(...args: ValueOrEmptyArray<TParams>) {
     return this.send(...args);
   }
   cancel() {

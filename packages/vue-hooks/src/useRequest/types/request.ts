@@ -1,5 +1,6 @@
+import { DeepUnwrapRef, Noop } from "@feutopia/utils";
 import { MaybeRefOrGetter, WatchSource } from "vue";
-import { Noop, UnwrapRefArray } from ".";
+import { ValueOrEmptyArray } from "./utils";
 
 export type Service<TData, TParams extends any[]> = (
   ...args: TParams
@@ -13,9 +14,9 @@ export type RequestControlOptions = Readonly<{
 }>;
 
 export type RequestCallbackOptions<TData, TParams extends any[]> = {
-  params?: UnwrapRefArray<TParams>;
+  params?: ValueOrEmptyArray<TParams>;
   onBefore?: Noop;
-  onSuccess?: (data: TData | undefined, params: TParams) => void;
+  onSuccess?: (data: TData | undefined, params: DeepUnwrapRef<TParams>) => void;
   onError?: (e: Error) => void;
   onFinally?: Noop;
 };
