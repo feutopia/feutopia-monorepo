@@ -8,7 +8,7 @@ import { DeepUnwrapRef } from "@feutopia/utils";
 
 export function useRequest<TData, TParams extends any[]>(
   service: Service<TData, DeepUnwrapRef<TParams>>,
-  initOptions: RequestOptions<TData, TParams>
+  initOptions?: RequestOptions<TData, TParams>
 ) {
   const defaultOptions = {
     params: [],

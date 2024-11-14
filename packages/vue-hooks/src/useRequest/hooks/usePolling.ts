@@ -4,12 +4,12 @@ import { toValue, watch } from "vue";
 import { tryOnScopeDispose } from "@/utils";
 
 const delay = (ms: number) =>
-  new Promise<undefined>((resolve) => setTimeout(resolve, ms));
+  new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
 type Params = Pick<RequestControlOptions, "pollingInterval" | "ready">;
 
 type DelayTask = ReturnType<
-  typeof buildCancelableTask<undefined, Parameters<typeof delay>>
+  typeof buildCancelableTask<void, Parameters<typeof delay>>
 >;
 
 export function usePolling<TData>(
@@ -19,7 +19,7 @@ export function usePolling<TData>(
 ) {
   let delayTask: DelayTask | null = null;
 
-  const cancelTask = () => {
+  const cancelDelayTask = () => {
     if (delayTask) {
       delayTask.cancel();
       delayTask = null;
@@ -47,12 +47,11 @@ export function usePolling<TData>(
   watch(
     () => getPollingInterval(),
     () => {
-      if (!isLoading()) {
-        cancelTask();
-        // 当前没有在发送请求
-        if (canPoll()) {
-          request();
-        }
+      if (isLoading()) return;
+      cancelDelayTask();
+      // 当前没有在发送请求
+      if (canPoll()) {
+        request();
       }
     }
   );
@@ -66,10 +65,10 @@ export function usePolling<TData>(
   });
 
   emitter.on("cancel", () => {
-    cancelTask();
+    cancelDelayTask();
   });
 
   tryOnScopeDispose(() => {
-    cancelTask();
+    cancelDelayTask();
   });
 }
