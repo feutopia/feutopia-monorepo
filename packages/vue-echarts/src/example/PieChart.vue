@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import PieChart from "../components/PieChart/index.vue";
-import type { EChartsOption } from "../../dist/types";
+import type { EChartsOption, PieChartInstance } from "../../dist/types";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {
@@ -24,7 +24,7 @@ setTimeout(() => {
   };
 }, 0);
 
-const refPieChart = ref<InstanceType<typeof PieChart>>();
+const refPieChart = ref<PieChartInstance>();
 onMounted(() => {
   console.log(refPieChart.value?.getInstance());
 });

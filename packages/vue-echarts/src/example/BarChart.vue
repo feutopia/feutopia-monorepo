@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import BarChart from "../components/BarChart/index.vue";
-import type { EChartsOption } from "../../dist/types";
+import type { EChartsOption, BarChartInstance } from "../../dist/types";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {
@@ -25,7 +25,7 @@ setTimeout(() => {
   };
 }, 0);
 
-const refBarChart = ref<InstanceType<typeof BarChart>>();
+const refBarChart = ref<BarChartInstance>();
 onMounted(() => {
   console.log(refBarChart.value?.getInstance());
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import LineChart from "../components/LineChart/index.vue";
-import type { EChartsOption } from "../../dist/types";
+import type { EChartsOption, LineChartInstance } from "../../dist/types";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {
@@ -25,7 +25,7 @@ setTimeout(() => {
   };
 }, 0);
 
-const refLineChart = ref<InstanceType<typeof LineChart>>();
+const refLineChart = ref<LineChartInstance>();
 onMounted(() => {
   console.log(refLineChart.value?.getInstance());
 });
