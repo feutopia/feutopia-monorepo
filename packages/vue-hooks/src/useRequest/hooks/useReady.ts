@@ -1,19 +1,16 @@
 import { toValue, watch } from "vue";
-import {
-  EmitterInstance,
-  FetchStateRef,
-  RequestControlOptions,
-} from "../types";
+import { EmitterInstance, RequestControlOptions } from "../types";
 
-type Para = Pick<RequestControlOptions, "ready" | "manual">;
+type Params = Pick<RequestControlOptions, "ready" | "manual">;
 
-type Emitter<T> = EmitterInstance<FetchStateRef<T>>;
-
-export function useReady<TData>(emitter: Emitter<TData>, para: Para) {
+export function useReady<TData>(
+  emitter: EmitterInstance<TData>,
+  params: Params
+) {
   watch(
-    () => toValue(para.ready),
+    () => toValue(params.ready),
     (ready) => {
-      const manual = toValue(para.manual);
+      const manual = toValue(params.manual);
       if (ready && !manual) {
         emitter.emit("run");
       }

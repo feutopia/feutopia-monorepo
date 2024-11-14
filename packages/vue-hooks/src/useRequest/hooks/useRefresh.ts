@@ -1,17 +1,14 @@
 import { toValue, watch } from "vue";
-import {
-  EmitterInstance,
-  FetchStateRef,
-  RequestControlOptions,
-} from "../types";
+import { EmitterInstance, RequestControlOptions } from "../types";
 
-type Para = Pick<RequestControlOptions, "ready" | "refreshDeps">;
+type Params = Pick<RequestControlOptions, "ready" | "refreshDeps">;
 
-type Emitter<T> = EmitterInstance<FetchStateRef<T>>;
-
-export function useRefresh<TData>(emitter: Emitter<TData>, para: Para) {
-  watch(para.refreshDeps, () => {
-    if (toValue(para.ready)) {
+export function useRefresh<TData>(
+  emitter: EmitterInstance<TData>,
+  params: Params
+) {
+  watch(params.refreshDeps, () => {
+    if (toValue(params.ready)) {
       emitter.emit("run");
     }
   });

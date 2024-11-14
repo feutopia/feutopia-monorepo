@@ -1,17 +1,16 @@
 import { tryOnScopeDispose } from "@/utils";
+import mitt from "@feutopia/mitt";
 import {
-  Service,
-  RequestOptions,
-  EmitterType,
-  FetchStateRef,
+  EmitterEvents,
   RequestCallbackOptions,
+  RequestOptions,
+  Service,
 } from "../types";
-import { EventEmitter } from "../utils";
-import { Fetch } from "./Fetch";
 import { toValue } from "vue";
 import { usePolling, useReady, useRefresh } from "../hooks";
+import { Fetch } from "./Fetch";
 
-export function useRequest<TData, TParams extends any[]>(
+export function useRequest<TData, TParams extends unknown[]>(
   service: Service<TData, TParams>,
   initOptions: RequestOptions<TData, TParams>
 ) {
@@ -22,17 +21,15 @@ export function useRequest<TData, TParams extends any[]>(
     refreshDeps: [],
     pollingInterval: 0,
   } satisfies typeof initOptions | { params: [] };
-
   const options = { ...defaultOptions, ...initOptions };
   const { params, ready, manual, refreshDeps, pollingInterval } = options;
 
-  const emitter = new EventEmitter<EmitterType<FetchStateRef<TData>>>();
+  const emitter = mitt<EmitterEvents<TData>>();
   const fetchInstance = new Fetch<TData, TParams>(
     service,
-    emitter,
-    params as RequestCallbackOptions<TData, TParams>
+    params as RequestCallbackOptions<TData, TParams>,
+    emitter
   );
-
   useReady(emitter, { ready, manual });
   useRefresh(emitter, { ready, refreshDeps });
   usePolling(emitter, fetchInstance.state, {
@@ -40,18 +37,19 @@ export function useRequest<TData, TParams extends any[]>(
     pollingInterval,
   });
 
-  tryOnScopeDispose(() => {
-    fetchInstance.unmount();
-    emitter.offAll();
-  });
-
   const init = () => {
-    const canExcute = toValue(ready) && !toValue(manual);
-    if (canExcute) {
+    const canExecute = toValue(ready) && !toValue(manual);
+    if (canExecute) {
       fetchInstance.run(...(params as TParams));
     }
   };
   init();
+
+  // 卸载
+  tryOnScopeDispose(() => {
+    fetchInstance.unmount();
+    emitter.all.clear();
+  });
 
   return {
     ...fetchInstance.state,

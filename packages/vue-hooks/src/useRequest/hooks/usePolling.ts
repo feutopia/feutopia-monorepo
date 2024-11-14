@@ -1,57 +1,56 @@
 import { buildCancelableTask } from "@feutopia/utils";
-import {
-  FetchStateRef,
-  EmitterInstance,
-  RequestControlOptions,
-} from "../types";
+import { FetchState, EmitterInstance, RequestControlOptions } from "../types";
 import { toValue, watch } from "vue";
 import { tryOnScopeDispose } from "@/utils";
-
-type Emitter<T> = EmitterInstance<FetchStateRef<T>>;
 
 const delay = (ms: number) =>
   new Promise<undefined>((resolve) => setTimeout(resolve, ms));
 
-type Para = Pick<RequestControlOptions, "pollingInterval" | "ready">;
+type Params = Pick<RequestControlOptions, "pollingInterval" | "ready">;
+
+type DelayTask = ReturnType<
+  typeof buildCancelableTask<undefined, Parameters<typeof delay>>
+>;
 
 export function usePolling<TData>(
-  emitter: Emitter<TData>,
-  state: FetchStateRef<TData>,
-  para: Para
+  emitter: EmitterInstance<TData>,
+  state: FetchState<TData>,
+  params: Params
 ) {
-  let delayTask: ReturnType<
-    typeof buildCancelableTask<undefined, Parameters<typeof delay>>
-  > | null = null;
+  let delayTask: DelayTask | null = null;
 
-  const cancelDelayTaskRun = () => {
+  const cancelTask = () => {
     if (delayTask) {
       delayTask.cancel();
       delayTask = null;
     }
   };
 
+  // 是否在请求中
+  const isLoading = () => toValue(state.loading);
+
+  // 获取轮询间隔
+  const getPollingInterval = () => toValue(params.pollingInterval);
+
   // 是否可以轮询
-  const canPolling = () =>
-    toValue(para.ready) && toValue(para.pollingInterval) > 0;
+  const canPoll = () => toValue(params.ready) && getPollingInterval() > 0;
 
   const request = async () => {
     delayTask = buildCancelableTask(delay);
-    const { cancelled } = await delayTask.run(toValue(para.pollingInterval));
+    const { cancelled } = await delayTask.run(getPollingInterval());
     if (cancelled) return;
-    if (canPolling()) {
+    if (canPoll()) {
       emitter.emit("run");
     }
   };
 
-  // 监听自身的值发生变化
   watch(
-    () => toValue(para.pollingInterval),
+    () => getPollingInterval(),
     () => {
-      const isRequesting = toValue(state.loading);
-      if (!isRequesting) {
-        cancelDelayTaskRun();
+      if (!isLoading()) {
+        cancelTask();
         // 当前没有在发送请求
-        if (canPolling()) {
+        if (canPoll()) {
           request();
         }
       }
@@ -61,12 +60,16 @@ export function usePolling<TData>(
   emitter.on("finally", (res) => {
     // 如果请求被取消，则不进行轮询
     if (res.cancelled.value) return;
-    if (canPolling()) {
+    if (canPoll()) {
       request();
     }
   });
 
-  emitter.on("cancel", cancelDelayTaskRun);
+  emitter.on("cancel", () => {
+    cancelTask();
+  });
 
-  tryOnScopeDispose(cancelDelayTaskRun);
+  tryOnScopeDispose(() => {
+    cancelTask();
+  });
 }

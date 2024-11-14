@@ -1,10 +1,10 @@
-import { ShallowRefRecord } from ".";
+import { ShallowRefObject } from ".";
 
-export type FetchState<T> = {
+export type FetchStateData<T> = {
   loading: boolean;
   cancelled: boolean;
   data: T | undefined;
   error: Error | undefined;
 };
 
-export type FetchStateRef<T> = ShallowRefRecord<FetchState<T>>;
+export type FetchState<T> = ShallowRefObject<FetchStateData<T>>;

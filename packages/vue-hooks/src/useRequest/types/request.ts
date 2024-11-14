@@ -1,5 +1,5 @@
 import { MaybeRefOrGetter, WatchSource } from "vue";
-import { Noop, RefOrGetterRecord } from ".";
+import { Noop, UnwrapRefArray } from ".";
 
 export type Service<TData, TParams extends any[]> = (
   ...args: TParams
@@ -12,16 +12,15 @@ export type RequestControlOptions = Readonly<{
   pollingInterval: MaybeRefOrGetter<number>;
 }>;
 
-export type RequestCallbackOptions<TData, TParams> = {
-  params?: RefOrGetterRecord<TParams>;
+export type RequestCallbackOptions<TData, TParams extends any[]> = {
+  params?: UnwrapRefArray<TParams>;
   onBefore?: Noop;
   onSuccess?: (data: TData | undefined, params: TParams) => void;
   onError?: (e: Error) => void;
   onFinally?: Noop;
 };
 
-export type RequestOptions<TData, TParams> = RequestCallbackOptions<
+export type RequestOptions<
   TData,
-  TParams
-> &
-  Partial<RequestControlOptions>;
+  TParams extends any[],
+> = RequestCallbackOptions<TData, TParams> & Partial<RequestControlOptions>;

@@ -1,54 +1,47 @@
 import { MaybeRefOrGetter, shallowRef, toValue } from "vue";
 import { buildCancelableTask } from "@feutopia/utils";
 import {
-  FetchStateRef,
-  EmitterInstance,
   Service,
   RequestCallbackOptions,
   Noop,
+  UnwrapRefArray,
+  EmitterInstance,
   FetchState,
-  UnwrapMaybeRefGetterArray,
+  FetchStateData,
 } from "../types";
-import { isNonRefObject } from "../utils";
-
-type Emitter<T> = EmitterInstance<FetchStateRef<T>>;
+import { isNotRefObject } from "../utils";
 
 export class Fetch<TData, TParams extends any[]> {
-  private service: Service<TData, TParams>;
-  private emitter: Emitter<TData>;
-  private serviceTask: ReturnType<
-    typeof buildCancelableTask<TData, TParams>
-  > | null;
   private params: TParams;
   private count = 0;
-  private options: RequestCallbackOptions<TData, TParams>;
-  private cleanupFns: Noop[];
-  state: FetchStateRef<TData> = {
+  private unsubscribes: Noop[] = [];
+  private serviceTask: ReturnType<
+    typeof buildCancelableTask<TData, TParams>
+  > | null = null;
+  state: FetchState<TData> = {
     loading: shallowRef(false),
-    data: shallowRef<TData | undefined>(undefined),
-    error: shallowRef<Error | undefined>(undefined),
+    data: shallowRef<TData>(),
+    error: shallowRef<Error>(),
     cancelled: shallowRef(false),
   };
   constructor(
-    service: Service<TData, TParams>,
-    emitter: Emitter<TData>,
-    options: RequestCallbackOptions<TData, TParams>
+    private service: Service<TData, TParams>,
+    private options: RequestCallbackOptions<TData, TParams>,
+    private emitter: EmitterInstance<TData>
   ) {
     this.service = service;
-    this.serviceTask = null;
-    this.emitter = emitter;
     this.options = options;
+    this.emitter = emitter;
     this.params = (options.params || []) as TParams;
-    this.cleanupFns = [];
     this.subscribe();
   }
   private subscribe() {
-    const cleanupRun = this.emitter.on("run", () => {
+    const stop = this.emitter.on("run", () => {
       this.run(...this.params);
     });
-    this.cleanupFns.push(cleanupRun);
+    this.unsubscribes.push(stop);
   }
-  private setState(obj: Partial<FetchState<TData>>) {
+  private setState(obj: Partial<FetchStateData<TData>>) {
     for (const [key, value] of Object.entries(obj)) {
       const item = this.state[key as keyof typeof this.state];
       if (item) {
@@ -56,19 +49,19 @@ export class Fetch<TData, TParams extends any[]> {
       }
     }
   }
-  private resolveObj(param: Record<string, MaybeRefOrGetter<any>>) {
-    const obj: Partial<typeof param> = {};
-    for (const [key, value] of Object.entries(param)) {
-      obj[key] = isNonRefObject(value)
+  private resolveObj(params: Record<string, MaybeRefOrGetter<any>>) {
+    const obj: Partial<typeof params> = {};
+    for (const [key, value] of Object.entries(params)) {
+      obj[key] = isNotRefObject(value)
         ? this.resolveObj(value)
         : toValue(value);
     }
     return obj;
   }
-  private resolveParams(args: TParams) {
-    return args.map((param) =>
-      isNonRefObject(param) ? this.resolveObj(param) : toValue(param)
-    ) as UnwrapMaybeRefGetterArray<TParams>;
+  private resolveParams(params: TParams) {
+    return params.map((param) =>
+      isNotRefObject(param) ? this.resolveObj(param) : toValue(param)
+    ) as UnwrapRefArray<TParams>;
   }
   private cancelTask() {
     if (this.serviceTask) {
@@ -95,16 +88,16 @@ export class Fetch<TData, TParams extends any[]> {
         // 确保是当前的请求
         this.setState({
           loading: false,
-          cancelled: true,
           error: undefined,
+          cancelled: true,
         });
         this.emitter.emit("cancelled");
       }
     } else if (error) {
       // 失败
       this.setState({
-        error,
         loading: false,
+        error,
         cancelled: false,
       });
       this.options.onError?.(error);
@@ -112,10 +105,10 @@ export class Fetch<TData, TParams extends any[]> {
     } else {
       // 成功
       this.setState({
-        data,
         loading: false,
-        cancelled: false,
+        data,
         error: undefined,
+        cancelled: false,
       });
       this.options.onSuccess?.(this.state.data.value, params);
       this.emitter.emit("success", this.state);
@@ -137,8 +130,8 @@ export class Fetch<TData, TParams extends any[]> {
     return this.send(...this.params);
   }
   public unmount() {
-    this.cleanupFns.forEach((fn) => fn());
-    this.cleanupFns = [];
+    this.unsubscribes.forEach((fn) => fn());
+    this.unsubscribes = [];
     this.cancelTask();
   }
 }
