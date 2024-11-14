@@ -42,6 +42,9 @@ export default defineConfig({
     rollupOptions: {
       external: ["vue"],
       output: {
+        globals: {
+          vue: "Vue",
+        },
         exports: "named", // 使用命名导出的方式，而不是默认导出
       },
     },
