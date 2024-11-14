@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Utils Library",
   "keywords": [
     "utils",
@@ -38,5 +38,8 @@
   "bugs": {
     "url": "https://github.com/feutopia/feutopia-monorepo/issues"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@vue/runtime-core": "^3.5.12"
+  }
 }

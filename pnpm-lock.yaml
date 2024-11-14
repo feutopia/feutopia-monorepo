@@ -77,6 +77,9 @@ importers:
     dependencies:
       axios: 1.7.7
 
+  packages/mitt:
+    specifiers: {}
+
   packages/react-ui:
     specifiers:
       '@types/react': ^18.0.0
@@ -92,7 +95,10 @@ importers:
       react-dom: 18.3.1_react@18.3.1
 
   packages/utils:
-    specifiers: {}
+    specifiers:
+      '@vue/runtime-core': ^3.5.12
+    devDependencies:
+      '@vue/runtime-core': 3.5.12
 
   packages/vue-echarts:
     specifiers:
@@ -1721,7 +1727,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.5.12
       '@vue/shared': 3.5.12
-      vue: 3.5.12_typescript@5.6.3
+      vue: 3.5.12
 
   /@vue/shared/3.5.12:
     resolution: {integrity: sha512-L2RPSAwUFbgZH20etwrXyVyCBu9OxRSi8T/38QsvnkJyvq2LufW2lDCOzm7t/U9C1mkhJGWYfCuFBCmIuNivrg==}
@@ -4951,6 +4957,20 @@ packages:
       semver: 7.6.3
       typescript: 5.6.3
     dev: true
+
+  /vue/3.5.12:
+    resolution: {integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/compiler-dom': 3.5.12
+      '@vue/compiler-sfc': 3.5.12
+      '@vue/runtime-dom': 3.5.12
+      '@vue/server-renderer': 3.5.12_vue@3.5.12
+      '@vue/shared': 3.5.12
 
   /vue/3.5.12_typescript@5.6.3:
     resolution: {integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==}
