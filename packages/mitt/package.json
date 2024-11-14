@@ -1,0 +1,41 @@
+{
+  "name": "@feutopia/mitt",
+  "version": "0.0.1",
+  "description": "Event emitter",
+  "keywords": [
+    "event"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "umd": "./dist/umd/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run test --run && pnpm run build:vite",
+    "build:vite": "vite build",
+    "test": "vitest"
+  },
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/mitt#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "license": "MIT"
+}
