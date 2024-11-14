@@ -25,6 +25,7 @@
     "access": "public"
   },
   "scripts": {
+    "dev": "vite",
     "build": "pnpm run test --run && pnpm run build:vite",
     "build:vite": "vite build",
     "test": "vitest"
