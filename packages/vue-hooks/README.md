@@ -60,6 +60,54 @@ const { isSupported, stop } = useResizeObserver(target, (entries) => {
 - `isSupported`: Computed ref indicating if ResizeObserver is supported
 - `stop`: Function to stop observing
 
+### useRequest
+
+A hook for managing asynchronous requests with features like polling, manual control, and automatic error handling.
+
+```ts
+const { 
+  data,
+  loading,
+  error,
+  run,
+  cancel,
+  refresh
+} = useRequest(service, {
+  manual: false,
+  pollingInterval: 0,
+  ready: true,
+  refreshDeps: [],
+  onBefore: () => {},
+  onSuccess: (data, params) => {},
+  onError: (error, params) => {},
+  onFinally: (params) => {},
+});
+```
+
+**Parameters:**
+
+- `service`: Async function that performs the request
+- `options`:
+  - `manual`: Whether to manually trigger the request (default: false)
+  - `pollingInterval`: Interval for polling in milliseconds (default: 0, no polling)
+  - `ready`: Control whether the request should execute (default: true)
+  - `refreshDeps`: Dependencies array that triggers request refresh when changed
+  - `params`: Initial parameters for the service function
+  - `onBefore`: Callback before request starts
+  - `onSuccess`: Callback when request succeeds
+  - `onError`: Callback when request fails
+  - `onFinally`: Callback when request completes
+
+**Returns:**
+
+- `data`: Response data
+- `loading`: Loading state
+- `error`: Error object if request fails
+- `run`: Function to manually trigger the request
+- `cancel`: Function to cancel the current request
+- `refresh`: Function to refresh using the last used parameters
+- `cancelled`: Whether the request was cancelled
+
 ## License
 
 MIT
