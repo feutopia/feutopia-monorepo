@@ -1,11 +1,11 @@
+import { buildCancelableTask, DeepUnwrapRef } from "@feutopia/utils";
 import { MaybeRefOrGetter, shallowRef, toValue } from "vue";
-import { buildCancelableTask, DeepUnwrapRef, Noop } from "@feutopia/utils";
 import {
-  Service,
-  RequestCallbackOptions,
   EmitterInstance,
   FetchState,
   FetchStateData,
+  RequestCallbackOptions,
+  Service,
   ValueOrEmptyArray,
 } from "../types";
 import { isNotRefObject } from "../utils";
@@ -13,7 +13,6 @@ import { isNotRefObject } from "../utils";
 export class Fetch<TData, TParams extends any[]> {
   private params: ValueOrEmptyArray<TParams>;
   private count = 0;
-  private unsubscribes: Noop[] = [];
   private serviceTask: ReturnType<
     typeof buildCancelableTask<TData, DeepUnwrapRef<TParams>>
   > | null = null;
@@ -32,13 +31,6 @@ export class Fetch<TData, TParams extends any[]> {
     this.options = options;
     this.emitter = emitter;
     this.params = this.options.params ?? [];
-    this.subscribe();
-  }
-  private subscribe() {
-    const stop = this.emitter.on("run", () => {
-      this.run(...this.params);
-    });
-    this.unsubscribes.push(stop);
   }
   private setState(state: Partial<FetchStateData<TData>>) {
     for (const [key, value] of Object.entries(state)) {
@@ -70,26 +62,23 @@ export class Fetch<TData, TParams extends any[]> {
     const params = this.resolveParams(args);
     const currentCount = ++this.count;
     this.cancelTask();
+    this.options.onBefore?.();
+    this.emitter.emit("before");
     this.setState({
       loading: true,
       cancelled: false,
     });
-    this.emitter.emit("loading");
-    this.options.onBefore?.();
-    this.emitter.emit("before");
     this.serviceTask = buildCancelableTask(this.service);
     const { data, cancelled, error } = await this.serviceTask.run(...params);
+    if (currentCount !== this.count) return this.state; // 如果不是当前的请求，直接返回
     if (cancelled) {
       // 取消
-      if (currentCount === this.count) {
-        // 确保是当前的请求
-        this.setState({
-          loading: false,
-          error: undefined,
-          cancelled: true,
-        });
-        this.emitter.emit("cancelled");
-      }
+      this.setState({
+        loading: false,
+        error: undefined,
+        cancelled: true,
+      });
+      this.emitter.emit("cancelled");
     } else if (error) {
       // 失败
       this.setState({
@@ -110,10 +99,8 @@ export class Fetch<TData, TParams extends any[]> {
       this.options.onSuccess?.(this.state.data.value, params);
       this.emitter.emit("success", this.state);
     }
-    if (currentCount === this.count) {
-      this.options.onFinally?.();
-      this.emitter.emit("finally", this.state);
-    }
+    this.options.onFinally?.();
+    this.emitter.emit("finally");
     return this.state;
   }
   run(...args: ValueOrEmptyArray<TParams>) {
@@ -127,8 +114,6 @@ export class Fetch<TData, TParams extends any[]> {
     return this.send(...this.params);
   }
   public unmount() {
-    this.unsubscribes.forEach((fn) => fn());
-    this.unsubscribes = [];
     this.cancelTask();
   }
 }

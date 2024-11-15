@@ -1,10 +1,10 @@
 import { tryOnScopeDispose } from "@/utils";
 import mitt from "@feutopia/mitt";
-import { EmitterEvents, RequestOptions, Service } from "../types";
+import { DeepUnwrapRef } from "@feutopia/utils";
 import { toValue } from "vue";
 import { usePolling, useReady, useRefresh } from "../hooks";
+import { EmitterEvents, RequestOptions, Service } from "../types";
 import { Fetch } from "./Fetch";
-import { DeepUnwrapRef } from "@feutopia/utils";
 
 export function useRequest<TData, TParams extends any[]>(
   service: Service<TData, DeepUnwrapRef<TParams>>,
@@ -22,12 +22,22 @@ export function useRequest<TData, TParams extends any[]>(
   const emitter = mitt<EmitterEvents<TData>>();
   const fetchInstance = new Fetch<TData, TParams>(service, options, emitter);
 
-  useReady(emitter, { ready: options.ready, manual: options.manual });
-  useRefresh(emitter, {
+  const fetch = () => {
+    fetchInstance.refresh();
+  };
+  useReady({
+    fetch,
+    ready: options.ready,
+    manual: options.manual,
+  });
+  useRefresh({
+    fetch,
     ready: options.ready,
     refreshDeps: options.refreshDeps,
   });
-  usePolling(emitter, fetchInstance.state, {
+  usePolling({
+    fetch,
+    emitter,
     ready: options.ready,
     pollingInterval: options.pollingInterval,
   });

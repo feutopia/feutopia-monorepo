@@ -3,11 +3,10 @@ import { FetchState } from ".";
 
 type EmitterType<T> = {
   // 状态事件
-  loading: void;
   before: void;
   success: T;
   error: Error;
-  finally: T;
+  finally: void;
   cancelled: void;
   // 动作事件
   run: void;
