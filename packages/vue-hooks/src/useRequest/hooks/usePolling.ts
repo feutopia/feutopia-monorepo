@@ -1,5 +1,5 @@
 import { tryOnScopeDispose } from "@/utils";
-import { buildCancelableTask } from "@feutopia/utils";
+import { delay, cancelDelay, DelayPromise } from "@feutopia/utils";
 import { toValue, watch } from "vue";
 import {
   EmitterInstance,
@@ -7,24 +7,17 @@ import {
   RequestControlOptions,
 } from "../types";
 
-const delay = (ms: number) =>
-  new Promise<void>((resolve) => window.setTimeout(resolve, ms));
-
-type DelayTask = ReturnType<
-  typeof buildCancelableTask<void, Parameters<typeof delay>>
->;
-
 type Params<TData> = RequestAction & {
   emitter: EmitterInstance<TData>;
 } & Pick<RequestControlOptions, "pollingInterval" | "ready">;
 
 export function usePolling<TData>(params: Params<TData>) {
-  let delayTask: DelayTask | null = null;
+  let delayPromise: DelayPromise | null = null;
 
   const cancelDelayTask = () => {
-    if (delayTask) {
-      delayTask.cancel();
-      delayTask = null;
+    if (delayPromise) {
+      cancelDelay(delayPromise);
+      delayPromise = null;
     }
   };
 
@@ -35,8 +28,8 @@ export function usePolling<TData>(params: Params<TData>) {
   const canPoll = () => toValue(params.ready) && getInterval() > 0;
 
   const request = async () => {
-    delayTask = buildCancelableTask(delay);
-    const { cancelled } = await delayTask.run(getInterval());
+    delayPromise = delay(getInterval());
+    const { cancelled } = await delayPromise;
     if (cancelled) return;
     if (canPoll()) {
       params.fetch();
@@ -44,7 +37,7 @@ export function usePolling<TData>(params: Params<TData>) {
   };
 
   watch(getInterval, () => {
-    if (delayTask?.isRunning()) {
+    if (delayPromise?.isRunning()) {
       cancelDelayTask();
       // 当前没有在发送请求
       if (canPoll()) {

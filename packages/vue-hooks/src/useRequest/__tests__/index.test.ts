@@ -238,6 +238,49 @@ describe("useRequest", () => {
       // 清理：停止轮询
       cancel();
     });
+
+    it("should handle polling interval changes correctly", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const pollingInterval = ref(1000);
+      const { cancel } = useRequest(service, {
+        pollingInterval,
+      });
+
+      expect(service).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(500); // 等待500ms
+      pollingInterval.value = 2000; // 在轮询过程中改变间隔
+
+      const waitTime = 500;
+      await vi.advanceTimersByTimeAsync(waitTime); // 再等待500ms，此时原来的1000ms轮询应该被取消
+      expect(service).toHaveBeenCalledTimes(1); // 仍然是1次，因为原来的轮询被取消了
+
+      await vi.advanceTimersByTimeAsync(2000 - waitTime); // 等待新的间隔时间
+      expect(service).toHaveBeenCalledTimes(2); // 按新的间隔触发了请求
+
+      // 清理：停止轮询
+      cancel();
+    });
+
+    it("should stop polling when interval is set to 0", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const pollingInterval = ref(1000);
+      const { cancel } = useRequest(service, {
+        pollingInterval,
+      });
+
+      expect(service).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(service).toHaveBeenCalledTimes(2);
+
+      pollingInterval.value = 0; // 设置为0应该停止轮询
+      await vi.advanceTimersByTimeAsync(2000);
+      expect(service).toHaveBeenCalledTimes(2); // 调用次数不应该增加
+
+      // 清理：停止轮询
+      cancel();
+    });
   });
 
   describe("Refresh Dependencies", () => {
