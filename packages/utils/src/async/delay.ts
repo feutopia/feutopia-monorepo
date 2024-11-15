@@ -5,7 +5,9 @@ interface DelayResult {
   cancelled: boolean;
 }
 
-type DelayPromise = Promise<DelayResult>;
+export type DelayPromise = Promise<DelayResult> & {
+  isRunning: () => boolean;
+};
 
 const cancelMap = CreateWeakMap<DelayPromise, () => void>();
 
@@ -13,6 +15,7 @@ function delay(ms: number): DelayPromise {
   if (typeof ms !== "number" || ms < 0 || !Number.isFinite(ms)) {
     throw new Error("Delay time must be a non-negative finite number");
   }
+  let isRunning = true;
   const { resolve, promise } = Promise.withResolvers<DelayResult>();
   let timeoutId: number | null = null;
   const resolveResult = () => {
@@ -23,7 +26,8 @@ function delay(ms: number): DelayPromise {
   } else {
     timeoutId = window.setTimeout(resolveResult, ms);
   }
-  cancelMap.set(promise, () => {
+  const delayPromise = Object.assign(promise, { isRunning: () => isRunning });
+  cancelMap.set(delayPromise, () => {
     if (timeoutId) {
       window.clearTimeout(timeoutId);
       timeoutId = null;
@@ -31,9 +35,10 @@ function delay(ms: number): DelayPromise {
     resolve({ cancelled: true });
   });
   promise.finally(() => {
-    cancelMap.delete(promise);
+    isRunning = false;
+    cancelMap.delete(delayPromise);
   });
-  return promise;
+  return delayPromise;
 }
 
 function cancelDelay(promise: DelayPromise) {
