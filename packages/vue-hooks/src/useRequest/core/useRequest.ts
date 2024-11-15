@@ -48,8 +48,18 @@ export function useRequest<TData, TParams extends any[]>(
 
   return {
     ...fetchInstance.state,
-    run: fetchInstance.run.bind(fetchInstance),
+    // 手动调用 run 方法, 只需判断是否 ready
+    run: (...params: Parameters<typeof fetchInstance.run>) => {
+      if (toValue(options.ready)) {
+        fetchInstance.run(...params);
+      }
+    },
+    // 手动调用 refresh 方法, 只需判断是否 ready
+    refresh: () => {
+      if (toValue(options.ready)) {
+        return fetchInstance.refresh();
+      }
+    },
     cancel: fetchInstance.cancel.bind(fetchInstance),
-    refresh: fetchInstance.refresh.bind(fetchInstance),
   };
 }
