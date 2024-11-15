@@ -51,7 +51,7 @@ export function useRequest<TData, TParams extends any[]>(
     // 手动调用 run 方法, 只需判断是否 ready
     run: (...params: Parameters<typeof fetchInstance.run>) => {
       if (toValue(options.ready)) {
-        fetchInstance.run(...params);
+        return fetchInstance.run(...params);
       }
     },
     // 手动调用 refresh 方法, 只需判断是否 ready

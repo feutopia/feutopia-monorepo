@@ -110,6 +110,16 @@ describe("useRequest", () => {
       expect(service).toHaveBeenCalledTimes(1);
     });
 
+    it("should return data from run", async () => {
+      const service = vi.fn().mockResolvedValue("success data");
+      const { run, loading } = useRequest(service, {
+        manual: true,
+      });
+      const result = await run();
+      expect(loading.value).toBe(false);
+      expect(result?.data.value).toBe("success data");
+    });
+
     it("should support cancel request", async () => {
       // 这里 service 必须使用微任务, 否则 cancel 会失效
       const service = vi
@@ -290,20 +300,34 @@ describe("useRequest", () => {
     });
   });
 
-  it("should handle refresh correctly", async () => {
-    const service = vi
-      .fn()
-      .mockResolvedValueOnce("first call")
-      .mockResolvedValueOnce("refreshed data");
-    const { data, refresh } = useRequest(service);
-    expect(service).toHaveBeenCalledTimes(1);
-    await vi.runAllTimersAsync();
-    expect(data.value).toBe("first call");
-    // 执行刷新
-    await refresh();
-    expect(data.value).toBe("refreshed data");
-    expect(service).toHaveBeenCalledTimes(2);
-    // 验证两次调用使用了相同的参数
-    expect(service.mock.calls[0]).toEqual(service.mock.calls[1]);
+  describe("Refresh", () => {
+    it("should handle refresh correctly", async () => {
+      const service = vi
+        .fn()
+        .mockResolvedValueOnce("first call")
+        .mockResolvedValueOnce("refreshed data");
+      const { data, refresh } = useRequest(service);
+      expect(service).toHaveBeenCalledTimes(1);
+      await vi.runAllTimersAsync();
+      expect(data.value).toBe("first call");
+      // 执行刷新
+      await refresh();
+      expect(data.value).toBe("refreshed data");
+      expect(service).toHaveBeenCalledTimes(2);
+      // 验证两次调用使用了相同的参数
+      expect(service.mock.calls[0]).toEqual(service.mock.calls[1]);
+    });
+    it("should return data from refresh", async () => {
+      const service = vi
+        .fn()
+        .mockResolvedValueOnce("first call")
+        .mockResolvedValueOnce("refreshed data");
+      const { refresh, loading } = useRequest(service);
+
+      await vi.runAllTimersAsync(); // 等待首次请求完成
+      const result = await refresh();
+      expect(loading.value).toBe(false);
+      expect(result?.data.value).toBe("refreshed data");
+    });
   });
 });
