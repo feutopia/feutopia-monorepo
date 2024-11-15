@@ -14,6 +14,27 @@ npm install @feutopia/utils
 
 ### Async Utilities
 
+#### delay
+
+Creates a cancelable delay/timeout promise:
+
+```typescript
+import { delay, cancelDelay } from "@feutopia/utils";
+
+// Create a delay of 1000ms
+const delayPromise = delay(1000);
+
+// Check if delay is still running
+const isRunning = delayPromise.isRunning();
+
+// Cancel the delay if needed
+cancelDelay(delayPromise);
+
+// Wait for delay
+const { cancelled } = await delayPromise;
+// cancelled will be true if the delay was canceled
+```
+
 #### buildCancelableTask
 
 Creates a cancelable task wrapper for async operations:
@@ -36,6 +57,35 @@ task.cancel();
 
 // Check if task was canceled
 const isCanceled = task.isCanceled();
+```
+
+### Object Utilities
+
+#### CreateWeakMap
+
+Creates a WeakMap wrapper with additional clear() method:
+
+```typescript
+import { CreateWeakMap } from "@feutopia/utils";
+
+// Create a new WeakMap
+const weakMap = CreateWeakMap<object, string>();
+
+// Set a value
+const key = {};
+weakMap.set(key, "value");
+
+// Get a value
+const value = weakMap.get(key);
+
+// Clear all entries
+weakMap.clear();
+
+// Check if key exists
+const hasKey = weakMap.has(key);
+
+// Delete an entry
+weakMap.delete(key);
 ```
 
 ### Type Utilities

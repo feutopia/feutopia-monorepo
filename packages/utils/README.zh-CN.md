@@ -13,6 +13,27 @@ npm install @feutopia/utils
 
 ### 异步工具
 
+#### delay
+
+创建一个可取消的延迟/超时 Promise：
+
+```typescript
+import { delay, cancelDelay } from "@feutopia/utils";
+
+// 创建一个 1000ms 的延迟
+const delayPromise = delay(1000);
+
+// 检查延迟是否仍在运行
+const isRunning = delayPromise.isRunning();
+
+// 需要时取消延迟
+cancelDelay(delayPromise);
+
+// 等待延迟完成
+const { cancelled } = await delayPromise;
+// 如果延迟被取消，cancelled 将为 true
+```
+
 #### buildCancelableTask
 
 创建可取消的异步任务包装器：
@@ -35,6 +56,35 @@ task.cancel();
 
 // 检查任务是否已被取消
 const isCanceled = task.isCanceled();
+```
+
+### 对象工具
+
+#### CreateWeakMap
+
+创建一个带有额外 clear() 方法的 WeakMap 包装器：
+
+```typescript
+import { CreateWeakMap } from "@feutopia/utils";
+
+// 创建一个新的 WeakMap
+const weakMap = CreateWeakMap<object, string>();
+
+// 设置值
+const key = {};
+weakMap.set(key, "value");
+
+// 获取值
+const value = weakMap.get(key);
+
+// 清除所有条目
+weakMap.clear();
+
+// 检查键是否存在
+const hasKey = weakMap.has(key);
+
+// 删除一个条目
+weakMap.delete(key);
 ```
 
 ### 类型工具
