@@ -29,6 +29,72 @@ describe("useRequest", () => {
     });
   });
 
+  describe("Ready", () => {
+    it("should send request when ready is true", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(true);
+      useRequest(service, { ready });
+
+      expect(service).toHaveBeenCalledTimes(1);
+      await vi.runAllTimersAsync();
+    });
+
+    it("should not send request when ready is false", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(false);
+      useRequest(service, { ready });
+
+      expect(service).not.toHaveBeenCalled();
+      await vi.runAllTimersAsync();
+    });
+
+    it("should trigger request when ready changes from false to true", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(false);
+      useRequest(service, { ready });
+
+      expect(service).not.toHaveBeenCalled();
+
+      ready.value = true;
+      await nextTick();
+      expect(service).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not interrupt ongoing request when ready changes from true to false", async () => {
+      const service = vi
+        .fn()
+        .mockImplementation(
+          () =>
+            new Promise((resolve) => setTimeout(() => resolve("success"), 1000))
+        );
+      const ready = ref(true);
+      const { loading } = useRequest(service, { ready });
+
+      expect(service).toHaveBeenCalledTimes(1);
+      expect(loading.value).toBe(true);
+
+      ready.value = false;
+      await vi.advanceTimersByTimeAsync(500); // 请求还在进行中
+      expect(loading.value).toBe(true); // 请求不会被中断
+
+      await vi.advanceTimersByTimeAsync(500); // 完成请求
+      expect(loading.value).toBe(false);
+    });
+
+    it("should do nothing when ready changes from true to false during idle state", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(true);
+      useRequest(service, { ready });
+
+      await vi.runAllTimersAsync();
+      expect(service).toHaveBeenCalledTimes(1);
+
+      ready.value = false;
+      await nextTick();
+      expect(service).toHaveBeenCalledTimes(1); // 请求次数不变
+    });
+  });
+
   describe("Manual Control", () => {
     it("should not auto-run in manual mode", async () => {
       const service = vi.fn().mockResolvedValue("success");
@@ -61,6 +127,63 @@ describe("useRequest", () => {
       expect(loading.value).toBe(false);
       expect(cancelled.value).toBe(true);
     });
+
+    it("should execute run when ready is true", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(true);
+      const { run } = useRequest(service, {
+        manual: true,
+        ready,
+      });
+
+      expect(service).not.toHaveBeenCalled();
+      run();
+      expect(service).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not execute run when ready is false", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(false);
+      const { run } = useRequest(service, {
+        manual: true,
+        ready,
+      });
+
+      expect(service).not.toHaveBeenCalled();
+      run();
+      expect(service).not.toHaveBeenCalled();
+    });
+
+    it("should not execute run when ready changes from true to false", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(true);
+      const { run } = useRequest(service, {
+        manual: true,
+        ready,
+      });
+
+      ready.value = false;
+      await nextTick();
+      run();
+      expect(service).not.toHaveBeenCalled();
+    });
+
+    it("should execute run when ready changes from false to true", async () => {
+      const service = vi.fn().mockResolvedValue("success");
+      const ready = ref(false);
+      const { run } = useRequest(service, {
+        manual: true,
+        ready,
+      });
+
+      run();
+      expect(service).not.toHaveBeenCalled();
+
+      ready.value = true;
+      await nextTick();
+      run();
+      expect(service).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("Polling", () => {
@@ -91,7 +214,7 @@ describe("useRequest", () => {
       expect(service).toHaveBeenCalledTimes(1);
 
       ready.value = false;
-      await vi.advanceTimersByTimeAsync(2000);
+      await vi.advanceTimersByTimeAsync(1000);
       expect(service).toHaveBeenCalledTimes(1);
 
       ready.value = true;
