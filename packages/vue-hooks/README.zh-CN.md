@@ -1,4 +1,4 @@
-# @feutopia/vue-hooks
+# Vue 3 组合式函数
 
 **中文** | [English](./README.md)
 

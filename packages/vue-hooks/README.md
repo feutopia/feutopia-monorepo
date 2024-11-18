@@ -1,4 +1,4 @@
-# @feutopia/vue-hooks
+# Vue 3 Composables
 
 **English** | [中文](https://github.com/feutopia/feutopia-monorepo/blob/main/packages/vue-hooks/README.zh-CN.md)
 

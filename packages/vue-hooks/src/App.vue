@@ -1,28 +1,19 @@
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
-import { useRequest } from "./useRequest";
+import { useDate } from "./useDate";
 
-const dep = ref(0);
-const { loading, run, cancel, cancelled } = useRequest(
-  () => {
-    return Promise.resolve("success");
-  },
-  {
-    refreshDeps: [dep],
-  }
-);
-
-const init = async () => {
-  run();
-  console.log("loading", loading.value, "cancelled", cancelled.value);
-  cancel();
-  await nextTick();
-  console.log("loading", loading.value, "cancelled", cancelled.value);
-};
-
-init();
+const { dateInfo, getFormattedDate, getFormattedTime } = useDate();
 </script>
 
 <template>
-  <div>hello</div>
+  <div>年:{{ dateInfo.year }}</div>
+  <div>月:{{ dateInfo.month }}</div>
+  <div>日:{{ dateInfo.day }}</div>
+  <div>时:{{ dateInfo.hour }}</div>
+  <div>分:{{ dateInfo.minute }}</div>
+  <div>秒:{{ dateInfo.second }}</div>
+  <div>星期:{{ dateInfo.weekdayCn }}</div>
+  <div>Weekday:{{ dateInfo.weekdayEn }}</div>
+  <div>时间戳:{{ dateInfo.timestamp }}</div>
+  <div>{{ getFormattedDate() }}</div>
+  <div>{{ getFormattedTime() }}</div>
 </template>
