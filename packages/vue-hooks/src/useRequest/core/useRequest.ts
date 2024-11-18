@@ -53,7 +53,7 @@ export function useRequest<TData, TParams extends any[]>(
   // 卸载
   tryOnScopeDispose(() => {
     fetchInstance.unmount();
-    emitter.all.clear();
+    emitter.clear();
   });
 
   return {
