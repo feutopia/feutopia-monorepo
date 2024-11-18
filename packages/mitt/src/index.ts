@@ -21,13 +21,19 @@ export type EventHandlerMap<Events extends Record<EventType, unknown>> = Map<
 >;
 
 export interface Emitter<Events extends Record<EventType, unknown>> {
-  all: EventHandlerMap<Events>;
+  clear(): void;
 
   on<Key extends keyof Events>(
     type: Key,
     handler: Handler<Events[Key]>
   ): () => void;
   on(type: "*", handler: WildcardHandler<Events>): () => void;
+
+  once<Key extends keyof Events>(
+    type: Key,
+    handler: Handler<Events[Key]>
+  ): void;
+  once(type: "*", handler: WildcardHandler<Events>): void;
 
   off<Key extends keyof Events>(
     type: Key,
@@ -46,19 +52,22 @@ export interface Emitter<Events extends Record<EventType, unknown>> {
  * @name mitt
  * @returns {Mitt}
  */
-export default function mitt<Events extends Record<EventType, unknown>>(
-  all?: EventHandlerMap<Events>
-): Emitter<Events> {
+export default function mitt<
+  Events extends Record<EventType, unknown>,
+>(): Emitter<Events> {
   type GenericEventHandler =
     | Handler<Events[keyof Events]>
     | WildcardHandler<Events>;
-  all = all || new Map();
+
+  const all: EventHandlerMap<Events> = new Map();
 
   return {
     /**
-     * A Map of event names to registered handler functions.
+     * Clear all event handlers.
      */
-    all,
+    clear() {
+      all.clear();
+    },
 
     /**
      * Register an event handler for the given type.
@@ -67,15 +76,29 @@ export default function mitt<Events extends Record<EventType, unknown>>(
      * @memberOf mitt
      */
     on<Key extends keyof Events>(type: Key, handler: GenericEventHandler) {
-      const handlers: Array<GenericEventHandler> | undefined = all!.get(type);
+      const handlers: Array<GenericEventHandler> | undefined = all.get(type);
       if (handlers) {
         handlers.push(handler);
       } else {
-        all!.set(type, [handler] as EventHandlerList<Events[keyof Events]>);
+        all.set(type, [handler] as EventHandlerList<Events[keyof Events]>);
       }
       return () => {
         this.off(type, handler as Handler<Events[Key]>);
       };
+    },
+
+    /**
+     * Register an event handler for the given type.
+     * @param {string|symbol} type Type of event to listen for, or `'*'` for all events
+     * @param {Function} handler Function to call in response to given event
+     * @memberOf mitt
+     */
+    once<Key extends keyof Events>(type: Key, handler: GenericEventHandler) {
+      const wrapperHandler = (event: Events[Key]) => {
+        this.off(type, wrapperHandler);
+        (handler as Handler<Events[Key]>)(event);
+      };
+      this.on(type, wrapperHandler);
     },
 
     /**
@@ -86,12 +109,12 @@ export default function mitt<Events extends Record<EventType, unknown>>(
      * @memberOf mitt
      */
     off<Key extends keyof Events>(type: Key, handler?: GenericEventHandler) {
-      const handlers: Array<GenericEventHandler> | undefined = all!.get(type);
+      const handlers: Array<GenericEventHandler> | undefined = all.get(type);
       if (handlers) {
         if (handler) {
           handlers.splice(handlers.indexOf(handler) >>> 0, 1);
         } else {
-          all!.set(type, []);
+          all.set(type, []);
         }
       }
     },
@@ -107,7 +130,7 @@ export default function mitt<Events extends Record<EventType, unknown>>(
      * @memberOf mitt
      */
     emit<Key extends keyof Events>(type: Key, evt?: Events[Key]) {
-      let handlers = all!.get(type);
+      let handlers = all.get(type);
       if (handlers) {
         (handlers as EventHandlerList<Events[keyof Events]>)
           .slice()
@@ -116,7 +139,7 @@ export default function mitt<Events extends Record<EventType, unknown>>(
           });
       }
 
-      handlers = all!.get("*");
+      handlers = all.get("*");
       if (handlers) {
         (handlers as WildCardEventHandlerList<Events>)
           .slice()
