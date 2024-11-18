@@ -10,11 +10,13 @@ A monorepo for modern frontend development tools and libraries.
 
 Includes:
 
-- Vue 3 UI components ([@feutopia/vue-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-ui#readme))
-- Vue 3 composables ([@feutopia/vue-hooks](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme))
-- Vue3 Echarts components ([@feutopia/vue-echarts](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-echarts#readme))
-- React UI components ([@feutopia/react-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme))
-- utility functions ([@feutopia/utils](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/utils#readme)).
+- Vue 3 UI Components ([@feutopia/vue-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-ui#readme))
+- Vue 3 Composables ([@feutopia/vue-hooks](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-hooks#readme))
+- Vue3 Echarts Components ([@feutopia/vue-echarts](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-echarts#readme))
+- React UI Components ([@feutopia/react-ui](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme))
+- Http Client ([@feutopia/http](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/http#readme))
+- Event Emitter ([@feutopia/mitt](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/mitt#readme))
+- Utility Functions ([@feutopia/utils](https://github.com/feutopia/feutopia-monorepo/tree/main/packages/utils#readme))
 
 ## Contributing
 
