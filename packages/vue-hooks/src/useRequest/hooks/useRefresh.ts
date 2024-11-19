@@ -1,11 +1,13 @@
 import { toValue, watch } from "vue";
-import { RequestAction, RequestControlOptions } from "../types";
+import { RequestFetch, RequestControlOptions } from "../types";
+import { isArray } from "@feutopia/utils";
 
-type Params = RequestAction &
+type Params = RequestFetch &
   Pick<RequestControlOptions, "ready" | "refreshDeps">;
 
 export function useRefresh(params: Params) {
-  watch(params.refreshDeps, () => {
+  const refreshDeps = toValue(params.refreshDeps);
+  watch(isArray(refreshDeps) ? refreshDeps : [], () => {
     if (toValue(params.ready)) {
       params.fetch();
     }

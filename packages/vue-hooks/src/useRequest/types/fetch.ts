@@ -1,4 +1,5 @@
 import { ShallowRefObject } from ".";
+import { Fetch } from "../core/Fetch";
 
 export type FetchStateData<T> = {
   loading: boolean;
@@ -8,3 +9,7 @@ export type FetchStateData<T> = {
 };
 
 export type FetchState<T> = ShallowRefObject<FetchStateData<T>>;
+
+export type FetchInstance<TData, TParams extends any[]> = InstanceType<
+  typeof Fetch<TData, TParams>
+>;

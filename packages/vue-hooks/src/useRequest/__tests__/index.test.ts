@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useRequest } from "../core/useRequest";
 import { nextTick, ref } from "vue";
+import { clearCache, useRequest } from "..";
 
 describe("useRequest", () => {
   beforeEach(() => {
@@ -371,6 +371,146 @@ describe("useRequest", () => {
       const result = await refresh();
       expect(loading.value).toBe(false);
       expect(result?.data.value).toBe("refreshed data");
+    });
+  });
+
+  describe("useCache", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      clearCache("testKey");
+    });
+
+    describe("Basic Cache Features", () => {
+      it("should share the same request when multiple calls use the same cacheKey", async () => {
+        const service = vi
+          .fn()
+          .mockImplementation(
+            () =>
+              new Promise((resolve) =>
+                setTimeout(() => resolve("success"), 100)
+              )
+          );
+
+        // First request
+        const { data: data1 } = useRequest(service, {
+          cacheKey: "testKey",
+        });
+
+        // Second request with same cacheKey before first one completes
+        const { data: data2 } = useRequest(service, {
+          cacheKey: "testKey",
+        });
+
+        expect(service).toHaveBeenCalledTimes(1);
+
+        await vi.advanceTimersByTimeAsync(100);
+
+        expect(data1.value).toBe("success");
+        expect(data2.value).toBe("success");
+      });
+
+      it("should make new request when cache is expired", async () => {
+        const service = vi.fn().mockResolvedValue("success");
+
+        // First request
+        const { data: data1 } = useRequest(service, {
+          cacheKey: "testKey",
+        });
+
+        await vi.runAllTimersAsync();
+        expect(service).toHaveBeenCalledTimes(1);
+        expect(data1.value).toBe("success");
+
+        // Second request after first one completes
+        const { data: data2 } = useRequest(service, {
+          cacheKey: "testKey",
+        });
+
+        await vi.runAllTimersAsync();
+        expect(service).toHaveBeenCalledTimes(2);
+        expect(data2.value).toBe("success");
+      });
+    });
+
+    describe("Cache Time", () => {
+      it("should respect cacheTime and make new request after cache expires", async () => {
+        const service = vi.fn().mockResolvedValue("success");
+        const cacheTime = 1000; // 1 second cache
+
+        // First request
+        const { data: data1 } = useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime,
+        });
+
+        // 注意这里不能使用 runAllTimersAsync(), 因为它会执行所有的计时器, 包括缓存的过期定时器
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service).toHaveBeenCalledTimes(1);
+        expect(data1.value).toBe("success");
+
+        // Request within cache time
+        const { data: data2 } = useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime,
+        });
+
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service).toHaveBeenCalledTimes(1); // Should use cached result
+        expect(data2.value).toBe("success");
+
+        // Advance time beyond cache duration, because there is a time discrepancy, so add 5ms
+        await vi.advanceTimersByTimeAsync(cacheTime);
+
+        // Request after cache expires
+        const { data: data3 } = useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime,
+        });
+
+        await vi.runAllTimersAsync();
+        expect(service).toHaveBeenCalledTimes(2); // Should make new request
+        expect(data3.value).toBe("success");
+      });
+
+      it("should update cache time when cacheTime changes", async () => {
+        const service = vi.fn().mockResolvedValue("success");
+        const cacheTime = ref(1000);
+
+        useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime,
+        });
+
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service).toHaveBeenCalledTimes(1);
+
+        // Change cache time before original cache expires
+        cacheTime.value = 2000;
+        await vi.advanceTimersByTimeAsync(1000);
+
+        // Should still use cached result after original cache time
+        const { data: data2 } = useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime: cacheTime.value,
+        });
+
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service).toHaveBeenCalledTimes(1);
+        expect(data2.value).toBe("success");
+
+        // Advance beyond new cache time
+        await vi.advanceTimersByTimeAsync(1000);
+
+        // Should make new request
+        const { data: data3 } = useRequest(service, {
+          cacheKey: "testKey",
+          cacheTime: cacheTime.value,
+        });
+
+        await vi.advanceTimersByTimeAsync(0);
+        expect(service).toHaveBeenCalledTimes(2);
+        expect(data3.value).toBe("success");
+      });
     });
   });
 });

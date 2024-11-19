@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { useDate } from "./useDate";
+import { delay } from "@feutopia/utils";
+import { useRequest } from "./useRequest";
 
-const { dateInfo, getFormattedDate, getFormattedTime } = useDate();
+const service = () =>
+  new Promise((resolve) => {
+    console.log("service========");
+    resolve("success");
+  });
+
+const init = async () => {
+  useRequest(service, {
+    cacheKey: "test",
+    cacheTime: 100,
+    onSuccess: (data) => {
+      console.log("111", data);
+    },
+  });
+  await delay(50);
+  useRequest(service, {
+    cacheKey: "test",
+    cacheTime: 100,
+    onSuccess: (data) => {
+      console.log("222", data);
+    },
+  });
+};
+
+init();
 </script>
 
-<template>
-  <div>年:{{ dateInfo.year }}</div>
-  <div>月:{{ dateInfo.month }}</div>
-  <div>日:{{ dateInfo.day }}</div>
-  <div>时:{{ dateInfo.hour }}</div>
-  <div>分:{{ dateInfo.minute }}</div>
-  <div>秒:{{ dateInfo.second }}</div>
-  <div>星期:{{ dateInfo.weekdayCn }}</div>
-  <div>Weekday:{{ dateInfo.weekdayEn }}</div>
-  <div>时间戳:{{ dateInfo.timestamp }}</div>
-  <div>{{ getFormattedDate() }}</div>
-  <div>{{ getFormattedTime() }}</div>
-</template>
+<template></template>

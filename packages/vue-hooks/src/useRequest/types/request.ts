@@ -6,11 +6,15 @@ export type Service<TData, TParams extends any[]> = (
   ...args: TParams
 ) => Promise<TData>;
 
+export type CacheKey = symbol | string;
+
 export type RequestControlOptions = Readonly<{
-  ready: MaybeRefOrGetter<Boolean>;
-  manual: MaybeRefOrGetter<Boolean>;
-  refreshDeps: WatchSource<any>[];
-  pollingInterval: MaybeRefOrGetter<number>;
+  ready?: MaybeRefOrGetter<Boolean>;
+  manual?: MaybeRefOrGetter<Boolean>;
+  refreshDeps?: WatchSource<any>[];
+  pollingInterval?: MaybeRefOrGetter<number>;
+  cacheKey?: MaybeRefOrGetter<symbol | string>;
+  cacheTime?: MaybeRefOrGetter<number>;
 }>;
 
 export type RequestCallbackOptions<TData, TParams extends any[]> = {
@@ -24,4 +28,4 @@ export type RequestCallbackOptions<TData, TParams extends any[]> = {
 export type RequestOptions<
   TData,
   TParams extends any[],
-> = RequestCallbackOptions<TData, TParams> & Partial<RequestControlOptions>;
+> = RequestCallbackOptions<TData, TParams> & RequestControlOptions;

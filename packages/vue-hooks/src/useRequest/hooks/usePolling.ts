@@ -1,13 +1,14 @@
 import { tryOnScopeDispose } from "@/utils";
-import { delay, cancelDelay, DelayPromise } from "@feutopia/utils";
-import { toValue, watch } from "vue";
 import {
-  EmitterInstance,
-  RequestAction,
-  RequestControlOptions,
-} from "../types";
+  delay,
+  cancelDelay,
+  DelayPromise,
+  isPositiveInteger,
+} from "@feutopia/utils";
+import { toValue, watch } from "vue";
+import { EmitterInstance, RequestFetch, RequestControlOptions } from "../types";
 
-type Params<TData> = RequestAction & {
+type Params<TData> = RequestFetch & {
   emitter: EmitterInstance<TData>;
 } & Pick<RequestControlOptions, "pollingInterval" | "ready">;
 
@@ -21,42 +22,57 @@ export function usePolling<TData>(params: Params<TData>) {
     }
   };
 
-  // 获取轮询间隔
-  const getInterval = () => toValue(params.pollingInterval);
-
-  // 是否可以轮询
-  const canPoll = () => toValue(params.ready) && getInterval() > 0;
+  // 获取当前的轮询配置状态
+  const getPollingState = () => {
+    const interval = toValue(params.pollingInterval);
+    const ready = toValue(params.ready);
+    return {
+      interval,
+      ready,
+      isValid: ready && isPositiveInteger(interval),
+    };
+  };
 
   const request = async () => {
-    delayPromise = delay(getInterval());
+    const { interval, isValid } = getPollingState();
+    if (!isValid) return;
+
+    delayPromise = delay(interval as number);
     const { cancelled } = await delayPromise;
+
     if (cancelled) return;
-    if (canPoll()) {
+
+    const { isValid: stillValid } = getPollingState();
+    if (stillValid) {
       params.fetch();
     }
   };
 
-  watch(getInterval, () => {
-    if (delayPromise?.isRunning()) {
-      cancelDelayTask();
-      // 当前没有在发送请求
-      if (canPoll()) {
-        request();
+  // 监听轮询间隔变化
+  watch(
+    () => toValue(params.pollingInterval),
+    () => {
+      if (delayPromise?.isRunning()) {
+        cancelDelayTask();
+        const { isValid } = getPollingState();
+        if (isValid) {
+          request();
+        }
       }
     }
-  });
+  );
 
+  // 监听请求完成事件
   params.emitter.on("finally", () => {
-    if (canPoll()) {
+    const { isValid } = getPollingState();
+    if (isValid) {
       request();
     }
   });
 
-  params.emitter.on("cancel", () => {
-    cancelDelayTask();
-  });
+  // 监听取消事件
+  params.emitter.on("cancel", cancelDelayTask);
 
-  tryOnScopeDispose(() => {
-    cancelDelayTask();
-  });
+  // 组件销毁时清理
+  tryOnScopeDispose(cancelDelayTask);
 }

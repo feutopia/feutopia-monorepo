@@ -23,12 +23,10 @@ export class Fetch<TData, TParams extends any[]> {
     cancelled: shallowRef(false),
   };
   constructor(
-    private readonly service: Service<TData, DeepUnwrapRef<TParams>>,
+    private service: Service<TData, DeepUnwrapRef<TParams>>,
     private readonly options: RequestCallbackOptions<TData, TParams>,
     private readonly emitter: EmitterInstance<TData>
   ) {
-    this.options = options;
-    this.emitter = emitter;
     this.#params = this.options.params ?? [];
   }
   #setState(state: Partial<FetchStateData<TData>>) {
@@ -101,6 +99,12 @@ export class Fetch<TData, TParams extends any[]> {
     this.options.onFinally?.();
     this.emitter.emit("finally");
     return this.state;
+  }
+  getService() {
+    return this.service;
+  }
+  setService(value: Service<TData, DeepUnwrapRef<TParams>>) {
+    this.service = value;
   }
   run(...args: ValueOrEmptyArray<TParams>) {
     return this.#send(...args);

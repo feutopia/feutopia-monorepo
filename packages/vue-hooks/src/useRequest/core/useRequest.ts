@@ -1,8 +1,8 @@
-import { tryOnScopeDispose } from "@/utils";
 import mitt from "@feutopia/mitt";
 import { DeepUnwrapRef } from "@feutopia/utils";
+import { tryOnScopeDispose } from "@/utils";
 import { toValue } from "vue";
-import { usePolling, useReady, useRefresh } from "../hooks";
+import { usePolling, useReady, useRefresh, useCache } from "../hooks";
 import { EmitterEvents, RequestOptions, Service } from "../types";
 import { Fetch } from "./Fetch";
 
@@ -40,6 +40,12 @@ export function useRequest<TData, TParams extends any[]>(
     emitter,
     ready: options.ready,
     pollingInterval: options.pollingInterval,
+  });
+  useCache({
+    getService: fetchInstance.getService.bind(fetchInstance),
+    setService: fetchInstance.setService.bind(fetchInstance),
+    cacheKey: options.cacheKey,
+    cacheTime: options.cacheTime,
   });
 
   // 初始化
