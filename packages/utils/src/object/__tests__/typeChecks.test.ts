@@ -12,6 +12,12 @@ import {
   isObject,
   isPlainObject,
   isIterable,
+  isNull,
+  isUndefined,
+  isValidNumber,
+  isNumber,
+  isPositiveInteger,
+  isFunction,
 } from "../typeChecks";
 
 describe("Type Check Utils", () => {
@@ -50,46 +56,6 @@ describe("Type Check Utils", () => {
     });
   });
 
-  describe("isMap", () => {
-    it("should correctly identify Maps", () => {
-      expect(isMap(new Map())).toBe(true);
-      expect(isMap(new WeakMap())).toBe(false);
-      expect(isMap({})).toBe(false);
-    });
-  });
-
-  describe("isSet", () => {
-    it("should correctly identify Sets", () => {
-      expect(isSet(new Set())).toBe(true);
-      expect(isSet(new WeakSet())).toBe(false);
-      expect(isSet([])).toBe(false);
-    });
-  });
-
-  describe("isWeakMap", () => {
-    it("should correctly identify WeakMaps", () => {
-      expect(isWeakMap(new WeakMap())).toBe(true);
-      expect(isWeakMap(new Map())).toBe(false);
-      expect(isWeakMap({})).toBe(false);
-    });
-  });
-
-  describe("isWeakSet", () => {
-    it("should correctly identify WeakSets", () => {
-      expect(isWeakSet(new WeakSet())).toBe(true);
-      expect(isWeakSet(new Set())).toBe(false);
-      expect(isWeakSet([])).toBe(false);
-    });
-  });
-
-  describe("isRegExp", () => {
-    it("should correctly identify RegExps", () => {
-      expect(isRegExp(/test/)).toBe(true);
-      expect(isRegExp(new RegExp("test"))).toBe(true);
-      expect(isRegExp("/test/")).toBe(false);
-    });
-  });
-
   describe("isDate", () => {
     it("should correctly identify Dates", () => {
       expect(isDate(new Date())).toBe(true);
@@ -106,11 +72,79 @@ describe("Type Check Utils", () => {
     });
   });
 
-  describe("isPromise", () => {
-    it("should correctly identify Promises", () => {
-      expect(isPromise(Promise.resolve())).toBe(true);
-      expect(isPromise(new Promise(() => {}))).toBe(true);
-      expect(isPromise({ then: () => {} })).toBe(false);
+  describe("isFunction", () => {
+    it("should correctly identify functions", () => {
+      // Regular functions
+      expect(isFunction(function () {})).toBe(true);
+      expect(isFunction(() => {})).toBe(true);
+
+      // Built-in functions
+      expect(isFunction(Array.isArray)).toBe(true);
+      expect(isFunction(Object.prototype.toString)).toBe(true);
+      expect(isFunction(setTimeout)).toBe(true);
+
+      // Class constructor
+      expect(isFunction(class {})).toBe(true);
+
+      // Non-functions
+      expect(isFunction({})).toBe(false);
+      expect(isFunction([])).toBe(false);
+      expect(isFunction(42)).toBe(false);
+      expect(isFunction("string")).toBe(false);
+      expect(isFunction(null)).toBe(false);
+      expect(isFunction(undefined)).toBe(false);
+
+      // Function properties
+      const obj = { method() {} };
+      expect(isFunction(obj.method)).toBe(true);
+    });
+  });
+
+  describe("isIterable", () => {
+    it("should correctly identify iterables", () => {
+      expect(isIterable([])).toBe(true);
+      expect(isIterable(new Set())).toBe(true);
+      expect(isIterable(new Map())).toBe(true);
+      expect(isIterable("string")).toBe(true);
+      expect(isIterable(new WeakMap())).toBe(false);
+      expect(isIterable(new WeakSet())).toBe(false);
+      expect(isIterable({})).toBe(false);
+      expect(isIterable(null)).toBe(false);
+      expect(isIterable(undefined)).toBe(false);
+    });
+  });
+
+  describe("isMap", () => {
+    it("should correctly identify Maps", () => {
+      expect(isMap(new Map())).toBe(true);
+      expect(isMap(new WeakMap())).toBe(false);
+      expect(isMap({})).toBe(false);
+    });
+  });
+
+  describe("isNull", () => {
+    it("should correctly identify null values", () => {
+      expect(isNull(null)).toBe(true);
+      expect(isNull(undefined)).toBe(false);
+      expect(isNull({})).toBe(false);
+      expect(isNull(0)).toBe(false);
+      expect(isNull("")).toBe(false);
+    });
+  });
+
+  describe("isNumber", () => {
+    it("should correctly identify numbers", () => {
+      expect(isNumber(0)).toBe(true);
+      expect(isNumber(1)).toBe(true);
+      expect(isNumber(-1)).toBe(true);
+      expect(isNumber(1.5)).toBe(true);
+      expect(isNumber(NaN)).toBe(true);
+      expect(isNumber(Infinity)).toBe(true);
+      expect(isNumber(-Infinity)).toBe(true);
+      expect(isNumber("1")).toBe(false);
+      expect(isNumber(null)).toBe(false);
+      expect(isNumber(undefined)).toBe(false);
+      expect(isNumber({})).toBe(false);
     });
   });
 
@@ -142,17 +176,83 @@ describe("Type Check Utils", () => {
     });
   });
 
-  describe("isIterable", () => {
-    it("should correctly identify iterables", () => {
-      expect(isIterable([])).toBe(true);
-      expect(isIterable(new Set())).toBe(true);
-      expect(isIterable(new Map())).toBe(true);
-      expect(isIterable("string")).toBe(true);
-      expect(isIterable(new WeakMap())).toBe(false);
-      expect(isIterable(new WeakSet())).toBe(false);
-      expect(isIterable({})).toBe(false);
-      expect(isIterable(null)).toBe(false);
-      expect(isIterable(undefined)).toBe(false);
+  describe("isPositiveInteger", () => {
+    it("should correctly identify positive integers", () => {
+      expect(isPositiveInteger(1)).toBe(true);
+      expect(isPositiveInteger(100)).toBe(true);
+      expect(isPositiveInteger(0)).toBe(false);
+      expect(isPositiveInteger(-1)).toBe(false);
+      expect(isPositiveInteger(1.5)).toBe(false);
+      expect(isPositiveInteger("1")).toBe(false);
+      expect(isPositiveInteger(null)).toBe(false);
+      expect(isPositiveInteger(undefined)).toBe(false);
+    });
+  });
+
+  describe("isPromise", () => {
+    it("should correctly identify Promises", () => {
+      expect(isPromise(Promise.resolve())).toBe(true);
+      expect(isPromise(new Promise(() => {}))).toBe(true);
+      expect(isPromise({ then: () => {} })).toBe(false);
+    });
+  });
+
+  describe("isRegExp", () => {
+    it("should correctly identify RegExps", () => {
+      expect(isRegExp(/test/)).toBe(true);
+      expect(isRegExp(new RegExp("test"))).toBe(true);
+      expect(isRegExp("/test/")).toBe(false);
+    });
+  });
+
+  describe("isSet", () => {
+    it("should correctly identify Sets", () => {
+      expect(isSet(new Set())).toBe(true);
+      expect(isSet(new WeakSet())).toBe(false);
+      expect(isSet([])).toBe(false);
+    });
+  });
+
+  describe("isUndefined", () => {
+    it("should correctly identify undefined values", () => {
+      expect(isUndefined(undefined)).toBe(true);
+      expect(isUndefined(void 0)).toBe(true);
+      expect(isUndefined(null)).toBe(false);
+      expect(isUndefined(0)).toBe(false);
+      expect(isUndefined("")).toBe(false);
+      expect(isUndefined({})).toBe(false);
+    });
+  });
+
+  describe("isValidNumber", () => {
+    it("should correctly identify valid numbers", () => {
+      expect(isValidNumber(0)).toBe(true);
+      expect(isValidNumber(1)).toBe(true);
+      expect(isValidNumber(-1)).toBe(true);
+      expect(isValidNumber(1.5)).toBe(true);
+      expect(isValidNumber(Number.MAX_VALUE)).toBe(true);
+      expect(isValidNumber(NaN)).toBe(false);
+      expect(isValidNumber(Infinity)).toBe(false);
+      expect(isValidNumber(-Infinity)).toBe(false);
+      expect(isValidNumber("1")).toBe(false);
+      expect(isValidNumber(null)).toBe(false);
+      expect(isValidNumber(undefined)).toBe(false);
+    });
+  });
+
+  describe("isWeakMap", () => {
+    it("should correctly identify WeakMaps", () => {
+      expect(isWeakMap(new WeakMap())).toBe(true);
+      expect(isWeakMap(new Map())).toBe(false);
+      expect(isWeakMap({})).toBe(false);
+    });
+  });
+
+  describe("isWeakSet", () => {
+    it("should correctly identify WeakSets", () => {
+      expect(isWeakSet(new WeakSet())).toBe(true);
+      expect(isWeakSet(new Set())).toBe(false);
+      expect(isWeakSet([])).toBe(false);
     });
   });
 });

@@ -1,3 +1,3 @@
 export * from "./filterNonNilValues";
 export * from "./createWeakMap";
-export * from "./typeChecks";
+export * from "./typeChecks/";
