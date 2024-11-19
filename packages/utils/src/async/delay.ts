@@ -1,6 +1,6 @@
-import { isNonNegativeValidNumber } from "..";
 import "../pollyfill/promise-with-resolvers";
 import { CreateWeakMap } from "@/object/createWeakMap";
+import { isNonNegativeNumber } from "..";
 
 interface DelayResult {
   cancelled: boolean;
@@ -10,26 +10,16 @@ export type DelayPromise = Promise<DelayResult> & {
   isRunning: () => boolean;
 };
 
-const createRafDelay = (ms: number, callback?: () => void) => {
-  const startTime = Date.now();
-  let rafId: number;
-  const check = () => {
-    const timePassed = Date.now() - startTime;
-    if (timePassed >= ms) {
-      callback?.();
-      return;
-    }
-    rafId = requestAnimationFrame(check);
-  };
-  check();
-  return () => cancelAnimationFrame(rafId);
+const createDelay = (ms: number, callback?: () => void) => {
+  const timeoutId = setTimeout(() => callback?.(), ms);
+  return () => clearTimeout(timeoutId);
 };
 
 const cancelStore = CreateWeakMap<DelayPromise, () => void>();
 
 function delay(ms: number, callback?: () => void): DelayPromise {
-  if (!isNonNegativeValidNumber(ms)) {
-    throw new Error("Delay time must be a non-negative finite number");
+  if (!isNonNegativeNumber(ms)) {
+    throw new Error("Delay time must be a non-negative number");
   }
   let isRunning = true;
   const { resolve, promise } = Promise.withResolvers<DelayResult>();
@@ -37,7 +27,7 @@ function delay(ms: number, callback?: () => void): DelayPromise {
     resolve({ cancelled: false });
     callback?.();
   };
-  const stop = createRafDelay(ms, done);
+  const stop = createDelay(ms, done);
   const delayPromise = Object.assign(promise, { isRunning: () => isRunning });
   cancelStore.set(delayPromise, () => {
     stop();
