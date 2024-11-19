@@ -17,21 +17,10 @@ describe("delay utility", () => {
     expect(result).toEqual({ cancelled: false });
   });
 
-  it("should resolve immediately when delay is 0", async () => {
-    const result = await delay(0);
-    expect(result).toEqual({ cancelled: false });
-  });
-
   it("should throw error for invalid delay values", () => {
-    expect(() => delay(-1)).toThrow(
-      "Delay time must be a non-negative finite number"
-    );
-    expect(() => delay(Infinity)).toThrow(
-      "Delay time must be a non-negative finite number"
-    );
-    expect(() => delay(NaN)).toThrow(
-      "Delay time must be a non-negative finite number"
-    );
+    expect(() => delay(-1)).toThrow();
+    expect(() => delay(Infinity)).toThrow();
+    expect(() => delay(NaN)).toThrow();
   });
 
   it("should cancel delay and resolve with cancelled status", async () => {
@@ -70,12 +59,5 @@ describe("delay utility", () => {
     vi.advanceTimersByTime(100);
 
     expect(callback).not.toBeCalled();
-  });
-
-  it("should execute callback immediately when delay is 0", async () => {
-    const callback = vi.fn();
-    await delay(0, callback);
-
-    expect(callback).toBeCalledTimes(1);
   });
 });

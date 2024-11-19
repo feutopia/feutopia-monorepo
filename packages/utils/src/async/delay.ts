@@ -21,17 +21,24 @@ function delay(ms: number, callback?: () => void): DelayPromise {
   if (!isNonNegativeNumber(ms)) {
     throw new Error("Delay time must be a non-negative number");
   }
+
   let isRunning = true;
   const { resolve, promise } = Promise.withResolvers<DelayResult>();
+
   const done = () => {
     resolve({ cancelled: false });
     callback?.();
   };
+
   const stop = createDelay(ms, done);
+
   const delayPromise = Object.assign(promise, { isRunning: () => isRunning });
+
   cancelStore.set(delayPromise, () => {
-    stop();
-    resolve({ cancelled: true });
+    if (isRunning) {
+      stop();
+      resolve({ cancelled: true });
+    }
   });
   promise.finally(() => {
     isRunning = false;
