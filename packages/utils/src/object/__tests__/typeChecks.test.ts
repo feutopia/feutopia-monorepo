@@ -18,6 +18,8 @@ import {
   isNumber,
   isPositiveInteger,
   isFunction,
+  isNonNegativeNumber,
+  isNonNegativeValidNumber,
 } from "../typeChecks";
 
 describe("Type Check Utils", () => {
@@ -119,6 +121,36 @@ describe("Type Check Utils", () => {
       expect(isMap(new Map())).toBe(true);
       expect(isMap(new WeakMap())).toBe(false);
       expect(isMap({})).toBe(false);
+    });
+  });
+
+  describe("isNonNegativeNumber", () => {
+    it("should correctly identify non-negative integers", () => {
+      expect(isNonNegativeNumber(0)).toBe(true);
+      expect(isNonNegativeNumber(1)).toBe(true);
+      expect(isNonNegativeNumber(100)).toBe(true);
+      expect(isNonNegativeNumber(-1)).toBe(false);
+      expect(isNonNegativeNumber(1.5)).toBe(false);
+      expect(isNonNegativeNumber(NaN)).toBe(false);
+      expect(isNonNegativeNumber(Infinity)).toBe(false);
+      expect(isNonNegativeNumber("0")).toBe(false);
+      expect(isNonNegativeNumber(null)).toBe(false);
+      expect(isNonNegativeNumber(undefined)).toBe(false);
+    });
+  });
+
+  describe("isNonNegativeValidNumber", () => {
+    it("should correctly identify non-negative valid integers", () => {
+      expect(isNonNegativeValidNumber(0)).toBe(true);
+      expect(isNonNegativeValidNumber(1)).toBe(true);
+      expect(isNonNegativeValidNumber(100)).toBe(true);
+      expect(isNonNegativeValidNumber(-1)).toBe(false);
+      expect(isNonNegativeValidNumber(1.5)).toBe(false);
+      expect(isNonNegativeValidNumber(NaN)).toBe(false);
+      expect(isNonNegativeValidNumber(Infinity)).toBe(false);
+      expect(isNonNegativeValidNumber("0")).toBe(false);
+      expect(isNonNegativeValidNumber(null)).toBe(false);
+      expect(isNonNegativeValidNumber(undefined)).toBe(false);
     });
   });
 

@@ -17,3 +17,5 @@ export * from "./isNull";
 export * from "./isUndefined";
 export * from "./isNumber";
 export * from "./isFunction";
+export * from "./isNonNegativeValidNumber";
+export * from "./isNonNegativeNumber";
