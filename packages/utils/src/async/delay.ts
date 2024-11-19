@@ -1,3 +1,4 @@
+import { isNonNegativeValidNumber } from "..";
 import "../pollyfill/promise-with-resolvers";
 import { CreateWeakMap } from "@/object/createWeakMap";
 
@@ -9,40 +10,48 @@ export type DelayPromise = Promise<DelayResult> & {
   isRunning: () => boolean;
 };
 
-const cancelMap = CreateWeakMap<DelayPromise, () => void>();
+const createRafDelay = (ms: number, callback?: () => void) => {
+  const startTime = Date.now();
+  let rafId: number;
+  const check = () => {
+    const timePassed = Date.now() - startTime;
+    if (timePassed >= ms) {
+      callback?.();
+      return;
+    }
+    rafId = requestAnimationFrame(check);
+  };
+  check();
+  return () => cancelAnimationFrame(rafId);
+};
 
-function delay(ms: number): DelayPromise {
-  if (typeof ms !== "number" || ms < 0 || !Number.isFinite(ms)) {
+const cancelStore = CreateWeakMap<DelayPromise, () => void>();
+
+function delay(ms: number, callback?: () => void): DelayPromise {
+  if (!isNonNegativeValidNumber(ms)) {
     throw new Error("Delay time must be a non-negative finite number");
   }
   let isRunning = true;
   const { resolve, promise } = Promise.withResolvers<DelayResult>();
-  let timeoutId: number | null = null;
-  const resolveResult = () => {
+  const done = () => {
     resolve({ cancelled: false });
+    callback?.();
   };
-  if (ms === 0) {
-    resolveResult();
-  } else {
-    timeoutId = window.setTimeout(resolveResult, ms);
-  }
+  const stop = createRafDelay(ms, done);
   const delayPromise = Object.assign(promise, { isRunning: () => isRunning });
-  cancelMap.set(delayPromise, () => {
-    if (timeoutId) {
-      window.clearTimeout(timeoutId);
-      timeoutId = null;
-    }
+  cancelStore.set(delayPromise, () => {
+    stop();
     resolve({ cancelled: true });
   });
   promise.finally(() => {
     isRunning = false;
-    cancelMap.delete(delayPromise);
+    cancelStore.delete(delayPromise);
   });
   return delayPromise;
 }
 
 function cancelDelay(promise: DelayPromise) {
-  cancelMap.get(promise)?.();
+  cancelStore.get(promise)?.();
 }
 
 export { delay, cancelDelay };

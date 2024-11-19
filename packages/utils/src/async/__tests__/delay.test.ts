@@ -41,14 +41,6 @@ describe("delay utility", () => {
     expect(result).toEqual({ cancelled: true });
   });
 
-  it("should clean up timeout when cancelled", async () => {
-    const clearTimeoutSpy = vi.spyOn(window, "clearTimeout");
-    const promise = delay(100);
-    cancelDelay(promise);
-    await promise;
-    expect(clearTimeoutSpy).toHaveBeenCalled();
-  });
-
   it("should clean up internal references after resolution", async () => {
     const promise = delay(100);
     vi.advanceTimersByTime(100);
@@ -56,5 +48,34 @@ describe("delay utility", () => {
     // Try to cancel after resolution (should have no effect)
     cancelDelay(promise);
     expect(await promise).toEqual({ cancelled: false });
+  });
+
+  it("should execute callback after specified delay", async () => {
+    const callback = vi.fn();
+    const promise = delay(100, callback);
+
+    expect(callback).not.toBeCalled();
+    vi.advanceTimersByTime(100);
+    await promise;
+
+    expect(callback).toBeCalledTimes(1);
+  });
+
+  it("should not execute callback when delay is cancelled", async () => {
+    const callback = vi.fn();
+    const promise = delay(100, callback);
+
+    cancelDelay(promise);
+    await promise;
+    vi.advanceTimersByTime(100);
+
+    expect(callback).not.toBeCalled();
+  });
+
+  it("should execute callback immediately when delay is 0", async () => {
+    const callback = vi.fn();
+    await delay(0, callback);
+
+    expect(callback).toBeCalledTimes(1);
   });
 });
