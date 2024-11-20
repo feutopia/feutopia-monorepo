@@ -182,7 +182,7 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
-$Z_INDEX: 1000;
+$Z_INDEX: 99999;
 
 .fe-dialog {
   position: absolute;
