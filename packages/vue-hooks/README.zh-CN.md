@@ -192,6 +192,43 @@ const { data, loading, run } = useRequest<User, [number]>(
 run(1);
 ```
 
+### useDate
+
+用于管理和格式化日期/时间的钩子函数，支持自动更新。
+
+```ts
+const { dateInfo, formatTime, formatDate } = useDate();
+```
+
+**返回值：**
+
+- `dateInfo`: 当前日期信息的响应式引用，每秒自动更新
+- `formatTime`: 格式化当前时间的函数（HH:MM:SS）
+- `formatDate`: 格式化当前日期的函数（YYYY-MM-DD）
+
+**示例：**
+
+```ts
+const { dateInfo, formatTime, formatDate } = useDate();
+
+// 使用默认分隔符":"获取格式化时间
+console.log(formatTime()); // "14:30:45"
+
+// 使用自定义分隔符获取格式化时间
+console.log(formatTime("-")); // "14-30-45"
+
+// 使用默认分隔符"-"获取格式化日期
+console.log(formatDate()); // "2024-03-20"
+
+// 使用自定义分隔符获取格式化日期
+console.log(formatDate("/")); // "2024/03/20"
+
+// 访问原始日期信息
+console.log(dateInfo.value.year);  // 2024
+console.log(dateInfo.value.month); // 3
+console.log(dateInfo.value.day);   // 20
+```
+
 ## 许可证
 
 MIT

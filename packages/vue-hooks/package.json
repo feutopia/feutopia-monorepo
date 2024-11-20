@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/vue-hooks",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Vue3 Composable Hooks",
   "keywords": [
     "utils",
@@ -45,6 +45,6 @@
   "license": "MIT",
   "dependencies": {
     "@feutopia/mitt": "workspace:^0.0.2",
-    "@feutopia/utils": "workspace:^0.0.9"
+    "@feutopia/utils": "workspace:^0.0.11"
   }
 }

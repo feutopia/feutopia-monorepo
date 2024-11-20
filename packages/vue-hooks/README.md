@@ -192,6 +192,43 @@ const { data, loading, run } = useRequest<User, [number]>(
 run(1);
 ```
 
+### useDate
+
+A hook for managing and formatting date/time with automatic updates.
+
+```ts
+const { dateInfo, formatTime, formatDate } = useDate();
+```
+
+**Returns:**
+
+- `dateInfo`: Reactive reference to the current date information that updates every second
+- `formatTime`: Function to format the current time (HH:MM:SS)
+- `formatDate`: Function to format the current date (YYYY-MM-DD)
+
+**Example:**
+
+```ts
+const { dateInfo, formatTime, formatDate } = useDate();
+
+// Get formatted time with default separator ":"
+console.log(formatTime()); // "14:30:45"
+
+// Get formatted time with custom separator
+console.log(formatTime("-")); // "14-30-45"
+
+// Get formatted date with default separator "-"
+console.log(formatDate()); // "2024-03-20"
+
+// Get formatted date with custom separator
+console.log(formatDate("/")); // "2024/03/20"
+
+// Access raw date information
+console.log(dateInfo.value.year);  // 2024
+console.log(dateInfo.value.month); // 3
+console.log(dateInfo.value.day);   // 20
+```
+
 ## License
 
 MIT
