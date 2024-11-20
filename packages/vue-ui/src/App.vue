@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TabsDemo from "./examples/TabsDemo";
+import DialogDemo from "./examples/Dialog/index.vue";
 </script>
 
 <template>
-  <TabsDemo />
+  <DialogDemo />
 </template>
