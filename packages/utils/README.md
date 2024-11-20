@@ -93,7 +93,7 @@ weakMap.delete(key);
 Provides TypeScript utility types for better type safety:
 
 ```typescript
-import { IsNullable, RequireNonNull, NonNullableProps } from "@feutopia/utils";
+import { IsNullable, RequireNonNull, NonNullableProps, DropParams } from "@feutopia/utils";
 
 // Check if type might be null/undefined
 type MightBeNull = IsNullable<string | null>; // true
@@ -106,6 +106,13 @@ interface User {
 	avatar?: string;
 }
 type RequiredUserProps = NonNullableProps<User>; // { id: number; name: string }
+
+// Remove parameters from function type
+function example(a: string, b: number, c: boolean) {
+  return true;
+}
+type WithoutFirstParam = DropParams<typeof example>; // [b: number, c: boolean]
+type WithoutTwoParams = DropParams<typeof example, 2>; // [c: boolean]
 ```
 
 ### Date Utilities

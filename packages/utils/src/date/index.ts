@@ -1,6 +1,8 @@
 import type { DateInfo } from "./type";
 import { weekdaysEn, weekdaysCn, monthsEn, monthsCn } from "./const";
 
+export type { DateInfo };
+
 // 格式化数字为两位数
 export const padZero = (num: number): string => {
   return num < 10 ? `0${num}` : num.toString();

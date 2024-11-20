@@ -7,6 +7,7 @@ import type {
   Noop,
   AnyFn,
   EmptyArray,
+  DropParams,
 } from "../index";
 import { computed, ref } from "@vue/runtime-core";
 
@@ -105,6 +106,30 @@ describe("Type Utils", () => {
         text: "hello",
         computed: 42,
       } satisfies Expected;
+    });
+  });
+
+  describe("DropParams", () => {
+    it("should drop the first parameter by default", () => {
+      function testFn(a: string, b: number, c: boolean) {
+        return { a, b, c };
+      }
+
+      type DroppedOne = DropParams<typeof testFn>;
+      // 验证剩余参数类型为 [number, boolean]
+      const params: DroppedOne = [42, true];
+      expect(params).toEqual([42, true]);
+    });
+
+    it("should drop specified number of parameters", () => {
+      function testFn(a: string, b: number, c: boolean, d: object) {
+        return { a, b, c, d };
+      }
+
+      type DroppedTwo = DropParams<typeof testFn, 2>;
+      // 验证剩余参数类型为 [boolean, object]
+      const params: DroppedTwo = [true, {}];
+      expect(params).toEqual([true, {}]);
     });
   });
 });

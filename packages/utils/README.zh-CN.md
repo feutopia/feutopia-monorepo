@@ -92,7 +92,7 @@ weakMap.delete(key);
 提供 TypeScript 工具类型以增强类型安全：
 
 ```typescript
-import { IsNullable, RequireNonNull, NonNullableProps } from "@feutopia/utils";
+import { IsNullable, RequireNonNull, NonNullableProps, DropParams } from "@feutopia/utils";
 
 // 检查类型是否可能为 null/undefined
 type MightBeNull = IsNullable<string | null>; // true
@@ -105,6 +105,13 @@ interface User {
 	avatar?: string;
 }
 type RequiredUserProps = NonNullableProps<User>; // { id: number; name: string }
+
+// 移除函数参数
+function example(a: string, b: number, c: boolean) {
+  return true;
+}
+type WithoutFirstParam = DropParams<typeof example>; // [b: number, c: boolean]
+type WithoutTwoParams = DropParams<typeof example, 2>; // [c: boolean]
 ```
 
 ### 日期工具
