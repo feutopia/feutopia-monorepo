@@ -39,6 +39,54 @@ const { pause, resume, isActive } = useInterval(
 - `resume`: Function to resume the interval
 - `isActive`: Ref indicating if the interval is active
 
+### useRefExpose
+
+A hook that creates a proxy for accessing component ref properties more conveniently.
+
+**Parameters:**
+
+- `ref`: A Vue ref containing a component instance, which can be undefined or null
+
+**Returns:**
+
+- A proxy object that allows direct access to the ref's value properties
+
+**Features:**
+
+- Automatically unwraps the `.value` when accessing properties
+- Safely handles null/undefined ref values
+- Supports the `in` operator for property checks
+
+**Common Use Cases:**
+
+1. Direct access to component ref properties
+
+```ts
+const target = ref<ComponentInstance | null>(null);
+const exposed = useRefExpose(target);
+// Access properties directly without .value
+console.log(exposed.someProperty);
+console.log(exposed.someMethod());
+```
+
+2. Forwarding child component refs in wrapper components
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import ChildComponent from './ChildComponent.vue'
+import { useRefExpose } from '@feutopia/vue-hooks'
+
+const childRef = ref<InstanceType<typeof ChildComponent>>()
+// Forward all methods and properties from child component
+defineExpose(useRefExpose(childRef))
+</script>
+
+<template>
+  <ChildComponent ref="childRef" />
+</template>
+```
+
 ### useResizeObserver
 
 A hook for observing element size changes using ResizeObserver.
@@ -65,48 +113,84 @@ const { isSupported, stop } = useResizeObserver(target, (entries) => {
 A hook for managing asynchronous requests with features like polling, manual control, and automatic error handling.
 
 ```ts
-const { 
+const {
   data,
   loading,
   error,
   run,
   cancel,
-  refresh
-} = useRequest(service, {
-  manual: false,
-  pollingInterval: 0,
-  ready: true,
-  refreshDeps: [],
-  onBefore: () => {},
-  onSuccess: (data, params) => {},
-  onError: (error, params) => {},
-  onFinally: (params) => {},
-});
+  refresh,
+  cancelled
+  } = useRequest(
+  (params: TParams) => Promise<TData>, // service function
+  {
+  // Options
+  manual?: boolean | Ref<boolean>,
+  pollingInterval?: number | Ref<number>,
+  ready?: boolean | Ref<boolean>,
+  refreshDeps?: WatchSource[],
+  params?: TParams[],
+  cacheKey?: string | symbol | Ref<string | symbol>,
+  cacheTime?: number | Ref<number>,
+  // Callbacks
+  onBefore?: () => void,
+  onSuccess?: (data: TData, params: TParams[]) => void,
+  onError?: (error: Error) => void,
+  onFinally?: () => void,
+  }
+);
 ```
 
 **Parameters:**
 
-- `service`: Async function that performs the request
+- `service`: `(params: TParams) => Promise<TData>`
+  - Async function that performs the request
+  - Generic types:
+    - `TData`: Type of the data returned by the service
+    - `TParams`: Type of the parameters accepted by the service
+
 - `options`:
-  - `manual`: Whether to manually trigger the request (default: false)
-  - `pollingInterval`: Interval for polling in milliseconds (default: 0, no polling)
-  - `ready`: Control whether the request should execute (default: true)
+  - `manual`: Whether to manually trigger the request (default: `false`)
+  - `pollingInterval`: Interval for polling in milliseconds (default: `0`, no polling)
+  - `ready`: Control whether the request should execute (default: `true`)
   - `refreshDeps`: Dependencies array that triggers request refresh when changed
   - `params`: Initial parameters for the service function
+  - `cacheKey`: Unique key for caching request results
+  - `cacheTime`: Duration in milliseconds to cache the result (default: `0`, no caching)
   - `onBefore`: Callback before request starts
-  - `onSuccess`: Callback when request succeeds
-  - `onError`: Callback when request fails
+  - `onSuccess`: Callback when request succeeds with data and params
+  - `onError`: Callback when request fails with error
   - `onFinally`: Callback when request completes
 
 **Returns:**
 
-- `data`: Response data
-- `loading`: Loading state
-- `error`: Error object if request fails
-- `run`: Function to manually trigger the request
-- `cancel`: Function to cancel the current request
-- `refresh`: Function to refresh using the last used parameters
-- `cancelled`: Whether the request was cancelled
+- `data`: `Ref<TData | undefined>` - Response data
+- `loading`: `Ref<boolean>` - Loading state
+- `error`: `Ref<Error | undefined>` - Error object if request fails
+- `run`: `(...params: TParams[]) => Promise<FetchState<TData>>` - Function to manually trigger the request
+- `cancel`: `() => void` - Function to cancel the current request
+- `refresh`: `() => Promise<FetchState<TData>>` - Function to refresh using the last used parameters
+- `cancelled`: `Ref<boolean>` - Whether the request was cancelled
+
+**Example:**
+
+```ts
+interface User {
+  id: number;
+  name: string;
+}
+const { data, loading, run } = useRequest<User, [number]>(
+  (id) => fetchUser(id),
+  {
+    manual: true,
+    onSuccess: (data) => {
+      console.log("User loaded:", data.name);
+    },
+  }
+);
+// Manual trigger with parameters
+run(1);
+```
 
 ## License
 
