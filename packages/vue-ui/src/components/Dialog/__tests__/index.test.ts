@@ -221,6 +221,34 @@ describe("Dialog Component", () => {
     });
   });
 
+  it("should provide close method to slot content", async () => {
+    const wrapper = mount(Dialog, {
+      props: {
+        modelValue: true,
+      },
+      slots: {
+        default: `
+          <template #default="{ close }">
+            <button class="close-btn" @click="close">Close</button>
+          </template>
+        `,
+      },
+    });
+
+    await nextTick();
+
+    // 验证对话框已打开
+    expect(document.querySelector(".fe-dialog")).toBeTruthy();
+
+    // 点击关闭按钮
+    const closeBtn = document.querySelector(".close-btn") as HTMLElement;
+    await closeBtn.click();
+
+    // 验证 update:modelValue 事件被触发
+    expect(wrapper.emitted("update:modelValue")).toBeTruthy();
+    expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([false]);
+  });
+
   it("should handle rapid open/close transitions correctly", async () => {
     const afterOpen = vi.fn();
     const afterClose = vi.fn();

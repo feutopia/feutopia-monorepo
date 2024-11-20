@@ -174,7 +174,7 @@ defineExpose({
       ></div>
       <div class="fe-dialog-content" ref="contentElement">
         <div class="fe-dialog-body" :style="bodyStyle" :class="bodyClass">
-          <slot></slot>
+          <slot :close="close"></slot>
         </div>
       </div>
     </div>

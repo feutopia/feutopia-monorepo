@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Dialog from "../../components/Dialog/index.vue";
+import Content from "./Content.vue";
+import { DialogInstance } from "../../components/Dialog/type";
 
-const dialogRef = ref<InstanceType<typeof Dialog>>();
+const dialogRef = ref<DialogInstance>();
 </script>
 
 <template>
   <div class="container">
     <Dialog ref="dialogRef">
-      <div class="box">Dialog</div>
-      啦啦啦
+      <template #default="{ close }">
+        <Content />
+        <button @click="close">关闭</button>
+      </template>
     </Dialog>
     <button @click="dialogRef?.open()">打开对话框</button>
   </div>
