@@ -9,7 +9,7 @@ import {
   WatchStopHandle,
 } from "vue";
 
-import type { DialogProps } from "./type";
+import { DialogProps } from "./type";
 
 // 定义 Props
 const props = withDefaults(defineProps<DialogProps>(), {

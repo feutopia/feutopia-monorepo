@@ -1,4 +1,4 @@
-import { TabPane, Tabs } from "@/components";
+import { TabPane, Tabs } from "@/index";
 import { defineComponent, onMounted, ref } from "vue";
 import "./tabs.scss";
 

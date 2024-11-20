@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { Tabs, TabPane } from "@/components/Tabs";
+import { Tabs, TabPane } from "..";
 import { nextTick, ref } from "vue";
 
 describe("Tabs", () => {

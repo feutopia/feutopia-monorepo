@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
+  root: resolve(__dirname, "examples"),
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
