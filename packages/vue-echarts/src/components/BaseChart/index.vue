@@ -7,7 +7,7 @@ import { BaseChartProps } from "../types";
 
 const props = defineProps<BaseChartProps>();
 let chartInstance: ECharts | null = null;
-const chartBox = ref<HTMLDivElement | null>(null);
+const chartBox = ref<HTMLElement | null>(null);
 
 useResizeObserver(chartBox, () => {
   chartInstance?.resize();

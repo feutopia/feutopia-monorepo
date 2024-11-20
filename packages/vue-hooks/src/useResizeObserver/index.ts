@@ -1,8 +1,8 @@
-import { tryOnScopeDispose } from "../utils";
 import { computed, MaybeRefOrGetter, toValue, watch } from "vue";
+import { tryOnScopeDispose } from "../utils";
 
 export function useResizeObserver(
-  target: MaybeRefOrGetter<HTMLElement | null>,
+  target: MaybeRefOrGetter<HTMLElement | null | undefined>,
   callback: (entries: ResizeObserverEntry[]) => void
 ) {
   let observer: ResizeObserver | null = null;
