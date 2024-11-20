@@ -107,6 +107,92 @@ interface User {
 type RequiredUserProps = NonNullableProps<User>; // { id: number; name: string }
 ```
 
+### 日期工具
+
+提供一组日期格式化和信息提取的实用工具：
+
+```ts
+import { getDateInfo, formatTime, formatDate } from "@feutopia/utils";
+
+// 获取当前日期的详细信息（支持中英双语）
+const dateInfo = getDateInfo();
+console.log(dateInfo);
+/*
+{
+  year: 2024,            // 年份
+  month: 3,              // 月份 (1-12)
+  day: 15,               // 日期
+  dayStr: "15",          // 补零后的日期
+  hour: 14,              // 小时（24小时制）
+  hourStr: "14",         // 补零后的小时
+  minute: 30,            // 分钟
+  minuteStr: "30",       // 补零后的分钟
+  second: 45,            // 秒
+  secondStr: "45",       // 补零后的秒
+  weekdayEn: "Friday",   // 英文星期
+  weekdayCn: "星期五",    // 中文星期
+  monthEn: "March",      // 英文月份
+  monthCn: "三月",        // 中文月份
+  timestamp: 1710506245000,  // Unix 时间戳
+  dateStr: "2024-03-15T14:30:45.000Z"  // ISO 日期字符串
+}
+*/
+
+// 格式化时间，支持自定义分隔符
+formatTime(dateInfo);           // "14:30:45"
+formatTime(dateInfo, "-");      // "14-30-45"
+
+// 格式化日期，支持自定义分隔符
+formatDate(dateInfo);           // "2024-03-15"
+formatDate(dateInfo, "/");      // "2024/03/15"
+
+// 数字补零工具
+padZero(5);  // "05"
+padZero(10); // "10"
+```
+
+### 类型检查
+
+提供全面的类型检查工具函数：
+
+```typescript
+import { 
+  isArray,
+  isDate,
+  isError,
+  isFunction,
+  isMap,
+  isNumber,
+  isObject,
+  isPlainObject,
+  isPromise,
+  isRegExp,
+  isSet,
+  isValidNumber,
+  // ... 更多函数
+} from "@feutopia/utils";
+
+// 检查数组
+isArray([1, 2, 3]); // true
+isArray({}); // false
+
+// 检查数字
+isNumber(123); // true
+isValidNumber(NaN); // false
+isValidNumber(Infinity); // false
+
+// 检查对象
+isObject({}); // true
+isPlainObject(new Date()); // false
+isPlainObject({}); // true
+
+// 检查内置类型
+isDate(new Date()); // true
+isPromise(Promise.resolve()); // true
+isMap(new Map()); // true
+isSet(new Set()); // true
+```
+
 ## 许可证
 
 MIT

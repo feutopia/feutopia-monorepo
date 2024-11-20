@@ -108,6 +108,92 @@ interface User {
 type RequiredUserProps = NonNullableProps<User>; // { id: number; name: string }
 ```
 
+### Date Utilities
+
+A collection of utilities for date formatting and information extraction:
+
+```ts
+import { getDateInfo, formatTime, formatDate } from "@feutopia/utils";
+
+// Get current date information with bilingual support
+const dateInfo = getDateInfo();
+console.log(dateInfo);
+/*
+{
+  year: 2024,            // Current year
+  month: 3,              // Current month (1-12)
+  day: 15,               // Current day
+  dayStr: "15",          // Zero-padded day
+  hour: 14,              // Hour (24-hour format)
+  hourStr: "14",         // Zero-padded hour
+  minute: 30,            // Minute
+  minuteStr: "30",       // Zero-padded minute
+  second: 45,            // Second
+  secondStr: "45",       // Zero-padded second
+  weekdayEn: "Friday",   // English weekday
+  weekdayCn: "星期五",    // Chinese weekday
+  monthEn: "March",      // English month
+  monthCn: "三月",        // Chinese month
+  timestamp: 1710506245000,  // Unix timestamp
+  dateStr: "2024-03-15T14:30:45.000Z"  // ISO date string
+}
+*/
+
+// Format time with custom separator
+formatTime(dateInfo);           // "14:30:45"
+formatTime(dateInfo, "-");      // "14-30-45"
+
+// Format date with custom separator
+formatDate(dateInfo);           // "2024-03-15"
+formatDate(dateInfo, "/");      // "2024/03/15"
+
+// Pad single digit numbers with zero
+padZero(5);  // "05"
+padZero(10); // "10"
+```
+
+### Type Checking
+
+Provides a comprehensive set of type checking utilities:
+
+```typescript
+import { 
+  isArray,
+  isDate,
+  isError,
+  isFunction,
+  isMap,
+  isNumber,
+  isObject,
+  isPlainObject,
+  isPromise,
+  isRegExp,
+  isSet,
+  isValidNumber,
+  // ... and more
+} from "@feutopia/utils";
+
+// Check arrays
+isArray([1, 2, 3]); // true
+isArray({}); // false
+
+// Check numbers
+isNumber(123); // true
+isValidNumber(NaN); // false
+isValidNumber(Infinity); // false
+
+// Check objects
+isObject({}); // true
+isPlainObject(new Date()); // false
+isPlainObject({}); // true
+
+// Check built-in types
+isDate(new Date()); // true
+isPromise(Promise.resolve()); // true
+isMap(new Map()); // true
+isSet(new Set()); // true
+```
+
 ## License
 
 MIT
