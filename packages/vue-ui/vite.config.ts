@@ -5,7 +5,10 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  root: resolve(__dirname, "examples"),
+  root: resolve(
+    __dirname,
+    process.env.NODE_ENV === "development" ? "examples" : process.cwd()
+  ),
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
