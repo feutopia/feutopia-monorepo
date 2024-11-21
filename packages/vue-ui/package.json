@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/vue-ui",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Vue3 UI Components Library",
   "keywords": [
     "vue3",
@@ -17,7 +17,8 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js",
       "umd": "./dist/umd/index.js"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "files": [
     "dist"

@@ -31,9 +31,8 @@ export default defineConfig({
   build: {
     lib: {
       name: "FeutopiaVueUI",
-      entry: {
-        index: resolve(__dirname, "src/index.ts"),
-      },
+
+      entry: resolve(__dirname, "src/index.ts"),
       formats: ["es", "cjs", "umd"],
       fileName: (format, entryName) => {
         const formatDirectoryMap = {
@@ -47,12 +46,11 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: ["vue", "vue/jsx-runtime"],
+      external: ["vue"],
       output: {
         exports: "named", // 使用命名导出的方式，而不是默认导出
         globals: {
           vue: "Vue",
-          "vue/jsx-runtime": "VueJSXRuntime",
         },
       },
     },
