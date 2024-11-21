@@ -40,6 +40,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@vue/runtime-core": "^3.5.13"
+    "@vue/runtime-core": "3.5.12"
   }
 }
