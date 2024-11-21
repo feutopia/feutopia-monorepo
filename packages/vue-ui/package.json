@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/vue-ui",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Vue3 UI Components Library",
   "keywords": [
     "vue3",
@@ -44,5 +44,8 @@
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@feutopia/vue-hooks": "workspace:^0.0.12"
+  }
 }

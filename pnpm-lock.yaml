@@ -124,7 +124,10 @@ importers:
       '@feutopia/utils': link:../utils
 
   packages/vue-ui:
-    specifiers: {}
+    specifiers:
+      '@feutopia/vue-hooks': workspace:^0.0.12
+    dependencies:
+      '@feutopia/vue-hooks': link:../vue-hooks
 
 packages:
 
