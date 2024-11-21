@@ -1,6 +1,6 @@
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { resolve, join } from "path";
+import { resolve } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
@@ -28,10 +28,7 @@ export default defineConfig({
       rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
     }),
   ],
-  // root: "examples",
   build: {
-    // outDir: join(__dirname, "dist"),
-    // emptyOutDir: true,
     lib: {
       name: "FeutopiaVueUI",
       entry: {
