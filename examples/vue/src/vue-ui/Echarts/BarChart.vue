@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import BarChart from "../components/BarChart/index.vue";
-import type { EChartsOption, BarChartInstance } from "../../dist/types";
+import {
+  BarChart,
+  type EChartsOption,
+  type BarChartInstance,
+} from "@feutopia/vue-ui";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import LineChart from "../components/LineChart/index.vue";
-import type { EChartsOption, LineChartInstance } from "../../dist/types";
+import {
+  LineChart,
+  type EChartsOption,
+  type LineChartInstance,
+} from "@feutopia/vue-ui";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {

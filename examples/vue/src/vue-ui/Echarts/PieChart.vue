@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import PieChart from "../components/PieChart/index.vue";
-import type { EChartsOption, PieChartInstance } from "../../dist/types";
+import {
+  PieChart,
+  type EChartsOption,
+  type PieChartInstance,
+} from "@feutopia/vue-ui";
 
 const option = ref<EChartsOption>();
 setTimeout(() => {

@@ -9,6 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@feutopia/vue-ui": "workspace:^0.0.15"
+    "@feutopia/vue-ui": "workspace:^0.0.16"
   }
 }
