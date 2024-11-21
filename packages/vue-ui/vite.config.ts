@@ -5,7 +5,6 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  root: "examples",
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
@@ -29,9 +28,10 @@ export default defineConfig({
       rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
     }),
   ],
+  // root: "examples",
   build: {
-    outDir: join(__dirname, "dist"),
-    emptyOutDir: true,
+    // outDir: join(__dirname, "dist"),
+    // emptyOutDir: true,
     lib: {
       name: "FeutopiaVueUI",
       entry: {
