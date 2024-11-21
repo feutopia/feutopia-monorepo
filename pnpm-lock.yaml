@@ -89,6 +89,12 @@ importers:
       vitest: 2.1.5_ora3ajrgnjczsupskkwsmmqnjy
       vue-tsc: 2.1.10_typescript@5.6.3
 
+  examples/vue:
+    specifiers:
+      '@feutopia/vue-ui': workspace:^0.0.15
+    dependencies:
+      '@feutopia/vue-ui': link:../../packages/vue-ui
+
   packages/http:
     specifiers:
       axios: ^1.7.0

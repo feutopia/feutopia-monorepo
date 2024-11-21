@@ -1,0 +1,29 @@
+.flex {
+	display: flex;
+}
+
+.color-red {
+	color: red;
+}
+
+.fe-tabs {
+	&__header {
+		border-bottom: 1px solid #dcdfe6;
+		margin-bottom: 15px;
+	}
+
+	&__item {
+		padding: 8px 16px;
+		cursor: pointer;
+		transition: color 0.3s;
+
+		&.is-active {
+			color: #409eff;
+			border-bottom: 2px solid #409eff;
+		}
+	}
+
+	&__content {
+		padding: 8px 0;
+	}
+}
