@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watchEffect } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 
 const num = ref(0);
-
-watchEffect(() => {
-  console.log(num.value);
-});
 
 onBeforeUnmount(() => {
   console.log("onBeforeUnmount");
@@ -20,5 +16,11 @@ onBeforeUnmount(() => {
 <style scoped>
 .number {
   font-size: 50px;
+}
+button {
+  display: block;
+  width: 100px;
+  height: 20px;
+  margin: 10px 0;
 }
 </style>

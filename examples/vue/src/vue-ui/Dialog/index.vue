@@ -25,4 +25,10 @@ const dialogRef = ref<DialogInstance>();
   background-color: red;
   color: yellow;
 }
+button {
+  width: 100px;
+  height: 20px;
+  background-color: blue;
+  color: white;
+}
 </style>

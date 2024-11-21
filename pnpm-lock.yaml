@@ -91,7 +91,7 @@ importers:
 
   examples/vue:
     specifiers:
-      '@feutopia/vue-ui': workspace:^0.0.16
+      '@feutopia/vue-ui': workspace:^0.0.17
     dependencies:
       '@feutopia/vue-ui': link:../../packages/vue-ui
 
