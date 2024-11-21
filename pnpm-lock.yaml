@@ -132,8 +132,10 @@ importers:
   packages/vue-ui:
     specifiers:
       '@feutopia/vue-hooks': workspace:^0.0.12
+      echarts: ^5.5.1
     dependencies:
       '@feutopia/vue-hooks': link:../vue-hooks
+      echarts: 5.5.1
 
 packages:
 

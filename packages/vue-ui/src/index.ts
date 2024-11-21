@@ -1,3 +1,3 @@
 export * from "./Tabs";
-export { default as Dialog } from "./Dialog/index.vue";
-export * from "./Dialog/type";
+export * from "./Dialog";
+export * from "./Echarts";
