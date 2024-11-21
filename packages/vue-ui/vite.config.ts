@@ -1,14 +1,11 @@
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
-import { resolve } from "path";
+import { resolve, join } from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  root: resolve(
-    __dirname,
-    process.env.NODE_ENV === "development" ? "examples" : process.cwd()
-  ),
+  root: "examples",
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),
@@ -33,6 +30,8 @@ export default defineConfig({
     }),
   ],
   build: {
+    outDir: join(__dirname, "dist"),
+    emptyOutDir: true,
     lib: {
       name: "FeutopiaVueUI",
       entry: {
