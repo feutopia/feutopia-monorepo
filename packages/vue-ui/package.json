@@ -48,6 +48,20 @@
   "license": "MIT",
   "dependencies": {
     "@feutopia/vue-hooks": "workspace:^0.0.12",
-    "echarts": "^5.5.1"
+    "echarts": "^5.5.1",
+    "vue": "3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.0",
+    "@vitejs/plugin-vue-jsx": "^4.1.0",
+    "@vue/test-utils": "^2.4.6",
+    "glob": "^11.0.0",
+    "happy-dom": "^15.11.6",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vite-plugin-lib-inject-css": "^2.1.1",
+    "vitest": "^2.1.5",
+    "vue-tsc": "^2.1.10"
   }
 }
