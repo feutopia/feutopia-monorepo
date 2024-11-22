@@ -104,9 +104,6 @@ importers:
   packages/mitt:
     specifiers: {}
 
-  packages/react-ui:
-    specifiers: {}
-
   packages/utils:
     specifiers:
       '@vue/runtime-core': 3.5.12
@@ -1842,7 +1839,7 @@ packages:
       ajv:
         optional: true
     dependencies:
-      ajv: 8.13.0
+      ajv: 8.17.1
     dev: true
 
   /ajv/6.12.6:
