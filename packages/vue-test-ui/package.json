@@ -1,0 +1,58 @@
+{
+  "name": "@feutopia/vue-ui",
+  "private": false,
+  "version": "0.0.17",
+  "description": "Vue3 UI Components Library",
+  "keywords": [
+    "vue3",
+    "ui",
+    "components"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/lib/main.d.ts",
+      "default": "./dist/main.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "pnpm run typecheck && pnpm run test --run && pnpm run build:vite",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest",
+    "build:vite": "vite build"
+  },
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/vue-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "dependencies": {
+    "@feutopia/vue-hooks": "workspace:^0.0.12",
+    "echarts": "^5.5.1",
+    "vue": "3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.0",
+    "@vitejs/plugin-vue-jsx": "^4.1.0",
+    "@vue/test-utils": "^2.4.6",
+    "glob": "^11.0.0",
+    "happy-dom": "^15.11.6",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-dts": "^4.3.0",
+    "vite-plugin-lib-inject-css": "^2.1.1",
+    "vitest": "^2.1.5",
+    "vue-tsc": "^2.1.10"
+  },
+  "license": "MIT"
+}
