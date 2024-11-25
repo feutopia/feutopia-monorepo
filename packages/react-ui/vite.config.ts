@@ -8,6 +8,11 @@ import { glob } from "glob";
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "lib"),
+    },
+  },
   plugins: [
     react(),
     libInjectCss(), // Inject css at the top of chunk file in lib mode
@@ -16,6 +21,13 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.lib.json",
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern",
+      },
+    },
+  },
   build: {
     lib: {
       entry: "./lib/main.ts",

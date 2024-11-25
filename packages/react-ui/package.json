@@ -25,10 +25,10 @@
     "**/*.css"
   ],
   "scripts": {
+    "dev": "vite",
     "build": "pnpm run test --run && pnpm run build:vite",
     "test": "vitest",
-    "build:vite": "tsc -b ./tsconfig.lib.json && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "build:vite": "tsc -b ./tsconfig.lib.json && vite build"
   },
   "author": "David Zheng",
   "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme",
@@ -52,7 +52,9 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "clsx": "^2.1.1",
     "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "glob": "^11.0.0",

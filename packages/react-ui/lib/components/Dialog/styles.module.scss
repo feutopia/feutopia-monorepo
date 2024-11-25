@@ -1,0 +1,30 @@
+$Z_INDEX: 99999;
+
+.fe-dialog {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: $Z_INDEX;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  &.visible {
+    opacity: 1;
+  }
+}
+
+.fe-dialog-content {
+  position: fixed;
+  inset: 0;
+  overflow: auto;
+  display: flex;
+}
+
+.fe-dialog-body {
+  margin: auto;
+}
+
+.fe-dialog-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
