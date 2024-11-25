@@ -4,7 +4,6 @@ importers:
 
   .:
     specifiers:
-      '@eslint/js': ^9.15.0
       '@typescript-eslint/eslint-plugin': ^8.15.0
       '@typescript-eslint/parser': ^8.15.0
       eslint: ^9.15.0
@@ -26,7 +25,6 @@ importers:
       typescript: ^5.6.3
       typescript-eslint: ^8.15.0
     devDependencies:
-      '@eslint/js': 9.15.0
       '@typescript-eslint/eslint-plugin': 8.15.0_h5sh4v2hyom4h65ir7e4sw4goa
       '@typescript-eslint/parser': 8.15.0_a5kwni2dmitys5t3f7ycin2sie
       eslint: 9.15.0
@@ -123,9 +121,12 @@ importers:
     specifiers:
       '@feutopia/mitt': workspace:^0.0.2
       '@feutopia/utils': workspace:^0.0.11
+      vue: 3.5.12
     dependencies:
       '@feutopia/mitt': link:../mitt
       '@feutopia/utils': link:../utils
+    devDependencies:
+      vue: 3.5.12
 
   packages/vue-ui:
     specifiers:
@@ -1695,7 +1696,7 @@ packages:
     dependencies:
       '@vue/compiler-ssr': 3.5.12
       '@vue/shared': 3.5.12
-      vue: 3.5.12_typescript@5.6.3
+      vue: 3.5.12
 
   /@vue/shared/3.5.12:
     resolution: {integrity: sha512-L2RPSAwUFbgZH20etwrXyVyCBu9OxRSi8T/38QsvnkJyvq2LufW2lDCOzm7t/U9C1mkhJGWYfCuFBCmIuNivrg==}
@@ -4728,6 +4729,20 @@ packages:
       semver: 7.6.3
       typescript: 5.6.3
     dev: true
+
+  /vue/3.5.12:
+    resolution: {integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@vue/compiler-dom': 3.5.12
+      '@vue/compiler-sfc': 3.5.12
+      '@vue/runtime-dom': 3.5.12
+      '@vue/server-renderer': 3.5.12_vue@3.5.12
+      '@vue/shared': 3.5.12
 
   /vue/3.5.12_typescript@5.6.3:
     resolution: {integrity: sha512-CLVZtXtn2ItBIi/zHZ0Sg1Xkb7+PU32bJJ8Bmy7ts3jxXTcbfsEfBivFYYWz1Hur+lalqGAh65Coin0r+HRUfg==}
