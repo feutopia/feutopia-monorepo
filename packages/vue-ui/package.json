@@ -1,5 +1,6 @@
 {
   "name": "@feutopia/vue-ui",
+  "private": false,
   "version": "0.0.17",
   "description": "Vue3 UI Components Library",
   "keywords": [
@@ -8,17 +9,11 @@
     "components"
   ],
   "type": "module",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js",
-      "umd": "./dist/umd/index.js"
-    },
-    "./style.css": "./dist/style.css"
+      "types": "./dist/lib/main.d.ts",
+      "default": "./dist/main.js"
+    }
   },
   "files": [
     "dist"
@@ -26,8 +21,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
-    "dev": "vite",
     "build": "pnpm run typecheck && pnpm run test --run && pnpm run build:vite",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
@@ -45,11 +42,9 @@
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "license": "MIT",
   "dependencies": {
     "@feutopia/vue-hooks": "workspace:^0.0.12",
-    "echarts": "^5.5.1",
-    "vue": "3.5.12"
+    "echarts": "^5.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.0",
@@ -62,6 +57,8 @@
     "vite-plugin-dts": "^4.3.0",
     "vite-plugin-lib-inject-css": "^2.1.1",
     "vitest": "^2.1.5",
+    "vue": "3.5.12",
     "vue-tsc": "^2.1.10"
-  }
+  },
+  "license": "MIT"
 }

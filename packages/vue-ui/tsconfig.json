@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.d.ts"],
+  "include": ["lib/**/*.ts", "lib/**/*.tsx", "lib/**/*.vue", "lib/**/*.d.ts"],
   "compilerOptions": {
     "jsx": "preserve",
     "jsxImportSource": "vue",
@@ -8,9 +8,7 @@
     "jsxFragmentFactory": "Fragment",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    },
-    "declaration": true,
-    "declarationDir": "./dist"
+      "@/*": ["lib/*"]
+    }
   }
 }

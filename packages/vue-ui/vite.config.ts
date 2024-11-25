@@ -1,15 +1,23 @@
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
-import { resolve } from "path";
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
+import vueJsx from "@vitejs/plugin-vue-jsx";
+import { libInjectCss } from "vite-plugin-lib-inject-css";
+import path from "path";
+import { fileURLToPath } from "url";
+import { glob } from "glob";
 
+// https://vite.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "src"),
-    },
-  },
+  plugins: [
+    vue(),
+    vueJsx(),
+    libInjectCss(), // Inject css at the top of chunk file in lib mode
+    dts({
+      entryRoot: "lib",
+      exclude: ["lib/**/__tests__/"],
+    }),
+  ],
   css: {
     preprocessorOptions: {
       scss: {
@@ -17,41 +25,33 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    vue(),
-    vueJsx(),
-    dts({
-      entryRoot: "src",
-      outDir: "dist/types",
-      include: ["src/index.ts", "src/**/*.{ts,tsx,jsx,vue}"],
-      insertTypesEntry: true, // 根据package.json中的types字段生成 types 文件
-      rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
-    }),
-  ],
   build: {
     lib: {
-      name: "FeutopiaVueUI",
-
-      entry: resolve(__dirname, "src/index.ts"),
-      formats: ["es", "cjs", "umd"],
-      fileName: (format, entryName) => {
-        const formatDirectoryMap = {
-          es: "esm",
-          cjs: "cjs",
-          umd: "umd",
-        };
-        const directory =
-          formatDirectoryMap[format as keyof typeof formatDirectoryMap];
-        return `${directory}/${entryName}.js`;
-      },
+      entry: "./lib/main.ts",
+      formats: ["es"],
     },
     rollupOptions: {
-      external: ["vue"],
+      external: ["vue", "vue/jsx-runtime"],
+      input: Object.fromEntries(
+        // https://rollupjs.org/configuration-options/#input
+        glob
+          .sync("lib/**/*.{ts,tsx}", {
+            ignore: ["lib/**/__tests__/*.{ts,tsx}", "lib/**/*.d.ts"],
+          })
+          .map((file) => [
+            // e.g. lib/nested/foo.js becomes nested/foo
+            path.relative(
+              "lib",
+              file.slice(0, file.length - path.extname(file).length)
+            ),
+            // e.g. lib/nested/foo becomes /project/lib/nested/foo.js
+            fileURLToPath(new URL(file, import.meta.url)),
+          ])
+      ),
       output: {
-        exports: "named", // 使用命名导出的方式，而不是默认导出
-        globals: {
-          vue: "Vue",
-        },
+        assetFileNames: "assets/[name][extname]",
+        chunkFileNames: "chunks/[name].[hash].js",
+        entryFileNames: "[name].js",
       },
     },
     // 添加这个配置来禁止复制 public 目录

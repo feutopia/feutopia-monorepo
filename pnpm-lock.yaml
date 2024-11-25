@@ -166,7 +166,6 @@ importers:
     dependencies:
       '@feutopia/vue-hooks': link:../vue-hooks
       echarts: 5.5.1
-      vue: 3.5.12_typescript@5.6.3
     devDependencies:
       '@vitejs/plugin-vue': 5.2.0_vite@5.4.11+vue@3.5.12
       '@vitejs/plugin-vue-jsx': 4.1.0_vite@5.4.11+vue@3.5.12
@@ -178,6 +177,7 @@ importers:
       vite-plugin-dts: 4.3.0_xkdhn6wmhjwl57f545r5qxtmg4
       vite-plugin-lib-inject-css: 2.1.1_vite@5.4.11
       vitest: 2.1.5_happy-dom@15.11.6
+      vue: 3.5.12_typescript@5.6.3
       vue-tsc: 2.1.10_typescript@5.6.3
 
 packages:
