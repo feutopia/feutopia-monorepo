@@ -39,12 +39,15 @@
   "bugs": {
     "url": "https://github.com/feutopia/feutopia-monorepo/issues"
   },
+  "license": "MIT",
   "peerDependencies": {
     "vue": ">=3.0.0"
   },
-  "license": "MIT",
   "dependencies": {
     "@feutopia/mitt": "workspace:^0.0.2",
     "@feutopia/utils": "workspace:^0.0.11"
+  },
+  "devDependencies": {
+    "vue": "3.5.12"
   }
 }
