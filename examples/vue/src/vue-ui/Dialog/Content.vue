@@ -16,6 +16,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .number {
   font-size: 50px;
+  color: yellow;
 }
 button {
   display: block;

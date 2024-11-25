@@ -1,5 +1,5 @@
 {
-  "name": "vue",
+  "name": "vue-test",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@feutopia/vue-ui": "workspace:^0.0.17"
+    "@feutopia/vue-ui": "workspace:^0.0.18",
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vitejs/plugin-vue-jsx": "^4.1.0",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.8"
   }
 }

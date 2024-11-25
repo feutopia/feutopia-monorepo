@@ -4,7 +4,6 @@ import Dialog from "./vue-ui/Dialog/index.vue";
 import LineChart from "./vue-ui/Echarts/LineChart.vue";
 import BarChart from "./vue-ui/Echarts/BarChart.vue";
 import PieChart from "./vue-ui/Echarts/PieChart.vue";
-import "@feutopia/vue-ui/style.css";
 </script>
 
 <template>
