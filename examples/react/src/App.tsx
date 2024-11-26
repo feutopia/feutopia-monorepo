@@ -1,4 +1,5 @@
 import { DialogUI } from "./react-ui/DialogUI";
+import { ShowUI } from "./react-ui/ShowUI";
 
 function App() {
   return (
@@ -6,6 +7,7 @@ function App() {
       <DialogUI>
         <div>123</div>
       </DialogUI>
+      <ShowUI />
     </>
   );
 }
