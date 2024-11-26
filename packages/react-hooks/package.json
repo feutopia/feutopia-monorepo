@@ -30,7 +30,7 @@
     "build:vite": "tsc -p ./tsconfig.json && vite build"
   },
   "author": "David Zheng",
-  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-hooks#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
