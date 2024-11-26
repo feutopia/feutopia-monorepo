@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Content from "./Content.vue";
-import { Dialog, DialogInstance } from "@feutopia/vue-ui";
+import { Dialog, type DialogInstance } from "@feutopia/vue-ui";
 
 const dialogRef = ref<DialogInstance>();
 </script>
