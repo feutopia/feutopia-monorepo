@@ -14,7 +14,7 @@ export default defineConfig({
     vueJsx(),
     libInjectCss(), // Inject css at the top of chunk file in lib mode
     dts({
-      entryRoot: "lib",
+      tsconfigPath: "./tsconfig.json",
       exclude: ["lib/**/__tests__/"],
     }),
   ],
