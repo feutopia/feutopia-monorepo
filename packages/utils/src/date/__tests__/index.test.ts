@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { padZero, getDateInfo, formatTime, formatDate } from "../index";
 import { DateInfo } from "../type";
 

@@ -1,4 +1,5 @@
 import { CreateWeakMap } from "../createWeakMap";
+import { describe, it, expect } from "vitest";
 
 describe("CreateWeakMap", () => {
   it("should create an empty WeakMap", () => {

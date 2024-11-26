@@ -29,13 +29,16 @@ export default defineConfig({
       },
     },
   },
+  esbuild: {
+    drop: ["console", "debugger"],
+  },
   build: {
     lib: {
       entry: "./lib/main.ts",
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["react", "react/jsx-runtime"],
+      external: ["react", "react-dom", "react/jsx-runtime"],
       input: Object.fromEntries(
         // https://rollupjs.org/configuration-options/#input
         glob

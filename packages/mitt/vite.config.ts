@@ -17,6 +17,9 @@ export default defineConfig({
       rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
     }),
   ],
+  esbuild: {
+    drop: ["console", "debugger"],
+  },
   build: {
     lib: {
       name: "FeutopiaMitt",
