@@ -39,6 +39,23 @@ export default tseslint.config(
       // Enable its recommended rules
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
+      "@typescript-eslint/no-empty-function": "off", // 关闭空方法检查
+      "@typescript-eslint/no-explicit-any": "off", // 关闭any类型的警告
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/no-use-before-define": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/ban-ts-ignore": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/ban-types": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          useTabs: false, // 不使用制表符
+        },
+      ],
     },
   }
 );

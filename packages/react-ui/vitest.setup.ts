@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom";
-import { expect, vi } from "vitest";
 
 // 将测试函数设置为全局变量
 declare global {

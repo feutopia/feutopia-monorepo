@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 import { libInjectCss } from "vite-plugin-lib-inject-css";
@@ -21,7 +21,7 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.json",
       exclude: ["lib/**/__tests__/"],
     }),
-  ],
+  ] as PluginOption[],
   css: {
     preprocessorOptions: {
       scss: {
@@ -43,7 +43,7 @@ export default defineConfig({
         // https://rollupjs.org/configuration-options/#input
         glob
           .sync("lib/**/*.{ts,tsx}", {
-            ignore: ["lib/**/*.test.ts", "lib/**/*.d.ts"],
+            ignore: ["lib/**/*.test.{ts,tsx}", "lib/**/*.d.ts"],
           })
           .map((file) => [
             // e.g. lib/nested/foo.js becomes nested/foo

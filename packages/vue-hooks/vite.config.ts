@@ -1,8 +1,8 @@
-import { resolve } from "path";
-import { defineConfig } from "vite";
-import dts from "vite-plugin-dts";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
+import { resolve } from "path";
+import { defineConfig, PluginOption } from "vite";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   resolve: {
@@ -20,7 +20,7 @@ export default defineConfig({
       insertTypesEntry: true, // 根据package.json中的types字段生成 types 文件
       rollupTypes: true, // 是否将所有的类型声明打包到一个文件中
     }),
-  ],
+  ] as PluginOption[],
   esbuild: {
     drop: ["console", "debugger"],
   },
