@@ -1,7 +1,7 @@
 {
   "name": "@feutopia/vue-ui",
   "private": false,
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Vue3 UI Components Library",
   "keywords": [
     "vue3",
