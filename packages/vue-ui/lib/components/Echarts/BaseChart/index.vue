@@ -3,7 +3,7 @@ import { tryOnScopeDispose, useResizeObserver } from "@feutopia/vue-hooks";
 import type { ECharts } from "echarts/core";
 import * as echarts from "echarts/core";
 import { onMounted, ref, watchEffect } from "vue";
-import { BaseChartProps } from "../types";
+import { BaseChartProps } from "../type";
 
 const props = defineProps<BaseChartProps>();
 let chartInstance: ECharts | null = null;

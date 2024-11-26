@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref, VNode, VNodeArrayChildren } from "vue";
-import { TabVNode } from "./types";
+import { TabVNode } from "./type";
 import { useNamespace } from "@feutopia/vue-hooks";
 import { TabPane } from "./TabPane";
 
