@@ -6,16 +6,16 @@ export const Show = forwardRef<HTMLDivElement, ShowProps>(
     const props = {
       show: true,
       if: true,
+      as: "div",
       ...defaultProps,
     };
-    const Component = props.as || "div";
-    if (!props.if) return null;
+    const { show, if: ifProps, as: Component, ...restProps } = props;
+    if (!ifProps) return null;
     return (
       <Component
-        style={{ display: props.show ? "" : "none" }}
-        className={props.className}
-        onClick={props.onClick}
+        style={{ display: show ? "" : "none" }}
         ref={ref}
+        {...restProps}
       >
         {props.children}
       </Component>

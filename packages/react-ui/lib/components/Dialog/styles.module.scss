@@ -1,4 +1,11 @@
 $Z_INDEX: 99999;
+@mixin full-fixed($position: fixed) {
+  position: $position;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
 
 .fe-dialog {
   position: absolute;
@@ -13,18 +20,18 @@ $Z_INDEX: 99999;
 }
 
 .fe-dialog-content {
-  position: fixed;
-  inset: 0;
+  @include full-fixed;
   overflow: auto;
   display: flex;
+  pointer-events: none;
 }
 
 .fe-dialog-body {
   margin: auto;
+  pointer-events: auto;
 }
 
 .fe-dialog-mask {
-  position: fixed;
-  inset: 0;
+  @include full-fixed;
   background: rgba(0, 0, 0, 0.45);
 }

@@ -1,34 +1,39 @@
-import { CSSProperties } from "react";
-
+import React from "react";
 export interface DialogProps {
   // 类名
   className?: string;
-  // 点击事件
-  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  // 样式
+  style?: React.CSSProperties;
   // 内容
   children?: React.ReactNode;
   // 是否显示
   open?: boolean;
   // 关闭时是否销毁
   destroyOnClose?: boolean;
-  // 打开后回调
-  afterOpen?: () => void;
-  // 关闭后回调
-  afterClose?: () => void;
   // 打开回调
   onOpen?: () => void;
+  // 打开后回调
+  afterOpen?: () => void;
   // 关闭回调
   onClose?: () => void;
+  // 关闭后回调
+  afterClose?: () => void;
   // 是否显示遮罩
   mask?: boolean;
   // 是否点击遮罩关闭
   maskClosable?: boolean;
   // 遮罩样式
-  maskStyle?: CSSProperties;
+  maskStyle?: React.CSSProperties;
   // 遮罩类
   maskClass?: string;
   // 内容样式
-  bodyStyle?: CSSProperties;
+  contentStyle?: React.CSSProperties;
   // 内容类
-  bodyClass?: string;
+  contentClass?: string;
+  // 测试id, 给测试用例使用
+  "data-test-id"?: string;
+  // 测试遮罩id, 给测试用例使用
+  "data-test-mask-id"?: string;
+  // 测试内容id, 给测试用例使用
+  "data-test-content-id"?: string;
 }

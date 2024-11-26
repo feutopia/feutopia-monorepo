@@ -1,10 +1,9 @@
 import { defineConfig } from "vitest/config";
-import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "lib"),
@@ -18,6 +17,7 @@ export default defineConfig({
     },
   },
   test: {
+    setupFiles: ["./vitest.setup.ts"],
     globals: true,
     environment: "happy-dom",
   },

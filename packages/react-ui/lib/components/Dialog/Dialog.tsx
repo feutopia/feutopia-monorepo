@@ -1,9 +1,9 @@
+import { Show } from "@/main";
+import { clsx } from "clsx";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./styles.module.scss";
 import { type DialogProps } from "./type";
-import { clsx } from "clsx";
-import { useEffect, useRef, useState, MouseEvent } from "react";
-import { Show } from "@/main";
 
 function DialogContent(defaultProps: DialogProps) {
   const props = {
@@ -13,24 +13,22 @@ function DialogContent(defaultProps: DialogProps) {
     ...defaultProps,
   };
 
-  const emit = (
-    ...args: ("onOpen" | "afterOpen" | "onClose" | "afterClose")[]
-  ) => {
-    args.forEach((event) => {
-      props[event]?.();
-    });
+  const emit = (event: "onOpen" | "afterOpen" | "onClose" | "afterClose") => {
+    props[event]?.();
   };
 
   const [shouldRender, setShouldRender] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const dialogElement = useRef<HTMLDivElement>(null);
-  const contentElement = useRef<HTMLDivElement>(null);
 
   const addTransitionEndListener = (
     dialog: HTMLElement,
+    action: "open" | "close",
     callback: () => void
   ) => {
+    const isOpening = action === "open";
+    dialog.classList.toggle(styles["visible"], isOpening);
     const transitionController = new AbortController();
     dialog.addEventListener(
       "transitionend",
@@ -46,20 +44,19 @@ function DialogContent(defaultProps: DialogProps) {
 
   // 打开对话框
   const openDialog = (dialog: HTMLElement) => {
-    console.log("openDialog");
     emit("onOpen");
     dialog.offsetHeight; // 强制重绘
     dialog.classList.add(styles["visible"]);
-    return addTransitionEndListener(dialog, () => {
+    return addTransitionEndListener(dialog, "open", () => {
       emit("afterOpen");
     });
   };
 
   // 关闭对话框
   const closeDialog = (dialog: HTMLElement) => {
-    console.log("closeDialog");
+    emit("onClose");
     dialog.classList.remove(styles["visible"]);
-    return addTransitionEndListener(dialog, () => {
+    return addTransitionEndListener(dialog, "close", () => {
       if (props.destroyOnClose) {
         setShouldRender(false);
       }
@@ -72,11 +69,8 @@ function DialogContent(defaultProps: DialogProps) {
   useEffect(() => {
     const dialog = dialogElement.current;
     if (!dialog) return;
-    if (isShow) {
-      return openDialog(dialog);
-    } else {
-      return closeDialog(dialog);
-    }
+    const transitionCleanup = isShow ? openDialog(dialog) : closeDialog(dialog);
+    return () => transitionCleanup();
   }, [isShow]);
 
   // 监听 open 变化
@@ -87,35 +81,39 @@ function DialogContent(defaultProps: DialogProps) {
       setIsShow(true);
     } else {
       setIsShow(false);
+      // 如果这个时候 dialog 不存在，则直接销毁
+      if (!dialogElement.current) {
+        setShouldRender(false);
+        setIsVisible(false);
+      }
     }
   }, [props.open]);
 
   return (
     <Show
+      data-testid={props["data-test-id"]}
+      ref={dialogElement}
       if={shouldRender}
       show={isVisible}
-      ref={dialogElement}
-      className={clsx(props.className, styles["fe-dialog"])}
-      onClick={(e: MouseEvent<HTMLDivElement>) => {
-        const dialog = dialogElement.current;
-        if (
-          props.maskClosable &&
-          dialog &&
-          e.target === contentElement.current
-        ) {
-          emit("onClose");
-        }
-      }}
+      className={clsx(styles["fe-dialog"], props.className)}
+      style={props.style}
     >
       <Show
-        show={props.mask}
+        data-testid={props["data-test-mask-id"]}
+        if={props.mask}
         className={clsx(styles["fe-dialog-mask"], props.maskClass)}
         style={props.maskStyle}
+        onClick={() => {
+          if (props.maskClosable) {
+            emit("onClose");
+          }
+        }}
       ></Show>
-      <div className={styles["fe-dialog-content"]} ref={contentElement}>
+      <div className={styles["fe-dialog-content"]}>
         <div
-          className={clsx(styles["fe-dialog-body"], props.bodyClass)}
-          style={props.bodyStyle}
+          data-testid={props["data-test-content-id"]}
+          className={clsx(styles["fe-dialog-body"], props.contentClass)}
+          style={props.contentStyle}
         >
           {props.children}
         </div>
