@@ -1,5 +1,5 @@
 {
-  "name": "react-ui",
+  "name": "@feutopia/react-ui",
   "private": false,
   "version": "0.0.1",
   "description": "React UI Components Library",
@@ -28,7 +28,7 @@
     "dev": "vite",
     "build": "pnpm run test --run && pnpm run build:vite",
     "test": "vitest",
-    "build:vite": "tsc -b ./tsconfig.lib.json && vite build"
+    "build:vite": "tsc -b ./tsconfig.json && vite build"
   },
   "author": "David Zheng",
   "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/react-ui#readme",
@@ -40,10 +40,6 @@
     "url": "https://github.com/feutopia/feutopia-monorepo/issues"
   },
   "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -59,6 +55,8 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "glob": "^11.0.0",
     "globals": "^15.11.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.11.0",
     "vite": "^5.4.10",

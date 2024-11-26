@@ -1,11 +1,11 @@
 import { createPortal } from "react-dom";
 import styles from "./styles.module.scss";
-import { DialogProps } from "./type";
+import { type DialogProps } from "./type";
 import { clsx } from "clsx";
 import { useEffect, useRef, useState, MouseEvent } from "react";
 import { Show } from "@/main";
 
-function Modal(defaultProps: DialogProps) {
+function DialogContent(defaultProps: DialogProps) {
   const props = {
     mask: true,
     maskClosable: true,
@@ -125,5 +125,5 @@ function Modal(defaultProps: DialogProps) {
 }
 
 export function Dialog(props: DialogProps) {
-  return createPortal(<Modal {...props} />, document.body);
+  return createPortal(<DialogContent {...props} />, document.body);
 }

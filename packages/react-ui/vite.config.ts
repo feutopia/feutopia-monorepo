@@ -18,7 +18,8 @@ export default defineConfig({
     libInjectCss(), // Inject css at the top of chunk file in lib mode
     // Generate d.ts file
     dts({
-      tsconfigPath: "./tsconfig.lib.json",
+      tsconfigPath: "./tsconfig.json",
+      exclude: ["lib/**/__tests__/"],
     }),
   ],
   css: {
@@ -57,5 +58,7 @@ export default defineConfig({
         entryFileNames: "[name].js",
       },
     },
+    // 添加这个配置来禁止复制 public 目录
+    copyPublicDir: false,
   },
 });

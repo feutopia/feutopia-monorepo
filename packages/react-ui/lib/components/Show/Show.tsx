@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { ShowProps } from "./type";
+import { type ShowProps } from "./type";
 
 export const Show = forwardRef<HTMLDivElement, ShowProps>(
   (defaultProps, ref) => {

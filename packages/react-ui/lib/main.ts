@@ -1,2 +1,2 @@
-export { Dialog } from "./components/Dialog";
-export { Show } from "./components/Show";
+export * from "./components/Dialog";
+export * from "./components/Show";

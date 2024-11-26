@@ -46,6 +46,41 @@ importers:
       typescript: 5.6.3
       typescript-eslint: 8.15.0_a5kwni2dmitys5t3f7ycin2sie
 
+  examples/react:
+    specifiers:
+      '@eslint/js': ^9.13.0
+      '@feutopia/react-ui': workspace:^0.0.1
+      '@types/react': ^18.3.12
+      '@types/react-dom': ^18.3.1
+      '@vitejs/plugin-react': ^4.3.3
+      eslint: ^9.13.0
+      eslint-plugin-react: ^7.37.2
+      eslint-plugin-react-hooks: ^5.0.0
+      eslint-plugin-react-refresh: ^0.4.14
+      globals: ^15.11.0
+      react: ^18.3.1
+      react-dom: ^18.3.1
+      typescript: ~5.6.2
+      typescript-eslint: ^8.11.0
+      vite: ^5.4.10
+    dependencies:
+      '@feutopia/react-ui': link:../../packages/react-ui
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
+    devDependencies:
+      '@eslint/js': 9.15.0
+      '@types/react': 18.3.12
+      '@types/react-dom': 18.3.1
+      '@vitejs/plugin-react': 4.3.3_vite@5.4.11
+      eslint: 9.15.0
+      eslint-plugin-react: 7.37.2_eslint@9.15.0
+      eslint-plugin-react-hooks: 5.0.0_eslint@9.15.0
+      eslint-plugin-react-refresh: 0.4.14_eslint@9.15.0
+      globals: 15.12.0
+      typescript: 5.6.3
+      typescript-eslint: 8.15.0_a5kwni2dmitys5t3f7ycin2sie
+      vite: 5.4.11
+
   examples/vue:
     specifiers:
       '@feutopia/vue-ui': workspace:^0.0.19
@@ -94,9 +129,6 @@ importers:
       vite: ^5.4.10
       vite-plugin-dts: ^4.3.0
       vite-plugin-lib-inject-css: ^2.1.1
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1_react@18.3.1
     devDependencies:
       '@eslint/js': 9.15.0
       '@types/react': 18.3.12
@@ -109,6 +141,8 @@ importers:
       eslint-plugin-react-refresh: 0.4.14_eslint@9.15.0
       glob: 11.0.0
       globals: 15.12.0
+      react: 18.3.1
+      react-dom: 18.3.1_react@18.3.1
       typescript: 5.6.3
       typescript-eslint: 8.15.0_a5kwni2dmitys5t3f7ycin2sie
       vite: 5.4.11
@@ -4283,7 +4317,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
-    dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -4299,7 +4332,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /readdirp/4.0.2:
     resolution: {integrity: sha512-yDMz9g+VaZkqBYS/ozoBJwaBhTbZo3UNYQHNRw1D3UFQB8oHB4uS/tAODO+ZLjGWmUbKnIlOWO+aaIiAxrUWHA==}
@@ -4436,7 +4468,6 @@ packages:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /semver/6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
