@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -17,7 +17,7 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.json",
       exclude: ["lib/**/__tests__/"],
     }),
-  ],
+  ] as PluginOption[],
   css: {
     preprocessorOptions: {
       scss: {
