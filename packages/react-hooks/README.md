@@ -1,5 +1,7 @@
 # React Hooks Collection
 
+**English** | [中文](https://github.com/feutopia/feutopia-monorepo/blob/main/packages/react-hooks/README.zh-CN.md)
+
 A collection of useful React hooks.
 
 ## Installation

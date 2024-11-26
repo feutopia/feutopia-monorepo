@@ -1,5 +1,7 @@
 # React Hooks Collection
 
+**中文** | [English](./README.md)
+
 React Hooks 工具集
 
 ## 安装
