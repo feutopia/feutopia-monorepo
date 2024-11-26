@@ -1,20 +1,11 @@
-import { useState } from "react";
-import { Dialog } from "@feutopia/react-ui";
+import { DialogUI } from "./react-ui/DialogUI";
 
 function App() {
-  const [open, setOpen] = useState(false);
   return (
     <>
-      <button
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        打开
-      </button>
-      <Dialog open={open} destroyOnClose onClose={() => setOpen(false)}>
+      <DialogUI>
         <div>123</div>
-      </Dialog>
+      </DialogUI>
     </>
   );
 }
