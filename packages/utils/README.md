@@ -88,6 +88,30 @@ const hasKey = weakMap.has(key);
 weakMap.delete(key);
 ```
 
+### Array Utilities
+
+#### circularSlice
+
+Creates a slice of array with circular wrapping, starting from specified position:
+
+```typescript
+import { circularSlice } from "@feutopia/utils";
+
+const arr = [1, 2, 3, 4, 5];
+
+// Basic slicing
+circularSlice(arr, 0, 3); // [1, 2, 3]
+circularSlice(arr, 3, 3); // [4, 5, 1]
+circularSlice(arr, 4, 3); // [5, 1, 2]
+
+// Handle negative start index
+circularSlice(arr, -1, 3); // [5, 1, 2]
+
+// Handle count greater than array length
+const arr2 = [1, 2, 3];
+circularSlice(arr2, 0, 5); // [1, 2, 3, 1, 2]
+```
+
 ### Type Utilities
 
 Provides TypeScript utility types for better type safety:

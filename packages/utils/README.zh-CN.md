@@ -87,6 +87,30 @@ const hasKey = weakMap.has(key);
 weakMap.delete(key);
 ```
 
+### 数组工具
+
+#### circularSlice
+
+创建一个带有循环包装的数组切片，从指定位置开始：
+
+```typescript
+import { circularSlice } from "@feutopia/utils";
+
+const arr = [1, 2, 3, 4, 5];
+
+// 基本切片
+circularSlice(arr, 0, 3); // [1, 2, 3]
+circularSlice(arr, 3, 3); // [4, 5, 1]
+circularSlice(arr, 4, 3); // [5, 1, 2]
+
+// 处理负数起始索引
+circularSlice(arr, -1, 3); // [5, 1, 2]
+
+// 处理长度大于数组长度的情况
+const arr2 = [1, 2, 3];
+circularSlice(arr2, 0, 5); // [1, 2, 3, 1, 2]
+```
+
 ### 类型工具
 
 提供 TypeScript 工具类型以增强类型安全：
