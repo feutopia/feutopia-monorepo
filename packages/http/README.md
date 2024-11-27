@@ -26,74 +26,90 @@ pnpm install @feutopia/http
 
 ```ts
 import { HttpClient } from "@feutopia/http";
+
 class MyHttpClient extends HttpClient {
-	constructor() {
-		super({
-			config: {
-				baseURL: "https://api.example.com",
-				timeout: 5000,
-			},
-		});
-	}
+  constructor() {
+    super({
+      config: {
+        baseURL: "https://api.example.com",
+        timeout: 5000,
+      },
+    });
+  }
 }
+
 const http = new MyHttpClient();
+
 // GET request
 const getData = async () => {
-	const response = await http.get({ url: "/users" });
-	return response.data;
+  const response = await http.get({ 
+    url: "/users",
+    showError: true // Optional: control error display
+  });
+  return response.data;
 };
-// POST request
-const createUser = async (userData) => {
-	const response = await http.post({
-		url: "/users",
-		data: userData,
-	});
-	return response.data;
+
+// POST request with type safety
+const createUser = async (userData: UserData) => {
+  const response = await http.post<UserResponse>({
+    url: "/users",
+    data: userData,
+  });
+  return response.data;
 };
 ```
 
 ## Advanced Features
 
-### Custom Request Handler
+### Custom Request/Response Interceptors
 
 ```ts
-const http = new MyHttpClient({
-	requestHandler: (config) => {
-		// Add custom headers
-		config.headers["X-Custom-Header"] = "value";
-		return config;
-	},
-});
-```
+const http = new MyHttpClient();
 
-### Custom Response Handler
+// Get interceptors instance
+const interceptors = http.getInterceptors();
 
-```ts
-const http = new MyHttpClient({
-	responseHandler: (response) => {
-		// Transform response data
-		return response.data;
-	},
-});
+// Add request interceptor
+interceptors.request.use(
+  (config) => {
+    // Add custom headers
+    config.headers["X-Custom-Header"] = "value";
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor
+interceptors.response.use(
+  (response) => {
+    // Transform response data
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 ```
 
 ### File Upload
 
 ```ts
 const uploadFile = async (file: File) => {
-	await http.upload({
-		url: "/upload",
-		data: file,
-		onProgress: (percentage) => {
-			console.log(`Upload progress: ${percentage}%`);
-		},
-		onUploadComplete: (response) => {
-			console.log("Upload complete:", response);
-		},
-		onUploadError: (error) => {
-			console.error("Upload failed:", error);
-		},
-	});
+  await http.upload({
+    url: "/upload",
+    data: file, // Can be File, FormData, or other data
+    onProgress: (percentage) => {
+      console.log(`Upload progress: ${percentage}%`);
+    },
+    onUploadComplete: (response) => {
+      console.log("Upload complete:", response);
+    },
+    onUploadError: (error) => {
+      console.error("Upload failed:", error);
+    },
+  });
 };
 ```
 
@@ -110,9 +126,12 @@ const downloadFile = async () => {
 ### Request Cancellation
 
 ```ts
+// Method 1: Using the cancel method
 const request = http.get({ url: "/data" });
-// Cancel the request
 request.cancel();
+
+// Method 2: Cancel all pending requests
+http.cancelAllRequests();
 ```
 
 ## Error Handling
