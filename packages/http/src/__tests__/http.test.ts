@@ -413,6 +413,41 @@ describe("Http Client", () => {
         expect(onProgress).toHaveBeenCalledWith(50);
         expect(onUploadComplete).toHaveBeenCalledWith(mockResponse);
       });
+      it("should handle upload cancellation", async () => {
+        const mockFile = new File(["test"], "test.txt");
+        const onProgress = vi.fn();
+        const onUploadComplete = vi.fn();
+        const onUploadError = vi.fn();
+
+        mockRequest.mockImplementationOnce(async (config: any) => {
+          await Promise.resolve(); // Allow cancel to execute
+          if (config.signal?.aborted) {
+            const error: any = new Error("Request aborted");
+            error.code = ErrorCode.CANCELED;
+            throw error;
+          }
+          return { data: {} };
+        });
+
+        const uploadPromise = http.upload({
+          url: "/upload",
+          data: mockFile,
+          onProgress,
+          onUploadComplete,
+          onUploadError,
+        });
+
+        uploadPromise.cancel();
+
+        await uploadPromise;
+
+        expect(onUploadError).toHaveBeenCalledWith(
+          expect.objectContaining({
+            code: ErrorCode.CANCELED,
+          })
+        );
+        expect(onUploadComplete).not.toHaveBeenCalled();
+      });
     });
 
     describe("Download", () => {
@@ -449,6 +484,27 @@ describe("Http Client", () => {
         expect(createObjectURL).toHaveBeenCalled();
         expect(link.click).toHaveBeenCalled();
         expect(revokeObjectURL).toHaveBeenCalled();
+      });
+      it("should handle download cancellation", async () => {
+        mockRequest.mockImplementationOnce(async (config: any) => {
+          await Promise.resolve(); // Allow cancel to execute
+          if (config.signal?.aborted) {
+            const error: any = new Error("Request aborted");
+            error.code = ErrorCode.CANCELED;
+            throw error;
+          }
+          return { data: new Blob() };
+        });
+
+        const downloadPromise = http.download({ url: "/download" });
+        downloadPromise.cancel();
+
+        try {
+          await downloadPromise;
+          fail("Should have thrown cancellation error");
+        } catch (error: any) {
+          expect(error.code).toBe(ErrorCode.CANCELED);
+        }
       });
     });
   });

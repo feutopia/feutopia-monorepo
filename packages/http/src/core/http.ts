@@ -51,7 +51,7 @@ export class Http {
     );
   }
 
-  request<T = any>(config: HttpRequest): HttpResponse<T> {
+  #request<T = any>(config: HttpRequest): HttpResponse<T> {
     if (!config.signal) {
       const controller = new AbortController();
       config.signal = controller.signal;
@@ -78,38 +78,38 @@ export class Http {
   }
 
   get<T = any>(options: HttpRequest) {
-    return this.request<T>(options);
+    return this.#request<T>(options);
   }
 
   post<T = any>(options: HttpRequest) {
-    return this.request<T>({
+    return this.#request<T>({
       ...options,
       method: "POST",
     });
   }
 
   put<T = any>(options: HttpRequest) {
-    return this.request<T>({
+    return this.#request<T>({
       ...options,
       method: "PUT",
     });
   }
 
   delete<T = any>(options: HttpRequest) {
-    return this.request<T>({
+    return this.#request<T>({
       ...options,
       method: "DELETE",
     });
   }
 
   patch<T = any>(options: HttpRequest) {
-    return this.request<T>({
+    return this.#request<T>({
       ...options,
       method: "PATCH",
     });
   }
 
-  upload<T = any>(options: UploadHttpRequest) {
+  upload(options: UploadHttpRequest) {
     const {
       onProgress,
       onUploadComplete,
@@ -118,7 +118,7 @@ export class Http {
       ...otherOptions
     } = options;
     const formData = this.#createFormData(data);
-    const uploadPromise = this.request<T>({
+    const promise = this.#request({
       ...otherOptions,
       method: "POST",
       headers: { "Content-Type": "multipart/form-data" },
@@ -131,7 +131,10 @@ export class Http {
         }
       },
     });
-    return uploadPromise.then(onUploadComplete).catch(onUploadError);
+    const uploadPromise = promise.then(onUploadComplete).catch(onUploadError);
+    return Object.assign(uploadPromise, {
+      cancel: () => promise.cancel(),
+    });
   }
 
   // 创建 FormData 对象
@@ -148,7 +151,7 @@ export class Http {
   }
 
   download(options: HttpRequest) {
-    const promise = this.request<Blob>({
+    const promise = this.#request<Blob>({
       ...options,
       responseType: "blob",
     });
