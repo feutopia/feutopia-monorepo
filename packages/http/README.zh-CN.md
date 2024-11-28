@@ -66,11 +66,8 @@ const createUser = async (userData: UserData) => {
 ```ts
 const http = new MyHttpClient();
 
-// 获取拦截器实例
-const interceptors = http.getInterceptors();
-
 // 添加请求拦截器
-interceptors.request.use(
+http.interceptors.request.use(
   (config) => {
     // 添加自定义请求头
     config.headers["X-Custom-Header"] = "value";
@@ -82,7 +79,7 @@ interceptors.request.use(
 );
 
 // 添加响应拦截器
-interceptors.response.use(
+http.interceptors.response.use(
   (response) => {
     // 转换响应数据
     return response;

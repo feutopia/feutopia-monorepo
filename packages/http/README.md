@@ -66,11 +66,8 @@ const createUser = async (userData: UserData) => {
 ```ts
 const http = new MyHttpClient();
 
-// Get interceptors instance
-const interceptors = http.getInterceptors();
-
 // Add request interceptor
-interceptors.request.use(
+http.interceptors.request.use(
   (config) => {
     // Add custom headers
     config.headers["X-Custom-Header"] = "value";
@@ -82,7 +79,7 @@ interceptors.request.use(
 );
 
 // Add response interceptor
-interceptors.response.use(
+http.interceptors.response.use(
   (response) => {
     // Transform response data
     return response;

@@ -17,7 +17,7 @@ export class Http {
   }
 
   // 获取 axios 实例的拦截器
-  getInterceptors() {
+  get interceptors() {
     return this.#instance.interceptors;
   }
 

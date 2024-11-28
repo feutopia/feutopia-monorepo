@@ -330,12 +330,12 @@ describe("Http Client", () => {
         (axios.create as any).mockReturnValue(mockAxios);
         const http = new Http();
 
-        http.getInterceptors().request.use((config) => {
+        http.interceptors.request.use((config) => {
           order.push("first");
           return config;
         });
 
-        http.getInterceptors().request.use((config) => {
+        http.interceptors.request.use((config) => {
           order.push("second");
           return config;
         });
