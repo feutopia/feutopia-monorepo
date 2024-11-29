@@ -9,7 +9,7 @@ import {
 
 export class Http {
   #instance: AxiosInstance;
-  #requestControllers: Map<Symbol, AbortController> = new Map();
+  #requestControllers = new Set<AbortController>();
 
   constructor(options: HttpOptions = {}) {
     this.#instance = axios.create(options.config || {});
@@ -36,29 +36,16 @@ export class Http {
       },
       (error) => Promise.reject(error)
     );
-
-    this.#instance.interceptors.response.use(
-      (response) => {
-        // 处理 blob 类型的响应
-        if (response.config.responseType === "blob") {
-          return response;
-        }
-        return response;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
   }
 
   #request<T = any>(config: HttpRequest): HttpResponse<T> {
     if (!config.signal) {
       const controller = new AbortController();
       config.signal = controller.signal;
-      const requestKey = Symbol();
-      this.#requestControllers.set(requestKey, controller);
-      const promise = this.#instance.request(config).finally(() => {
-        this.#requestControllers.delete(requestKey);
+      this.#requestControllers.add(controller);
+      const promise = this.#instance.request(config);
+      promise.finally(() => {
+        this.#requestControllers.delete(controller);
       });
       return Object.assign(promise, {
         cancel: () => controller.abort(),
@@ -70,8 +57,9 @@ export class Http {
     });
   }
 
+  // 取消当前实例所有请求
   cancelAllRequests(): void {
-    for (const controller of this.#requestControllers.values()) {
+    for (const controller of this.#requestControllers) {
       controller.abort();
     }
     this.#requestControllers.clear();
@@ -109,20 +97,13 @@ export class Http {
     });
   }
 
-  upload(options: UploadHttpRequest) {
-    const {
-      onProgress,
-      onUploadComplete,
-      onUploadError,
-      data,
-      ...otherOptions
-    } = options;
-    const formData = this.#createFormData(data);
-    const promise = this.#request({
+  upload<T = any>(options: UploadHttpRequest) {
+    const { onProgress, ...otherOptions } = options;
+    otherOptions.data = this.#createFormData(otherOptions.data);
+    return this.#request<T>({
       ...otherOptions,
       method: "POST",
       headers: { "Content-Type": "multipart/form-data" },
-      data: formData,
       onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
           onProgress(
@@ -130,10 +111,6 @@ export class Http {
           );
         }
       },
-    });
-    const uploadPromise = promise.then(onUploadComplete).catch(onUploadError);
-    return Object.assign(uploadPromise, {
-      cancel: () => promise.cancel(),
     });
   }
 
@@ -150,12 +127,12 @@ export class Http {
     return new FormData();
   }
 
-  download(options: HttpRequest) {
-    const promise = this.#request<Blob>({
+  download<T extends Blob>(options: HttpRequest) {
+    const promise = this.#request<T>({
       ...options,
       responseType: "blob",
     });
-    const downloadPromise = promise.then((response) => {
+    promise.then((response) => {
       const blob = new Blob([response.data], {
         type: response.headers["content-type"],
       });
@@ -168,8 +145,8 @@ export class Http {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     });
-    return Object.assign(downloadPromise, {
-      cancel: () => promise.cancel(),
+    return Object.assign(promise, {
+      cancel: promise.cancel,
     });
   }
 
