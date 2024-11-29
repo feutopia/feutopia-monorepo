@@ -30,7 +30,7 @@ setTimeout(() => {
 
 const refBarChart = ref<BarChartInstance>();
 onMounted(() => {
-  console.log(refBarChart.value?.getInstance());
+  // console.log(refBarChart.value?.getInstance());
 });
 </script>
 

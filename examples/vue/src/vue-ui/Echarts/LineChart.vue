@@ -30,7 +30,7 @@ setTimeout(() => {
 
 const refLineChart = ref<LineChartInstance>();
 onMounted(() => {
-  console.log(refLineChart.value?.getInstance());
+  // console.log(refLineChart.value?.getInstance());
 });
 </script>
 

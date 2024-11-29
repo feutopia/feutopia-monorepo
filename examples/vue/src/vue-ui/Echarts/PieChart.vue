@@ -29,7 +29,7 @@ setTimeout(() => {
 
 const refPieChart = ref<PieChartInstance>();
 onMounted(() => {
-  console.log(refPieChart.value?.getInstance());
+  // console.log(refPieChart.value?.getInstance());
 });
 </script>
 
