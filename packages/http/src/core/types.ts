@@ -20,8 +20,6 @@ export type HttpRequest = AxiosRequestConfig & RequestOptions;
 // http 上传请求类型
 export interface UploadHttpRequest extends HttpRequest {
   onProgress?: (percentage: number) => void;
-  onUploadComplete?: (response: any) => void;
-  onUploadError?: (error: Error) => void;
 }
 
 // 基础 HTTP 响应类型

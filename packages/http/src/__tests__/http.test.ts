@@ -393,7 +393,6 @@ describe("Http Client", () => {
       it("should handle file upload with progress", async () => {
         const mockFile = new File(["test"], "test.txt");
         const onProgress = vi.fn();
-        const onUploadComplete = vi.fn();
         const mockResponse = { data: { url: "https://example.com/file" } };
 
         mockRequest.mockImplementationOnce(async (config: any) => {
@@ -407,20 +406,16 @@ describe("Http Client", () => {
           url: "/upload",
           data: mockFile,
           onProgress,
-          onUploadComplete,
         });
 
         expect(onProgress).toHaveBeenCalledWith(50);
-        expect(onUploadComplete).toHaveBeenCalledWith(mockResponse);
       });
       it("should handle upload cancellation", async () => {
         const mockFile = new File(["test"], "test.txt");
         const onProgress = vi.fn();
-        const onUploadComplete = vi.fn();
-        const onUploadError = vi.fn();
 
         mockRequest.mockImplementationOnce(async (config: any) => {
-          await Promise.resolve(); // Allow cancel to execute
+          await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
           if (config.signal?.aborted) {
             const error: any = new Error("Request aborted");
             error.code = ErrorCode.CANCELED;
@@ -429,24 +424,20 @@ describe("Http Client", () => {
           return { data: {} };
         });
 
-        const uploadPromise = http.upload({
+        const request = http.upload({
           url: "/upload",
           data: mockFile,
           onProgress,
-          onUploadComplete,
-          onUploadError,
         });
 
-        uploadPromise.cancel();
+        request.cancel();
 
-        await uploadPromise;
-
-        expect(onUploadError).toHaveBeenCalledWith(
-          expect.objectContaining({
-            code: ErrorCode.CANCELED,
-          })
-        );
-        expect(onUploadComplete).not.toHaveBeenCalled();
+        try {
+          await request;
+          fail("Should have thrown cancellation error");
+        } catch (error: any) {
+          expect(error.code).toBe(ErrorCode.CANCELED);
+        }
       });
     });
 
@@ -487,7 +478,7 @@ describe("Http Client", () => {
       });
       it("should handle download cancellation", async () => {
         mockRequest.mockImplementationOnce(async (config: any) => {
-          await Promise.resolve(); // Allow cancel to execute
+          await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
           if (config.signal?.aborted) {
             const error: any = new Error("Request aborted");
             error.code = ErrorCode.CANCELED;
@@ -496,11 +487,14 @@ describe("Http Client", () => {
           return { data: new Blob() };
         });
 
-        const downloadPromise = http.download({ url: "/download" });
-        downloadPromise.cancel();
+        const request = http.download({
+          url: "/download",
+        });
+
+        request.cancel();
 
         try {
-          await downloadPromise;
+          await request;
           fail("Should have thrown cancellation error");
         } catch (error: any) {
           expect(error.code).toBe(ErrorCode.CANCELED);
@@ -514,9 +508,7 @@ describe("Http Client", () => {
       const controller = new AbortController();
 
       mockRequest.mockImplementationOnce(async (config) => {
-        // 等待一个微任务，让 abort() 有机会执行
-        await Promise.resolve();
-        // 如果请求被取消，抛出取消错误
+        await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
         if (config.signal?.aborted) {
           const error: any = new Error("Request aborted");
           error.code = ErrorCode.CANCELED;
@@ -542,9 +534,7 @@ describe("Http Client", () => {
 
     it("should cancel all pending requests", async () => {
       mockRequest.mockImplementationOnce(async (config) => {
-        // 等待一个微任务，让 abort() 有机会执行
-        await Promise.resolve();
-        // 如果请求被取消，抛出取消错误
+        await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
         if (config.signal?.aborted) {
           const error: any = new Error("Request aborted");
           error.code = ErrorCode.CANCELED;
@@ -570,7 +560,7 @@ describe("Http Client", () => {
 
     it("should cancel request using Http instance cancel method", async () => {
       mockRequest.mockImplementationOnce(async (config) => {
-        await Promise.resolve();
+        await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
         if (config.signal?.aborted) {
           const error: any = new Error("Request aborted");
           error.code = ErrorCode.CANCELED;
@@ -598,7 +588,7 @@ describe("Http Client", () => {
 
       mockRequest
         .mockImplementationOnce(async (config) => {
-          await Promise.resolve();
+          await Promise.resolve(); // 等待一个微任务，让 promise.cancel 有机会执行
           if (config.signal?.aborted) {
             const error: any = new Error("Request aborted");
             error.code = ErrorCode.CANCELED;
