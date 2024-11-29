@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/http",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "HTTP Request Library, base on Axios",
   "keywords": [
     "http",

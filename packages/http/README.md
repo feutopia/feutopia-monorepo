@@ -99,13 +99,7 @@ const uploadFile = async (file: File) => {
     data: file, // Can be File, FormData, or other data
     onProgress: (percentage) => {
       console.log(`Upload progress: ${percentage}%`);
-    },
-    onUploadComplete: (response) => {
-      console.log("Upload complete:", response);
-    },
-    onUploadError: (error) => {
-      console.error("Upload failed:", error);
-    },
+    }
   });
 };
 ```

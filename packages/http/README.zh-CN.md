@@ -99,13 +99,7 @@ const uploadFile = async (file: File) => {
     data: file, // 可以是 File、FormData 或其他数据
     onProgress: (percentage) => {
       console.log(`上传进度：${percentage}%`);
-    },
-    onUploadComplete: (response) => {
-      console.log("上传完成：", response);
-    },
-    onUploadError: (error) => {
-      console.error("上传失败：", error);
-    },
+    }
   });
 };
 ```
