@@ -8,10 +8,12 @@
     "hooks"
   ],
   "type": "module",
+  "module": "./dist/main.js",
+  "types": "./dist/lib/main.d.ts",
   "exports": {
     ".": {
       "types": "./dist/lib/main.d.ts",
-      "default": "./dist/main.js"
+      "import": "./dist/main.js"
     }
   },
   "files": [
