@@ -1,9 +1,8 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
   HttpOptions,
   HttpRequest,
   UploadHttpRequest,
-  BaseHttpResponse,
   HttpResponse,
 } from "./types";
 
@@ -40,7 +39,7 @@ export class Http {
     );
   }
 
-  #request<T = any>(config: HttpRequest): HttpResponse<T> {
+  #request<T>(config: HttpRequest): HttpResponse<T> {
     const getRequestOptions = (config: HttpRequest) => {
       if (!config.signal) {
         const controller = new AbortController();
@@ -64,12 +63,14 @@ export class Http {
     // 虽然不影响结果，但添加 catch 防止控制台抛出未捕获的错误
     promise.catch(noop).finally(removeController);
 
+    // 这里真正返回的类型是 HttpResponse<AxiosResponse<T>>,
+    // 之所以使用 as 关键字, 是已经假定用户自定义的拦截器会取 response.data 的值。
     return Object.assign(promise, {
       cancel,
-    });
+    }) as HttpResponse<T>;
   }
 
-  upload<T = any>(options: UploadHttpRequest) {
+  upload<T>(options: UploadHttpRequest) {
     const { onProgress, ...otherOptions } = options;
     otherOptions.data = this.#createFormData(otherOptions.data);
     return this.#request<T>({
@@ -87,7 +88,7 @@ export class Http {
   }
 
   download<T extends Blob>(options: HttpRequest) {
-    const promise = this.#request<T>({
+    const promise = this.#request<AxiosResponse<T>>({
       ...options,
       responseType: "blob",
     });
@@ -118,32 +119,32 @@ export class Http {
     this.#requestControllers.clear();
   }
 
-  get<T = any>(options: HttpRequest) {
+  get<T>(options: HttpRequest) {
     return this.#request<T>(options);
   }
 
-  post<T = any>(options: HttpRequest) {
+  post<T>(options: HttpRequest) {
     return this.#request<T>({
       ...options,
       method: "POST",
     });
   }
 
-  put<T = any>(options: HttpRequest) {
+  put<T>(options: HttpRequest) {
     return this.#request<T>({
       ...options,
       method: "PUT",
     });
   }
 
-  delete<T = any>(options: HttpRequest) {
+  delete<T>(options: HttpRequest) {
     return this.#request<T>({
       ...options,
       method: "DELETE",
     });
   }
 
-  patch<T = any>(options: HttpRequest) {
+  patch<T>(options: HttpRequest) {
     return this.#request<T>({
       ...options,
       method: "PATCH",
@@ -151,7 +152,7 @@ export class Http {
   }
 
   // 创建 FormData 对象
-  #createFormData(data: File | FormData | any): FormData {
+  #createFormData(data: File | FormData): FormData {
     if (data instanceof File) {
       const form = new FormData();
       form.append("file", data);
@@ -164,7 +165,7 @@ export class Http {
   }
 
   // 从响应头中获取文件名
-  #getFilenameFromResponse(response: BaseHttpResponse): string {
+  #getFilenameFromResponse(response: AxiosResponse): string {
     const disposition = response.headers["content-disposition"];
     if (disposition?.includes("attachment")) {
       const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(

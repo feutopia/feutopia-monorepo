@@ -1,8 +1,4 @@
-import type {
-  AxiosRequestConfig,
-  AxiosResponse,
-  CreateAxiosDefaults,
-} from "axios";
+import type { AxiosRequestConfig, CreateAxiosDefaults } from "axios";
 
 // 基础配置
 type RequestOptions = {
@@ -22,12 +18,11 @@ export interface UploadHttpRequest extends HttpRequest {
   onProgress?: (percentage: number) => void;
 }
 
-// 基础 HTTP 响应类型
-export interface BaseHttpResponse<T = any> extends AxiosResponse {
-  data: T;
-}
-
-// 可取消的 HTTP 响应类型
-export interface HttpResponse<T = any> extends Promise<BaseHttpResponse<T>> {
+/*
+  可取消的 HTTP 响应类型
+  注意: 这里没有 `extends Promise<AxiosResponse<T>>`, 而是 `extends Promise<T>`,
+        因为已经假定用户自定义的拦截器会取 response.data 的值。
+*/
+export interface HttpResponse<T> extends Promise<T> {
   cancel: () => void;
 }

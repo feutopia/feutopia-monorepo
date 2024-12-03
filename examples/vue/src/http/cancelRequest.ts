@@ -15,9 +15,9 @@ const init = async () => {
 
   try {
     const res = await request;
-    console.log(res);
-  } catch (e: unknown) {
-    console.log("catch ======= ", e);
+    console.log(res.name);
+  } catch (e) {
+    console.log("catch-----", e);
   }
 };
 

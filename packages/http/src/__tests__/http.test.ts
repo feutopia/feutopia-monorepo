@@ -353,7 +353,7 @@ describe("Http Client", () => {
         const mockResponse = { data: { success: true } };
         mockRequest.mockResolvedValueOnce(mockResponse);
 
-        const response = await http.get({ url: "/test" });
+        const response = await http.get<typeof mockResponse>({ url: "/test" });
         expect(response.data).toEqual({ success: true });
       });
     });
@@ -376,15 +376,15 @@ describe("Http Client", () => {
       const malformedData = "invalid json";
       mockRequest.mockResolvedValueOnce({ data: malformedData });
 
-      const response = await http.get({ url: "/test" });
+      const response = await http.get<{ data: string }>({ url: "/test" });
       expect(response.data).toBe(malformedData);
     });
 
     it("should handle missing response data", async () => {
       mockRequest.mockResolvedValueOnce({});
 
-      const result = await http.get({ url: "/test" });
-      expect(result.data).toBeUndefined();
+      const result = await http.get<{}>({ url: "/test" });
+      expect((result as any).data).toBeUndefined();
     });
   });
 
