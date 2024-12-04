@@ -9,6 +9,7 @@
     "components"
   ],
   "type": "module",
+  "main": "./dist/main.js",
   "module": "./dist/main.js",
   "types": "./dist/lib/main.d.ts",
   "exports": {
