@@ -1,0 +1,119 @@
+// Variables
+$scrollbar-border-color: rgba(0, 0, 0, 0.2);
+$scrollbar-bg-color: rgba(56, 176, 232, 0.56);
+$scrollbar-hover-bg-color: rgba(194, 233, 245, 0.64);
+$arrow-color: #333;
+$z-index-scrollbar: 1000;
+$z-index-arrow: 1000;
+$scrollbar-size: 20px;
+
+// Common styles
+@mixin scrolltrack-base {
+  border: 1px solid $scrollbar-border-color;
+  padding: 2px;
+  border-radius: 16px;
+}
+
+@mixin scrollbar-base {
+  background-color: $scrollbar-bg-color;
+  border-radius: 16px;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover,
+  &.dragging {
+    background-color: $scrollbar-hover-bg-color;
+  }
+}
+
+@mixin scroll-arrow-base {
+  position: absolute;
+  width: $scrollbar-size;
+  height: $scrollbar-size;
+  color: $arrow-color;
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 16px;
+  z-index: $z-index-arrow;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.4;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+// Vertical scrollbar
+.fe-vertical-scrollbar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: $scrollbar-size;
+  z-index: $z-index-scrollbar;
+
+  .fe-scrolltrack {
+    @include scrolltrack-base;
+    position: absolute;
+    top: $scrollbar-size;
+    bottom: $scrollbar-size;
+    width: 100%;
+  }
+
+  .fe-scrollbar {
+    @include scrollbar-base;
+  }
+
+  .fe-scroll-arrow {
+    @include scroll-arrow-base;
+
+    &.fe-arrow-prev {
+      top: 0;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQMAAABCXz8WAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5TAP9bkSK1AAAAEklEQVR4nGOUYLRhrGN8zngYAAiSAoJhaM7CAAAAAElFTkSuQmCC");
+    }
+
+    &.fe-arrow-next {
+      bottom: 0;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQMAAABCXz8WAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5T/wDltzBKAAAAEklEQVR4nGO0YZRgbGQ8zPgcAAihAoUodUNNAAAAAElFTkSuQmCC");
+    }
+  }
+}
+
+// Horizontal scrollbar
+.fe-horizontal-scrollbar {
+  position: absolute;
+  left: 0;
+  right: $scrollbar-size;
+  bottom: 0;
+  height: $scrollbar-size;
+  z-index: $z-index-scrollbar;
+
+  .fe-scrolltrack {
+    @include scrolltrack-base;
+    position: absolute;
+    left: $scrollbar-size;
+    right: $scrollbar-size;
+    top: 0;
+    bottom: 0;
+  }
+
+  .fe-scrollbar {
+    @include scrollbar-base;
+    height: 100%;
+  }
+
+  .fe-scroll-arrow {
+    @include scroll-arrow-base;
+
+    &.fe-arrow-prev {
+      left: 0;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAIAQMAAAALP6d4AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5TAP9bkSK1AAAAFUlEQVR4nGOUYLRgLGB8AIQFQJYEABpYA0lB+2tyAAAAAElFTkSuQmCC");
+    }
+
+    &.fe-arrow-next {
+      right: 0;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAIAQMAAAALP6d4AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5T/wDltzBKAAAAFUlEQVR4nGO0YJRg7GA8AIQdQJYFABnYAzmG6vFCAAAAAElFTkSuQmCC");
+    }
+  }
+}

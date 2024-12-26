@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom Scrollbar</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        border: none;
+      }
+      body {
+        padding: 100px 0 0 100px;
+      }
+      .container {
+        width: 300px;
+        height: 400px;
+        overflow: auto;
+        position: relative;
+        resize: both;
+      }
+      .content {
+        position: relative;
+        width: 400px;
+        background: linear-gradient(to right bottom, #fff, #da0c0c);
+      }
+      p {
+        margin: 10px 0;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <h2>The Little Match Girl</h2>
+        <p>
+          Most terribly cold it was; it snowed, and was nearly quite dark, and
+          evening-- the last evening of the year. In this cold and darkness
+          there went along the street a poor little girl, bareheaded, and with
+          naked feet. When she left home she had slippers on, it is true; but
+          what was the good of that? They were very large slippers, which her
+          mother had hitherto worn; so large were they; and the poor little
+          thing lost them as she scuffled away across the street, because of two
+          carriages that rolled by dreadfully fast.
+        </p>
+        <p>
+          One slipper was nowhere to be found; the other had been laid hold of
+          by an urchin, and off he ran with it; he thought it would do capitally
+          for a cradle when he some day or other should have children himself.
+          So the little maiden walked on with her tiny naked feet, that were
+          quite red and blue from cold. She carried a quantity of matches in an
+          old apron, and she held a bundle of them in her hand. Nobody had
+          bought anything of her the whole livelong day; no one had given her a
+          single farthing.
+        </p>
+        <p>
+          She crept along trembling with cold and hunger--a very picture of
+          sorrow, the poor little thing!
+        </p>
+        <p>
+          The flakes of snow covered her long fair hair, which fell in beautiful
+          curls around her neck; but of that, of course, she never once now
+          thought. From all the windows the candles were gleaming, and it smelt
+          so deliciously of roast goose, for you know it was New Year's Eve;
+          yes, of that she thought.
+        </p>
+        <p>
+          In a corner formed by two houses, of which one advanced more than the
+          other, she seated herself down and cowered together. Her little feet
+          she had drawn close up to her, but she grew colder and colder, and to
+          go home she did not venture, for she had not sold any matches and
+          could not bring a farthing of money: from her father she would
+          certainly get blows, and at home it was cold too, for above her she
+          had only the roof, through which the wind whistled, even though the
+          largest cracks were stopped up with straw and rags.
+        </p>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="./dist/umd/CustomScrollbar.css" />
+    <script src="./dist/umd/CustomScrollbar.js"></script>
+    <script>
+      new CustomScrollbar(document.querySelector(".container"));
+    </script>
+
+    <!-- <script>
+      delete String.prototype.trimEnd;
+    </script>
+    <script src="./dist/umd/CustomScrollbar.js"></script> -->
+  </body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "name": "@feutopia/custom-scrollbar",
+  "version": "0.0.1",
+  "description": "Custom Scrollbar for IE9, IE10, IE11, Chrome",
+  "keywords": [
+    "custom scrollbar"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/CustomScrollbar.js",
+  "module": "./dist/esm/CustomScrollbar.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/CustomScrollbar.js",
+      "require": "./dist/cjs/CustomScrollbar.js",
+      "umd": "./dist/umd/CustomScrollbar.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "author": "David Zheng",
+  "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/custom-scrollbar#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feutopia/feutopia-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/feutopia/feutopia-monorepo/issues"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "core-js": "^3.39.0",
+    "rollup": "^4.29.1",
+    "rollup-plugin-delete": "^2.1.0",
+    "rollup-plugin-sass": "^1.14.0"
+  }
+}
