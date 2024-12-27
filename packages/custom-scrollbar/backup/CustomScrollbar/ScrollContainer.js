@@ -1,4 +1,10 @@
-import { createElement, applyStyles, clampValue } from "../utils";
+import {
+  createElement,
+  applyStyles,
+  clampValue,
+  requestAnimationFrame,
+  cancelAnimationFrame,
+} from "../utils";
 
 // ScrollContainer class
 export function ScrollContainer(options) {

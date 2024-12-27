@@ -4,6 +4,8 @@ import {
   appendChildren,
   applyStyles,
   clampValue,
+  requestAnimationFrame,
+  cancelAnimationFrame,
 } from "../utils";
 
 // Scrollbar class
@@ -26,6 +28,7 @@ Scrollbar.prototype = {
     this.maxScrollDistance = 0; // Maximum scrollable distance
     this.scrollInterval = null; // Timer ID for interval-based scrolling
     this.eventCleanup = []; // Array to store event removal callbacks
+    this.scrollAnimationId = null; // Animation ID for smooth scrolling
   },
   // 创建元素
   createElements: function () {
@@ -117,6 +120,10 @@ Scrollbar.prototype = {
       clearInterval(this.scrollInterval);
       this.scrollInterval = null;
     }
+    if (this.scrollAnimationId) {
+      cancelAnimationFrame(this.scrollAnimationId);
+      this.scrollAnimationId = null;
+    }
   },
   // Toggle dragging state (add/remove "dragging" class)
   toggleDraggingState: function (isDragging) {
@@ -187,7 +194,7 @@ Scrollbar.prototype = {
             this.scrollOffset + direction * velocity,
             this.onScrollEvent.bind(this)
           );
-          requestAnimationFrame(step);
+          this.scrollAnimationId = requestAnimationFrame(step);
         } else {
           this.toggleDraggingState(false);
         }

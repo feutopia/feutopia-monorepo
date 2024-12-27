@@ -1,4 +1,4 @@
-import "./pollyfill";
+export * from "./animationFrame";
 export * from "./appendChildren";
 export * from "./applyStyles";
 export * from "./browser";
