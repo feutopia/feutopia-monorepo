@@ -1,26 +1,20 @@
+import { ScrollManagerOptions } from "../types";
 import { applyStyles } from "../utils";
 import { ScrollContainer } from "./ScrollContainer";
 import { Scrollbar } from "./Scrollbar";
 
-type Options = {
-  parentElement: HTMLElement;
-  observerContainer: HTMLElement;
-  hasVerticalScrollbar: boolean;
-  hasHorizontalScrollbar: boolean;
-};
-
 // ScrollManager class
 export class ScrollManager {
-  private parentElement: Options["parentElement"];
-  private observerContainer: Options["observerContainer"];
-  private hasVerticalScrollbar: Options["hasVerticalScrollbar"];
-  private hasHorizontalScrollbar: Options["hasHorizontalScrollbar"];
+  private parentElement: ScrollManagerOptions["parentElement"];
+  private observerContainer: ScrollManagerOptions["observerContainer"];
+  private hasVerticalScrollbar: ScrollManagerOptions["hasVerticalScrollbar"];
+  private hasHorizontalScrollbar: ScrollManagerOptions["hasHorizontalScrollbar"];
 
   private scrollContainer: ScrollContainer | null = null;
   private verticalScrollbar: Scrollbar | null = null;
   private horizontalScrollbar: Scrollbar | null = null;
 
-  constructor(options: Options) {
+  constructor(options: ScrollManagerOptions) {
     this.parentElement = options.parentElement;
     this.observerContainer = options.observerContainer;
     this.hasVerticalScrollbar = options.hasVerticalScrollbar;
@@ -29,7 +23,7 @@ export class ScrollManager {
     this.mount();
   }
   // Mount
-  public mount() {
+  private mount() {
     // Step 1: Create scrollbars
     this.createScrollbars();
 
@@ -58,7 +52,7 @@ export class ScrollManager {
     }
   }
   // Create scrollbars if necessary
-  createScrollbars() {
+  private createScrollbars() {
     if (this.hasVerticalScrollbar) {
       this.verticalScrollbar = this.createVerticalScrollbar();
     }
@@ -67,7 +61,7 @@ export class ScrollManager {
     }
   }
   // Update parent element styles (padding) based on scrollbar sizes
-  updateParentStyles() {
+  private updateParentStyles() {
     const { width, height } = this.getScrollbarSize();
     applyStyles(this.parentElement, {
       paddingRight: `${width}px`,
@@ -95,16 +89,16 @@ export class ScrollManager {
     this.updateScrollbarOffsets();
   }
   // Get the current size of the scrollbars (width and height)
-  getScrollbarSize() {
-    const width = this.verticalScrollbar?.element.clientWidth ?? 0;
-    const height = this.horizontalScrollbar?.element.clientHeight ?? 0;
+  private getScrollbarSize() {
+    const width = this.verticalScrollbar?.scrollbarElement.clientWidth ?? 0;
+    const height = this.horizontalScrollbar?.scrollbarElement.clientHeight ?? 0;
     return {
       width,
       height,
     };
   }
   // Synchronize scrollbar instances (create or remove them)
-  syncScrollbars() {
+  private syncScrollbars() {
     if (this.hasVerticalScrollbar) {
       if (!this.verticalScrollbar) {
         this.verticalScrollbar = this.createVerticalScrollbar();
@@ -128,18 +122,18 @@ export class ScrollManager {
     }
   }
   // Update the sizes of the scrollbars based on the scroll container
-  updateScrollbarSizes() {
+  private updateScrollbarSizes() {
     const scrollRatios = this.getScrollContainerRatios();
 
     if (this.verticalScrollbar) {
-      this.verticalScrollbar.updateSize(scrollRatios.vertical);
+      this.verticalScrollbar.updateThumbSize(scrollRatios.vertical);
     }
     if (this.horizontalScrollbar) {
-      this.horizontalScrollbar.updateSize(scrollRatios.horizontal);
+      this.horizontalScrollbar.updateThumbSize(scrollRatios.horizontal);
     }
   }
   // Update the offsets of the scrollbars based on the scroll container's scroll position
-  updateScrollbarOffsets() {
+  private updateScrollbarOffsets() {
     if (this.verticalScrollbar) {
       const offset = this.convertToVerticalScrollbarOffset(
         this.scrollContainer?.scrollTop ?? 0
@@ -154,42 +148,42 @@ export class ScrollManager {
     }
   }
   // Get the scroll container's ratio for vertical and horizontal scrolling
-  getScrollContainerRatios() {
+  private getScrollContainerRatios() {
     return {
       vertical: this.scrollContainer?.verticalScrollRatio ?? 0,
       horizontal: this.scrollContainer?.horizontalScrollRatio ?? 0,
     };
   }
   // Convert scroll container's scroll top value to the corresponding vertical scrollbar offset
-  convertToVerticalScrollbarOffset(top: number) {
+  private convertToVerticalScrollbarOffset(top: number) {
     return (
       (top / (this.scrollContainer?.maxScrollHeight ?? 0)) *
       (this.verticalScrollbar?.maxScrollDistance ?? 0)
     );
   }
   // Convert scroll container's scroll left value to the corresponding horizontal scrollbar offset
-  convertToHorizontalScrollbarOffset(left: number) {
+  private convertToHorizontalScrollbarOffset(left: number) {
     return (
       (left / (this.scrollContainer?.maxScrollWidth ?? 0)) *
       (this.horizontalScrollbar?.maxScrollDistance ?? 0)
     );
   }
   // Convert a vertical scrollbar offset to the corresponding scroll container's scroll top
-  convertToScrollContainerTop(offset: number) {
+  private convertToScrollContainerTop(offset: number) {
     return (
       (offset / (this.verticalScrollbar?.maxScrollDistance ?? 0)) *
       (this.scrollContainer?.maxScrollHeight ?? 0)
     );
   }
   // Convert a horizontal scrollbar offset to the corresponding scroll container's scroll left
-  convertToScrollContainerLeft(offset: number) {
+  private convertToScrollContainerLeft(offset: number) {
     return (
       (offset / (this.horizontalScrollbar?.maxScrollDistance ?? 0)) *
       (this.scrollContainer?.maxScrollWidth ?? 0)
     );
   }
   // Create the scroll container that handles the actual scrolling logic
-  createScrollContainer() {
+  private createScrollContainer() {
     return new ScrollContainer({
       parentElement: this.parentElement,
       observerContainer: this.observerContainer,
@@ -210,7 +204,7 @@ export class ScrollManager {
     });
   }
   // Create vertical scrollbar
-  createVerticalScrollbar() {
+  private createVerticalScrollbar() {
     return new Scrollbar({
       parentElement: this.parentElement,
       className: "fe-vertical-scrollbar",
@@ -223,7 +217,7 @@ export class ScrollManager {
     });
   }
   // Create horizontal scrollbar
-  createHorizontalScrollbar() {
+  private createHorizontalScrollbar() {
     return new Scrollbar({
       parentElement: this.parentElement,
       className: "fe-horizontal-scrollbar",

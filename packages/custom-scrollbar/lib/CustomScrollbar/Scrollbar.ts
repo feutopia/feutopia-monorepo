@@ -1,3 +1,4 @@
+import { ScrollbarElements, ScrollbarOptions, ScrollbarState } from "../types";
 import {
   createElement,
   isIE9,
@@ -8,115 +9,121 @@ import {
   cancelAnimationFrame,
 } from "../utils";
 
-type Options = {
-  parentElement: HTMLElement;
-  className: string;
-  direction: "vertical" | "horizontal";
-  onScroll: (scrollValue: number) => void;
-};
-
 export class Scrollbar {
-  private parentElement: Options["parentElement"];
-  private className: Options["className"];
+  private parentElement: ScrollbarOptions["parentElement"];
+  private className: ScrollbarOptions["className"];
   private isVertical: boolean;
-  private onScroll: Options["onScroll"];
+  private onScroll: ScrollbarOptions["onScroll"];
 
-  // init variables
-  private isDragging = false; // Whether the scrollbar is being dragged
-  private scrollAnimationId: number | null = null; // Animation frame ID for smooth scrolling
-  private scrollOffset = 0; // Current scroll position
-  public maxScrollDistance = 0; // Maximum scrollable distance
-  private scrollInterval: number | null = null; // Timer ID for interval-based scrolling
-  private cleanupEvents: Array<() => void> = []; // Array to store event removal callbacks
+  private state: ScrollbarState;
+  private elements: ScrollbarElements;
+  private cleanupEvents: Array<() => void> = [];
 
-  // init elements
-  public element: HTMLElement;
-  private trackElement: HTMLElement;
-  private scrollbarElement: HTMLElement;
-  private prevArrow: HTMLElement;
-  private nextArrow: HTMLElement;
-  constructor(options: Options) {
+  constructor(options: ScrollbarOptions) {
     this.parentElement = options.parentElement;
     this.className = options.className ?? "";
     this.isVertical = options.direction === "vertical";
     this.onScroll = options.onScroll;
 
-    this.element = createElement("div", this.className);
-    this.trackElement = createElement("div", "fe-scrolltrack");
-    this.scrollbarElement = createElement("div", "fe-scrollbar");
-    this.prevArrow = createElement("div", "fe-scroll-arrow fe-arrow-prev");
-    this.nextArrow = createElement("div", "fe-scroll-arrow fe-arrow-next");
+    this.state = {
+      isDragging: false, // Whether the scrollbar is being dragged
+      scrollAnimationId: null, // Animation frame ID for smooth scrolling
+      scrollOffset: 0, // Current scroll position
+      maxScrollDistance: 0, // Maximum scrollable distance
+      scrollInterval: null, // Timer ID for interval-based scrolling
+    };
+
+    // init elements
+    this.elements = {
+      scrollbar: createElement("div", this.className),
+      track: createElement("div", "fe-scrollbar-track"),
+      thumb: createElement("div", "fe-scrollbar-thumb"),
+      buttonPre: createElement(
+        "div",
+        "fe-scrollbar-button fe-scrollbar-button-prev"
+      ),
+      buttonNext: createElement(
+        "div",
+        "fe-scrollbar-button fe-scrollbar-button-next"
+      ),
+    };
 
     this.appendElements();
     this.mount();
   }
   // Append elements to the parent element
-  appendElements() {
-    this.trackElement.appendChild(this.scrollbarElement);
+  private appendElements() {
+    this.elements.track.appendChild(this.elements.thumb);
     appendChildren(
-      [this.trackElement, this.prevArrow, this.nextArrow],
-      this.element
+      [this.elements.track, this.elements.buttonPre, this.elements.buttonNext],
+      this.elements.scrollbar
     );
   }
   // Mount
-  public mount() {
-    this.parentElement.appendChild(this.element);
+  private mount() {
+    this.parentElement.appendChild(this.elements.scrollbar);
     this.attachEvents();
   }
   // Unmount
   public unmount() {
     this.clearScrollTimer();
     this.detachEvents();
-    this.parentElement.removeChild(this.element);
+    this.parentElement.removeChild(this.elements.scrollbar);
+  }
+  public get maxScrollDistance() {
+    return this.state.maxScrollDistance;
+  }
+  public get scrollbarElement() {
+    return this.elements.scrollbar;
   }
   // Attach events
-  attachEvents() {
+  private attachEvents() {
     const cleanupDragEvents = this.attachDragEvents();
     const cleanupArrowEvents = this.attachArrowEvents();
     this.cleanupEvents = [cleanupDragEvents, cleanupArrowEvents];
   }
   // Detach events
-  detachEvents() {
+  private detachEvents() {
     this.cleanupEvents.forEach((removeEvent) => {
       removeEvent();
     });
     this.cleanupEvents = [];
   }
-  // Update the scrollbar size based on scroll ratio
-  public updateSize(scrollRatio: number) {
-    const size = this.calculateSize(scrollRatio);
-    this.maxScrollDistance = size.trackSize - size.barSize;
-    applyStyles(this.scrollbarElement, {
-      [this.isVertical ? "height" : "width"]: size.barSize + "px",
+  // Update the scrollbar thumb size based on scroll ratio
+  public updateThumbSize(scrollRatio: number) {
+    const { trackSize, thumbSize } = this.calculateSize(scrollRatio);
+    this.state.maxScrollDistance = trackSize - thumbSize;
+    applyStyles(this.elements.thumb, {
+      [this.isVertical ? "height" : "width"]: `${thumbSize}px`,
     });
   }
   // Calculate track and scrollbar sizes based on the scroll ratio
-  calculateSize(scrollRatio: number) {
-    const trackStyle = window.getComputedStyle(this.trackElement);
+  private calculateSize(scrollRatio: number) {
+    const trackStyle = window.getComputedStyle(this.elements.track);
     const padding =
       parseFloat(trackStyle.paddingTop) + parseFloat(trackStyle.paddingBottom);
     const trackSizeKey = this.isVertical ? "clientHeight" : "clientWidth";
-    const trackSize = this.trackElement[trackSizeKey] - padding;
-    return { trackSize, barSize: trackSize * scrollRatio };
+    const trackSize = this.elements.track[trackSizeKey] - padding;
+    return { trackSize, thumbSize: trackSize * scrollRatio };
   }
   // Set the scrollbar's offset (position) and call the onScroll callback
   public setScrollbarOffset(
     offset: number,
     callback?: (offset: number) => void
   ) {
-    offset = clampValue(offset, this.maxScrollDistance);
-    this.scrollOffset = offset;
+    offset = clampValue(offset, this.state.maxScrollDistance);
+    this.state.scrollOffset = offset;
 
     // For IE9, use marginTop or marginLeft, otherwise use transform
     if (isIE9) {
       // Use marginTop (or marginLeft) for vertical/horizontal scroll
-      applyStyles(this.scrollbarElement, {
-        [this.isVertical ? "marginTop" : "marginLeft"]: offset + "px",
+      applyStyles(this.elements.thumb, {
+        [this.isVertical ? "marginTop" : "marginLeft"]: `${offset}px`,
       });
     } else {
       // Use transform for modern browsers
       const translateKey = this.isVertical ? "translateY" : "translateX";
-      applyStyles(this.scrollbarElement, {
+      applyStyles(this.elements.thumb, {
         transform: `${translateKey}(${offset}px)`,
       });
     }
@@ -124,34 +131,34 @@ export class Scrollbar {
     callback?.(offset);
   }
   // Clear any ongoing scroll timer
-  clearScrollTimer() {
-    if (this.scrollInterval) {
-      clearInterval(this.scrollInterval);
-      this.scrollInterval = null;
+  private clearScrollTimer() {
+    if (this.state.scrollInterval) {
+      clearInterval(this.state.scrollInterval);
+      this.state.scrollInterval = null;
     }
-    if (this.scrollAnimationId) {
-      cancelAnimationFrame(this.scrollAnimationId);
-      this.scrollAnimationId = null;
+    if (this.state.scrollAnimationId) {
+      cancelAnimationFrame(this.state.scrollAnimationId);
+      this.state.scrollAnimationId = null;
     }
   }
   // Toggle dragging state (add/remove "dragging" class)
-  toggleDraggingState(isDragging: boolean) {
+  private toggleDraggingState(isDragging: boolean) {
     const action = isDragging ? "add" : "remove";
     // IE11 doesn't support classList add/remove
-    this.scrollbarElement.classList?.[action]("dragging");
+    this.elements.thumb.classList?.[action]("dragging");
   }
   // Handle scroll event callback
-  onScrollEvent = (offset: number) => {
+  private onScrollEvent = (offset: number) => {
     this.onScroll(offset);
   };
   // Attach events for dragging the scrollbar
-  attachDragEvents() {
+  private attachDragEvents() {
     let startPagePosition: number;
     let startScrollOffset: number;
 
     const onMouseMove = (e: MouseEvent) => {
       e.preventDefault();
-      if (!this.isDragging) return;
+      if (!this.state.isDragging) return;
       const delta = this.isVertical
         ? e.pageY - startPagePosition
         : e.pageX - startPagePosition;
@@ -161,7 +168,7 @@ export class Scrollbar {
 
     const onMouseUp = (e: MouseEvent) => {
       e.preventDefault();
-      this.isDragging = false;
+      this.state.isDragging = false;
       this.toggleDraggingState(false);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
@@ -169,25 +176,25 @@ export class Scrollbar {
 
     const onMouseDown = (e: MouseEvent) => {
       e.preventDefault();
-      this.isDragging = true;
+      this.state.isDragging = true;
       startPagePosition = this.isVertical ? e.pageY : e.pageX;
-      startScrollOffset = this.scrollOffset;
+      startScrollOffset = this.state.scrollOffset;
       this.toggleDraggingState(true);
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
       document.addEventListener("mouseleave", onMouseUp);
     };
 
-    this.scrollbarElement.addEventListener("mousedown", onMouseDown);
+    this.elements.thumb.addEventListener("mousedown", onMouseDown);
     return () => {
-      this.scrollbarElement.removeEventListener("mousedown", onMouseDown);
+      this.elements.thumb.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
       document.removeEventListener("mouseleave", onMouseUp);
     };
   }
   // Attach events for the arrows
-  attachArrowEvents() {
+  private attachArrowEvents() {
     const inertia = 0.9; // Inertia factor for smooth scrolling
     const scrollSpeed = 10; // Scroll speed
     const initialVelocity = 4; // Initial velocity for smooth scroll
@@ -199,10 +206,10 @@ export class Scrollbar {
           velocity *= inertia;
           this.toggleDraggingState(true);
           this.setScrollbarOffset(
-            this.scrollOffset + direction * velocity,
+            this.state.scrollOffset + direction * velocity,
             this.onScrollEvent
           );
-          this.scrollAnimationId = requestAnimationFrame(step);
+          this.state.scrollAnimationId = requestAnimationFrame(step);
         } else {
           this.toggleDraggingState(false);
         }
@@ -211,11 +218,11 @@ export class Scrollbar {
     };
 
     const startScrolling = (direction: number) => {
-      if (this.scrollInterval) return;
-      this.scrollInterval = setInterval(() => {
+      if (this.state.scrollInterval) return;
+      this.state.scrollInterval = setInterval(() => {
         this.toggleDraggingState(true);
         this.setScrollbarOffset(
-          this.scrollOffset + direction * scrollSpeed,
+          this.state.scrollOffset + direction * scrollSpeed,
           this.onScrollEvent
         );
       }, 50);
@@ -251,15 +258,30 @@ export class Scrollbar {
       e.preventDefault();
       handleMouseUp(1);
     };
-    this.prevArrow.addEventListener("mousedown", onArrowPrevMouseDown);
-    this.prevArrow.addEventListener("mouseup", onArrowPrevMouseUp);
-    this.nextArrow.addEventListener("mousedown", onArrowNextMouseDown);
-    this.nextArrow.addEventListener("mouseup", onArrowNextMouseUp);
+    this.elements.buttonPre.addEventListener("mousedown", onArrowPrevMouseDown);
+    this.elements.buttonPre.addEventListener("mouseup", onArrowPrevMouseUp);
+    this.elements.buttonNext.addEventListener(
+      "mousedown",
+      onArrowNextMouseDown
+    );
+    this.elements.buttonNext.addEventListener("mouseup", onArrowNextMouseUp);
     return () => {
-      this.prevArrow.removeEventListener("mousedown", onArrowPrevMouseDown);
-      this.prevArrow.removeEventListener("mouseup", onArrowPrevMouseUp);
-      this.nextArrow.removeEventListener("mousedown", onArrowNextMouseDown);
-      this.nextArrow.removeEventListener("mouseup", onArrowNextMouseUp);
+      this.elements.buttonPre.removeEventListener(
+        "mousedown",
+        onArrowPrevMouseDown
+      );
+      this.elements.buttonPre.removeEventListener(
+        "mouseup",
+        onArrowPrevMouseUp
+      );
+      this.elements.buttonNext.removeEventListener(
+        "mousedown",
+        onArrowNextMouseDown
+      );
+      this.elements.buttonNext.removeEventListener(
+        "mouseup",
+        onArrowNextMouseUp
+      );
     };
   }
 }

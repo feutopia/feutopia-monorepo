@@ -8,14 +8,14 @@ $z-index-arrow: 1000;
 $scrollbar-size: 20px;
 
 // Common styles
-@mixin scrolltrack-base {
+@mixin scrollbar-track {
   border: 1px solid $scrollbar-border-color;
   padding: 2px;
   border-radius: 16px;
   overflow: hidden;
 }
 
-@mixin scrollbar-base {
+@mixin scrollbar-thumb {
   background-color: $scrollbar-bg-color;
   border-radius: 16px;
   transition: background-color 0.2s ease-in-out;
@@ -26,7 +26,7 @@ $scrollbar-size: 20px;
   }
 }
 
-@mixin scroll-arrow-base {
+@mixin scrollbar-button {
   position: absolute;
   width: $scrollbar-size;
   height: $scrollbar-size;
@@ -54,27 +54,27 @@ $scrollbar-size: 20px;
   width: $scrollbar-size;
   z-index: $z-index-scrollbar;
 
-  .fe-scrolltrack {
-    @include scrolltrack-base;
+  .fe-scrollbar-track {
+    @include scrollbar-track;
     position: absolute;
     top: $scrollbar-size;
     bottom: $scrollbar-size;
     width: 100%;
   }
 
-  .fe-scrollbar {
-    @include scrollbar-base;
+  .fe-scrollbar-thumb {
+    @include scrollbar-thumb;
   }
 
-  .fe-scroll-arrow {
-    @include scroll-arrow-base;
+  .fe-scrollbar-button {
+    @include scrollbar-button;
 
-    &.fe-arrow-prev {
+    &.fe-scrollbar-button-prev {
       top: 0;
       background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQMAAABCXz8WAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5TAP9bkSK1AAAAEklEQVR4nGOUYLRhrGN8zngYAAiSAoJhaM7CAAAAAElFTkSuQmCC");
     }
 
-    &.fe-arrow-next {
+    &.fe-scrollbar-button-next {
       bottom: 0;
       background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFAQMAAABCXz8WAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5T/wDltzBKAAAAEklEQVR4nGO0YZRgbGQ8zPgcAAihAoUodUNNAAAAAElFTkSuQmCC");
     }
@@ -90,8 +90,8 @@ $scrollbar-size: 20px;
   height: $scrollbar-size;
   z-index: $z-index-scrollbar;
 
-  .fe-scrolltrack {
-    @include scrolltrack-base;
+  .fe-scrollbar-track {
+    @include scrollbar-track;
     position: absolute;
     left: $scrollbar-size;
     right: $scrollbar-size;
@@ -99,20 +99,20 @@ $scrollbar-size: 20px;
     bottom: 0;
   }
 
-  .fe-scrollbar {
-    @include scrollbar-base;
+  .fe-scrollbar-thumb {
+    @include scrollbar-thumb;
     height: 100%;
   }
 
-  .fe-scroll-arrow {
-    @include scroll-arrow-base;
+  .fe-scrollbar-button {
+    @include scrollbar-button;
 
-    &.fe-arrow-prev {
+    &.fe-scrollbar-button-prev {
       left: 0;
       background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAIAQMAAAALP6d4AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5TAP9bkSK1AAAAFUlEQVR4nGOUYLRgLGB8AIQFQJYEABpYA0lB+2tyAAAAAElFTkSuQmCC");
     }
 
-    &.fe-arrow-next {
+    &.fe-scrollbar-button-next {
       right: 0;
       background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAIAQMAAAALP6d4AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAZQTFRFAAAAAAAApWe5zwAAAAJ0Uk5T/wDltzBKAAAAFUlEQVR4nGO0YJRg7GA8AIQdQJYFABnYAzmG6vFCAAAAAElFTkSuQmCC");
     }
