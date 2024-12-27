@@ -44,9 +44,13 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
     "core-js": "^3.39.0",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
-    "rollup-plugin-sass": "^1.14.0"
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-sass": "^1.14.0",
+    "tslib": "^2.8.1",
+    "typescript": "5.6.3"
   }
 }

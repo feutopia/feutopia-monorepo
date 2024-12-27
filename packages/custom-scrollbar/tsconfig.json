@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2015", // 编译目标为最新的 ES 版本
+    "module": "esnext", // 使用 ES 模块系统
+    "strict": true, // 启用严格模式
+    "esModuleInterop": true, // 启用 ES 模块默认导入
+    "skipLibCheck": true, // 跳过库类型检查
+    "forceConsistentCasingInFileNames": true, // 保证文件名大小写一致
+    "outDir": "./dist", // 输出目录
+    "moduleResolution": "node", // 使用 Node.js 风格的模块解析
+    "resolveJsonModule": true, // 允许导入 .json 文件
+    "allowJs": true, // 允许编译 .js 文件
+
+    // 不能设置这2个属性，否则会报错
+    // "declaration": true, // 生成 .d.ts 声明文件
+    // "declarationDir": "./dist/types", // 声明文件的输出目录
+
+    "skipDefaultLibCheck": true // 跳过默认库类型检查
+  },
+  "include": ["lib/**/*"], // 包含的文件
+  "exclude": ["node_modules", "dist", "*.js"] // 排除的文件
+}

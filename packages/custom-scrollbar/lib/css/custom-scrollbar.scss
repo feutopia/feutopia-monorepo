@@ -12,6 +12,7 @@ $scrollbar-size: 20px;
   border: 1px solid $scrollbar-border-color;
   padding: 2px;
   border-radius: 16px;
+  overflow: hidden;
 }
 
 @mixin scrollbar-base {
