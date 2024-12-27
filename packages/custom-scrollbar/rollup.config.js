@@ -5,6 +5,7 @@ import typescript from "@rollup/plugin-typescript";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { babel } from "@rollup/plugin-babel";
+import strip from "@rollup/plugin-strip";
 import dts from "rollup-plugin-dts";
 
 export default defineConfig([
@@ -39,6 +40,9 @@ export default defineConfig([
           silenceDeprecations: ["legacy-js-api"],
         },
         output: true,
+      }),
+      strip({
+        include: "lib/**/*.(ts|js)",
       }),
       typescript(),
       commonjs({

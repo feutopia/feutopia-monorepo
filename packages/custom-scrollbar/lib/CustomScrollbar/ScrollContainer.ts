@@ -15,49 +15,49 @@ type Options = {
 
 // ScrollContainer class
 export class ScrollContainer {
-  #observerContainer: Options["observerContainer"];
-  #parentElement: Options["parentElement"];
-  #onVerticalScroll: Options["onVerticalScroll"];
-  #onHorizontalScroll: Options["onHorizontalScroll"];
+  private observerContainer: Options["observerContainer"];
+  private parentElement: Options["parentElement"];
+  private onVerticalScroll: Options["onVerticalScroll"];
+  private onHorizontalScroll: Options["onHorizontalScroll"];
 
   // Internal variables
-  #scrollTop = 0; // Scroll top position
-  #scrollLeft = 0; // Scroll left position
-  #clientWidth = 0; // Container width
-  #clientHeight = 0; // Container height
-  #scrollWidth = 0; // Scrollable width of the container
-  #scrollHeight = 0; // Scrollable height of the container
-  #maxScrollWidth = 0; // Maximum horizontal scroll distance
-  #maxScrollHeight = 0; // Maximum vertical scroll distance
-  #cleanupEvents: Array<() => void> = []; // Event handlers to be cleaned up
-  #verticalScrollAnimationId: number | null = null; // Vertical scroll animation ID
-  #horizontalScrollAnimationId: number | null = null; // Horizontal scroll animation ID
+  public scrollTop = 0; // Scroll top position
+  public scrollLeft = 0; // Scroll left position
+  private clientWidth = 0; // Container width
+  private clientHeight = 0; // Container height
+  private scrollWidth = 0; // Scrollable width of the container
+  private scrollHeight = 0; // Scrollable height of the container
+  public maxScrollWidth = 0; // Maximum horizontal scroll distance
+  public maxScrollHeight = 0; // Maximum vertical scroll distance
+  private cleanupEvents: Array<() => void> = []; // Event handlers to be cleaned up
+  private verticalScrollAnimationId: number | null = null; // Vertical scroll animation ID
+  private horizontalScrollAnimationId: number | null = null; // Horizontal scroll animation ID
 
   // init elements
-  #element: HTMLElement;
+  private element: HTMLElement;
 
   constructor(options: Options) {
-    this.#observerContainer = options.observerContainer;
-    this.#parentElement = options.parentElement;
-    this.#onVerticalScroll = options.onVerticalScroll; // Vertical scroll event callback
-    this.#onHorizontalScroll = options.onHorizontalScroll; // Horizontal scroll event callback
+    this.observerContainer = options.observerContainer;
+    this.parentElement = options.parentElement;
+    this.onVerticalScroll = options.onVerticalScroll; // Vertical scroll event callback
+    this.onHorizontalScroll = options.onHorizontalScroll; // Horizontal scroll event callback
 
-    this.#element = createElement("div", "fe-scroll-container"); // Scroll container element
-    this.#applyStyles();
+    this.element = createElement("div", "fe-scroll-container"); // Scroll container element
+    this.applyStyles();
     this.mount();
   }
-  #applyStyles() {
-    applyStyles(this.#element, {
+  applyStyles() {
+    applyStyles(this.element, {
       overflow: "hidden",
       height: "100%",
     });
   }
   // Mount
   public mount() {
-    this.#parentElement.appendChild(this.#element);
-    this.#element.appendChild(this.#observerContainer);
+    this.parentElement.appendChild(this.element);
+    this.element.appendChild(this.observerContainer);
     this.updateSize();
-    this.#attachEvents();
+    this.attachEvents();
 
     // Reset scroll position to 0
     requestAnimationFrame(() => {
@@ -67,66 +67,54 @@ export class ScrollContainer {
   }
   // Unmount
   public unmount() {
-    this.#clearAnimations("vertical", "horizontal");
-    this.#detachEvents();
-    this.#element.removeChild(this.#observerContainer);
-    this.#parentElement.removeChild(this.#element);
+    this.clearAnimations("vertical", "horizontal");
+    this.detachEvents();
+    this.element.removeChild(this.observerContainer);
+    this.parentElement.removeChild(this.element);
   }
   // Vertical scroll ratio (visible area / total scrollable area)
   get verticalScrollRatio() {
-    return this.#clientHeight / this.#scrollHeight;
+    return this.clientHeight / this.scrollHeight;
   }
   // Horizontal scroll ratio (visible area / total scrollable area)
   get horizontalScrollRatio() {
-    return this.#clientWidth / this.#scrollWidth;
-  }
-  get scrollTop() {
-    return this.#scrollTop;
-  }
-  get scrollLeft() {
-    return this.#scrollLeft;
-  }
-  get maxScrollHeight() {
-    return this.#maxScrollHeight;
-  }
-  get maxScrollWidth() {
-    return this.#maxScrollWidth;
+    return this.clientWidth / this.scrollWidth;
   }
   // Update the scroll container's size and scroll positions
   public updateSize() {
-    this.#scrollTop = this.#element.scrollTop;
-    this.#scrollLeft = this.#element.scrollLeft;
-    this.#clientWidth = this.#element.clientWidth;
-    this.#clientHeight = this.#element.clientHeight;
-    this.#scrollWidth = this.#element.scrollWidth;
-    this.#scrollHeight = this.#element.scrollHeight;
-    this.#maxScrollWidth = this.#scrollWidth - this.#clientWidth;
-    this.#maxScrollHeight = this.#scrollHeight - this.#clientHeight;
+    this.scrollTop = this.element.scrollTop;
+    this.scrollLeft = this.element.scrollLeft;
+    this.clientWidth = this.element.clientWidth;
+    this.clientHeight = this.element.clientHeight;
+    this.scrollWidth = this.element.scrollWidth;
+    this.scrollHeight = this.element.scrollHeight;
+    this.maxScrollWidth = this.scrollWidth - this.clientWidth;
+    this.maxScrollHeight = this.scrollHeight - this.clientHeight;
   }
-  #attachEvents() {
-    const wheelEvents = this.#attachWheelEventHandler();
-    this.#cleanupEvents = [wheelEvents];
+  attachEvents() {
+    const wheelEvents = this.attachWheelEventHandler();
+    this.cleanupEvents = [wheelEvents];
   }
-  #detachEvents() {
-    this.#cleanupEvents.forEach((removeEvent) => {
+  detachEvents() {
+    this.cleanupEvents.forEach((removeEvent) => {
       removeEvent();
     });
-    this.#cleanupEvents = [];
+    this.cleanupEvents = [];
   }
   // Clear ongoing animations
-  #clearAnimations(...directions: ("vertical" | "horizontal")[]) {
+  clearAnimations(...directions: ("vertical" | "horizontal")[]) {
     for (const direction of directions) {
       if (direction === "vertical") {
-        if (this.#verticalScrollAnimationId) {
-          cancelAnimationFrame(this.#verticalScrollAnimationId);
-          this.#verticalScrollAnimationId = null;
+        if (this.verticalScrollAnimationId) {
+          cancelAnimationFrame(this.verticalScrollAnimationId);
+          this.verticalScrollAnimationId = null;
         }
       }
 
       if (direction === "horizontal") {
-        if (this.#horizontalScrollAnimationId) {
-          cancelAnimationFrame(this.#horizontalScrollAnimationId);
-          this.#horizontalScrollAnimationId = null;
+        if (this.horizontalScrollAnimationId) {
+          cancelAnimationFrame(this.horizontalScrollAnimationId);
+          this.horizontalScrollAnimationId = null;
         }
       }
     }
@@ -136,10 +124,10 @@ export class ScrollContainer {
     scrollTop: number,
     callback?: (scrollTop: number) => void
   ) => {
-    scrollTop = clampValue(scrollTop, this.#maxScrollHeight);
+    scrollTop = clampValue(scrollTop, this.maxScrollHeight);
 
-    this.#scrollTop = scrollTop;
-    this.#element.scrollTop = scrollTop;
+    this.scrollTop = scrollTop;
+    this.element.scrollTop = scrollTop;
 
     callback?.(scrollTop);
   };
@@ -148,44 +136,42 @@ export class ScrollContainer {
     scrollLeft: number,
     callback?: (scrollLeft: number) => void
   ) => {
-    scrollLeft = clampValue(scrollLeft, this.#maxScrollWidth);
+    scrollLeft = clampValue(scrollLeft, this.maxScrollWidth);
 
-    this.#scrollLeft = scrollLeft;
-    this.#element.scrollLeft = scrollLeft;
+    this.scrollLeft = scrollLeft;
+    this.element.scrollLeft = scrollLeft;
 
     callback?.(scrollLeft);
   };
   // Handle vertical scroll offset
-  #handleVerticalScroll = (offset: number) => {
-    this.#onVerticalScroll(offset);
+  handleVerticalScroll = (offset: number) => {
+    this.onVerticalScroll(offset);
   };
   // Handle horizontal scroll offset
-  #handleHorizontalScroll = (offset: number) => {
-    this.#onHorizontalScroll(offset);
+  handleHorizontalScroll = (offset: number) => {
+    this.onHorizontalScroll(offset);
   };
   // Utility function to limit scroll delta for better IE11 compatibility
-  #limitScrollDelta(delta: number, maxScroll = 34) {
+  limitScrollDelta(delta: number, maxScroll = 34) {
     return clampValue(delta, maxScroll, -maxScroll);
   }
   // Attach the wheel event handler
-  #attachWheelEventHandler() {
+  attachWheelEventHandler() {
     const inertia = 0.2; // Inertia for smooth scrolling
     const velocity = { x: 0, y: 0 };
 
     const handleScroll = (axis: "x" | "y") => {
-      const distance = axis === "y" ? this.#scrollTop : this.#scrollLeft;
+      const distance = axis === "y" ? this.scrollTop : this.scrollLeft;
       const setScrollPosition =
         axis === "y" ? this.setScrollTop : this.setScrollLeft;
       const handleScrollOffset =
-        axis === "y"
-          ? this.#handleVerticalScroll
-          : this.#handleHorizontalScroll;
+        axis === "y" ? this.handleVerticalScroll : this.handleHorizontalScroll;
 
       const setAnimationId = (value: number) => {
         if (axis === "y") {
-          this.#verticalScrollAnimationId = value;
+          this.verticalScrollAnimationId = value;
         } else {
-          this.#horizontalScrollAnimationId = value;
+          this.horizontalScrollAnimationId = value;
         }
       };
 
@@ -210,24 +196,24 @@ export class ScrollContainer {
       let deltaX = e.deltaX;
 
       // Control the maximum scroll amount per scroll event for better IE11 compatibility
-      deltaY = this.#limitScrollDelta(e.deltaY); // IE11 scrolls too much, limit max scroll value
-      deltaX = this.#limitScrollDelta(e.deltaX); // Same for horizontal scroll
+      deltaY = this.limitScrollDelta(e.deltaY); // IE11 scrolls too much, limit max scroll value
+      deltaX = this.limitScrollDelta(e.deltaX); // Same for horizontal scroll
 
       velocity.y += deltaY || 0;
       velocity.x += deltaX || 0;
       if (velocity.y !== 0) {
-        this.#clearAnimations("vertical");
+        this.clearAnimations("vertical");
         handleScroll("y");
       }
       if (velocity.x !== 0) {
-        this.#clearAnimations("horizontal");
+        this.clearAnimations("horizontal");
         handleScroll("x");
       }
     };
 
-    this.#element.addEventListener("wheel", onWheel);
+    this.element.addEventListener("wheel", onWheel);
     return () => {
-      this.#element.removeEventListener("wheel", onWheel);
+      this.element.removeEventListener("wheel", onWheel);
     };
   }
 }

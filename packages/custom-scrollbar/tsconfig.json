@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2015", // 编译目标为最新的 ES 版本
-    "module": "esnext", // 使用 ES 模块系统
+    "target": "ES5", // 编译目标为最新的 ES 版本
+    "module": "ESNext", // 使用 ES 模块系统
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "strict": true, // 启用严格模式
     "esModuleInterop": true, // 启用 ES 模块默认导入
     "skipLibCheck": true, // 跳过库类型检查
