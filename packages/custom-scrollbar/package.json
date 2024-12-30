@@ -25,7 +25,7 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "watch": "rollup -c -w"
   },
   "author": "David Zheng",
@@ -46,6 +46,7 @@
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-strip": "^3.0.4",
     "core-js": "^3.39.0",
+    "cross-env": "^7.0.3",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
     "rollup-plugin-dts": "^6.1.1",

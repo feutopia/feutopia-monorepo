@@ -9,6 +9,8 @@ import strip from "@rollup/plugin-strip";
 import dts from "rollup-plugin-dts";
 import { DEFAULT_EXTENSIONS } from "@babel/core";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const sassOptions = {
   options: {
     silenceDeprecations: ["legacy-js-api"],
@@ -36,32 +38,33 @@ export default defineConfig([
       },
     ],
     plugins: [
-      // 清理 dist 文件夹
-      del({ targets: "dist/*" }),
-      // 处理 SASS 样式
+      // 1. 删除输出文件夹
+      isProduction && del({ targets: "dist/*" }),
+      // 2. 编译 SASS 文件
       sass({
         ...sassOptions,
         output: true,
       }),
-      // 去除开发调试时的代码 (如console.log)
-      strip({
-        include: "**/*.(js|ts)",
-      }),
-      // 解析模块依赖（支持 node_modules）
+      // 3. 解析模块路径和 node_modules
       nodeResolve(),
-      // 编译 TypeScript 文件，生成 JavaScript 输出
+      // 4. 转换 TypeScript 文件
       typescript(),
-      // 转换 CommonJS 模块为 ES6 模块
+      // 5. 转换 CommonJS 模块
       commonjs({
         sourceMap: false,
         strictRequires: "auto",
         extensions: [".js", ".ts"],
       }),
-      // 	使用 Babel 编译文件
+      // 6. 使用 Babel 进一步编译
       babel({
         babelHelpers: "bundled",
         extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
       }),
+      // 7. 去除调试代码 (如console.log)
+      isProduction &&
+        strip({
+          include: "**/*.(js|ts)",
+        }),
     ],
   },
   // 生成 index.d.ts 声明文件的配置

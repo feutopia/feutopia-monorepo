@@ -111,6 +111,7 @@ importers:
       '@rollup/plugin-node-resolve': ^16.0.0
       '@rollup/plugin-strip': ^3.0.4
       core-js: ^3.39.0
+      cross-env: ^7.0.3
       rollup: ^4.29.1
       rollup-plugin-delete: ^2.1.0
       rollup-plugin-dts: ^6.1.1
@@ -126,6 +127,7 @@ importers:
       '@rollup/plugin-node-resolve': 16.0.0_rollup@4.29.1
       '@rollup/plugin-strip': 3.0.4_rollup@4.29.1
       core-js: 3.39.0
+      cross-env: 7.0.3
       rollup: 4.29.1
       rollup-plugin-delete: 2.1.0_rollup@4.29.1
       rollup-plugin-dts: 6.1.1_kx7jdsbur7anjkkzccj4kt5num
@@ -3978,6 +3980,14 @@ packages:
       js-yaml: 4.1.0
       parse-json: 5.2.0
       typescript: 5.6.3
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.6
     dev: true
 
   /cross-spawn/7.0.6:
