@@ -68,7 +68,7 @@ export default defineConfig([
     ],
   },
   // 生成 index.d.ts 声明文件的配置
-  {
+  isProduction && {
     input,
     output: {
       file: "dist/types/index.d.ts",
