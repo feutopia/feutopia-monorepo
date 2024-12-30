@@ -50,12 +50,6 @@ export class ScrollContainer {
     this.scrollContainerElement.appendChild(this.observerContainer);
     this.updateSize();
     this.attachEvents();
-
-    // Reset scroll position to 0
-    requestAnimationFrame(() => {
-      this.setScrollTop(0);
-      this.setScrollLeft(0);
-    });
   }
   // Unmount
   public unmount() {
@@ -100,8 +94,9 @@ export class ScrollContainer {
     }
   }
   private attachEvents() {
-    const wheelEvents = this.attachWheelEventHandler();
-    this.cleanupEvents = [wheelEvents];
+    const cleanupWheelEvent = this.attachWheelEvent();
+    const cleanupBeforeunloadEvent = this.attachBeforeunloadEvent();
+    this.cleanupEvents = [cleanupWheelEvent, cleanupBeforeunloadEvent];
   }
   private detachEvents() {
     this.cleanupEvents.forEach((removeEvent) => {
@@ -163,8 +158,20 @@ export class ScrollContainer {
   private limitScrollDelta(delta: number, maxScroll = 34) {
     return clampValue(delta, maxScroll, -maxScroll);
   }
+  // Attach the beforeunload event handler
+  private attachBeforeunloadEvent() {
+    // IE11 reset scroll position on beforeunload
+    const onBeforeunload = () => {
+      this.setScrollTop(0);
+      this.setScrollLeft(0);
+    };
+    window.addEventListener("beforeunload", onBeforeunload);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeunload);
+    };
+  }
   // Attach the wheel event handler
-  private attachWheelEventHandler() {
+  private attachWheelEvent() {
     const inertia = 0.2; // Inertia for smooth scrolling
     const velocity = { x: 0, y: 0 };
 
