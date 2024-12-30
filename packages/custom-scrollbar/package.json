@@ -26,7 +26,8 @@
   ],
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "zip": "zip -r custom-scrollbar.zip dist index.html"
   },
   "author": "David Zheng",
   "homepage": "https://github.com/feutopia/feutopia-monorepo/tree/main/packages/custom-scrollbar#readme",
