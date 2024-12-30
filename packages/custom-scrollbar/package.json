@@ -6,13 +6,13 @@
     "custom scrollbar"
   ],
   "type": "module",
-  "main": "./dist/cjs/CustomScrollbar.js",
-  "module": "./dist/esm/CustomScrollbar.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "exports": {
     ".": {
-      "import": "./dist/esm/CustomScrollbar.js",
-      "require": "./dist/cjs/CustomScrollbar.js",
-      "umd": "./dist/umd/CustomScrollbar.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "umd": "./dist/umd/index.js"
     }
   },
   "files": [
@@ -45,12 +45,12 @@
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-strip": "^3.0.4",
-    "@rollup/plugin-typescript": "^12.1.2",
     "core-js": "^3.39.0",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-sass": "^1.14.0",
+    "rollup-plugin-typescript2": "^0.36.0",
     "tslib": "^2.8.1",
     "typescript": "5.6.3"
   }
