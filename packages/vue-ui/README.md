@@ -22,11 +22,36 @@ pnpm add @feutopia/vue-ui
 
 ## Usage
 
+### InfiniteList Component
+
+```vue
+<script setup lang="ts">
+import { InfiniteList } from "@feutopia/vue-ui";
+
+const items = Array.from({ length: 1000 }, (_, index) => ({
+  uid: index,
+  value: `Item ${index + 1}`,
+}));
+</script>
+<template>
+  <InfiniteList :items="items" :itemSize="50">
+    <template #default="{ item }">
+      <div>{{ item.value }}</div>
+    </template>
+		<template #extra>
+      <div>Extra content here</div>
+    </template>
+  </InfiniteList>
+</template>
+```
+
+### Tabs Component
+
 ```vue
 <script setup lang="ts">
 import { Tabs, TabPane } from "@feutopia/vue-ui";
-import "@feutopia/vue-ui/dist/style.css";
 </script>
+
 <template>
 	<Tabs>
 		<TabPane name="1" label="Tab 1">Content of tab 1</TabPane>

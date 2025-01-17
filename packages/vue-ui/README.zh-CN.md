@@ -22,11 +22,37 @@ pnpm add @feutopia/vue-ui
 
 ## 使用
 
+### 虚拟滚动组件
+
+``` vue
+<script setup lang="ts">
+import { InfiniteList } from "@feutopia/vue-ui";
+
+const items = Array.from({ length: 1000 }, (_, index) => ({
+  uid: index,
+  value: `项目 ${index + 1}`,
+}));
+</script>
+
+<template>
+  <InfiniteList :items="items" :itemSize="50">
+    <template #default="{ item }">
+      <div>{{ item.value }}</div>
+    </template>
+		<template #extra>
+      <div>这里是额外内容</div>
+    </template>
+  </InfiniteList>
+</template>
+```
+
+### Tabs 组件
+
 ```vue
 <script setup lang="ts">
 import { Tabs, TabPane } from "@feutopia/vue-ui";
-import "@feutopia/vue-ui/dist/style.css";
 </script>
+
 <template>
 	<Tabs>
 		<TabPane name="1" label="Tab 1">Content of tab 1</TabPane>

@@ -83,6 +83,7 @@ importers:
 
   examples/vue:
     specifiers:
+      '@faker-js/faker': ^9.4.0
       '@feutopia/http': workspace:^0.0.8
       '@feutopia/vue-ui': workspace:^0.0.20
       '@vitejs/plugin-vue': ^5.2.1
@@ -92,6 +93,7 @@ importers:
       vue: ^3.5.13
       vue-tsc: ^2.2.0
     dependencies:
+      '@faker-js/faker': 9.4.0
       '@feutopia/http': link:../../packages/http
       '@feutopia/vue-ui': link:../../packages/vue-ui
       vue: 3.5.13_typescript@5.6.3
@@ -1909,6 +1911,11 @@ packages:
     dependencies:
       levn: 0.4.1
     dev: true
+
+  /@faker-js/faker/9.4.0:
+    resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    dev: false
 
   /@humanfs/core/0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
