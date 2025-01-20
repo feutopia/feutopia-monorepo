@@ -24,3 +24,7 @@ html {
   tab-size: 4;
   text-size-adjust: 100%;
 }
+
+body {
+  padding: 40px;
+}

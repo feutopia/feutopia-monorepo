@@ -67,7 +67,7 @@ init();
 
 <style scoped>
 .box {
-  height: 500px;
+  height: 450px;
   border: 4px solid red;
 }
 

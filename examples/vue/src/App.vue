@@ -10,6 +10,7 @@ import "./http/cancelRequest.ts";
 
 <template>
   <InfiniteList />
+  <div style="height: 100px"></div>
   <Dialog />
   <Tabs />
   <LineChart />
