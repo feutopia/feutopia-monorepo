@@ -57,6 +57,8 @@ describe("useResizeObserver", () => {
     expect(mockObserve).toHaveBeenCalled();
 
     wrapper.unmount();
+
+    await nextTick();
     expect(mockDisconnect).toHaveBeenCalled();
   });
 
