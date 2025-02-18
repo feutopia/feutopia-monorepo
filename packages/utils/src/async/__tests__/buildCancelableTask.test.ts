@@ -108,13 +108,13 @@ describe("buildCancelableTask", () => {
       );
     const task = buildCancelableTask(mockService);
 
-    expect(task.isRunning()).toBe(false);
+    expect(task.isRunning).toBe(false);
 
     const resultPromise = task.run();
-    expect(task.isRunning()).toBe(true);
+    expect(task.isRunning).toBe(true);
 
     await resultPromise;
-    expect(task.isRunning()).toBe(false);
+    expect(task.isRunning).toBe(false);
   });
 
   it("should set isRunning to false when task is cancelled", async () => {
@@ -126,23 +126,23 @@ describe("buildCancelableTask", () => {
     const task = buildCancelableTask(mockService);
 
     const resultPromise = task.run();
-    expect(task.isRunning()).toBe(true);
+    expect(task.isRunning).toBe(true);
 
     task.cancel();
     await resultPromise;
-    expect(task.isRunning()).toBe(false);
+    expect(task.isRunning).toBe(false);
   });
 
   it("should set isRunning to false when task fails", async () => {
     const mockService = vi.fn().mockRejectedValue(new Error("Test error"));
     const task = buildCancelableTask(mockService);
 
-    expect(task.isRunning()).toBe(false);
+    expect(task.isRunning).toBe(false);
 
     const resultPromise = task.run();
-    expect(task.isRunning()).toBe(true);
+    expect(task.isRunning).toBe(true);
 
     await resultPromise;
-    expect(task.isRunning()).toBe(false);
+    expect(task.isRunning).toBe(false);
   });
 });

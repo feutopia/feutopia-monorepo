@@ -24,7 +24,7 @@ import { delay, cancelDelay } from "@feutopia/utils";
 const delayPromise = delay(1000);
 
 // 检查延迟是否仍在运行
-const isRunning = delayPromise.isRunning();
+const isRunning = delayPromise.isRunning;
 
 // 需要时取消延迟
 cancelDelay(delayPromise);

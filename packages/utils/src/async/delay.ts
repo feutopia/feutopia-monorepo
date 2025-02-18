@@ -7,7 +7,7 @@ interface DelayResult {
 }
 
 export type DelayPromise = Promise<DelayResult> & {
-  isRunning: () => boolean;
+  isRunning: boolean;
 };
 
 const createDelay = (ms: number, callback?: () => void) => {
@@ -32,18 +32,23 @@ function delay(ms: number, callback?: () => void): DelayPromise {
 
   const stop = createDelay(ms, done);
 
-  const delayPromise = Object.assign(promise, { isRunning: () => isRunning });
+  const delayPromise = Object.defineProperty(promise, "isRunning", {
+    get: () => isRunning,
+  }) as DelayPromise;
 
   cancelStore.set(delayPromise, () => {
     if (isRunning) {
+      isRunning = false;
       stop();
       resolve({ cancelled: true });
     }
   });
+
   promise.finally(() => {
     isRunning = false;
     cancelStore.delete(delayPromise);
   });
+
   return delayPromise;
 }
 

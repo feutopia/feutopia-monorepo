@@ -25,7 +25,7 @@ import { delay, cancelDelay } from "@feutopia/utils";
 const delayPromise = delay(1000);
 
 // Check if delay is still running
-const isRunning = delayPromise.isRunning();
+const isRunning = delayPromise.isRunning;
 
 // Cancel the delay if needed
 cancelDelay(delayPromise);
