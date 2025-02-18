@@ -52,7 +52,7 @@ export function usePolling<TData>(params: Params<TData>) {
   watch(
     () => toValue(params.pollingInterval),
     () => {
-      if (delayPromise?.isRunning()) {
+      if (delayPromise?.isRunning) {
         cancelDelayTask();
         const { isValid } = getPollingState();
         if (isValid) {

@@ -81,7 +81,7 @@ export function useCache<TData, TParams extends any[]>(
     () => toValue(params.cacheTime),
     (cacheTime) => {
       if (!isNonNegativeNumber(cacheTime)) return;
-      if (delayedTask?.isRunning()) {
+      if (delayedTask?.isRunning) {
         cancelDelay(delayedTask);
         const cacheKey = toValue(params.cacheKey);
         if (cacheKey) {
