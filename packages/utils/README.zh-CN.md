@@ -30,7 +30,7 @@ const isRunning = delayPromise.isRunning;
 cancelDelay(delayPromise);
 
 // 等待延迟完成
-const { cancelled } = await delayPromise;
+const cancelled = await delayPromise;
 // 如果延迟被取消，cancelled 将为 true
 ```
 
@@ -55,7 +55,7 @@ const { data, error, cancelled } = await task.run();
 task.cancel();
 
 // 检查任务是否已被取消
-const isCanceled = task.isCanceled();
+task.cancelled;
 ```
 
 ### 对象工具

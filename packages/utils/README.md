@@ -31,7 +31,7 @@ const isRunning = delayPromise.isRunning;
 cancelDelay(delayPromise);
 
 // Wait for delay
-const { cancelled } = await delayPromise;
+const cancelled = await delayPromise;
 // cancelled will be true if the delay was canceled
 ```
 
@@ -56,7 +56,7 @@ const { data, error, cancelled } = await task.run();
 task.cancel();
 
 // Check if task was canceled
-const isCanceled = task.isCanceled();
+task.cancelled;
 ```
 
 ### Object Utilities
