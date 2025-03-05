@@ -290,7 +290,7 @@ importers:
   packages/vue-hooks:
     specifiers:
       '@feutopia/mitt': workspace:^0.0.2
-      '@feutopia/utils': workspace:^0.0.12
+      '@feutopia/utils': workspace:^0.0.14
       '@types/node': ^22.9.3
       '@vitejs/plugin-vue': 5.2.1
       '@vitejs/plugin-vue-jsx': 4.1.0

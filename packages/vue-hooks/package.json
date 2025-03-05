@@ -1,6 +1,6 @@
 {
   "name": "@feutopia/vue-hooks",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Vue3 Composable Hooks",
   "keywords": [
     "utils",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@feutopia/mitt": "workspace:^0.0.2",
-    "@feutopia/utils": "workspace:^0.0.12"
+    "@feutopia/utils": "workspace:^0.0.14"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",

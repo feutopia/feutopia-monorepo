@@ -38,7 +38,7 @@ export function usePolling<TData>(params: Params<TData>) {
     if (!isValid) return;
 
     delayPromise = delay(interval as number);
-    const { cancelled } = await delayPromise;
+    const cancelled = await delayPromise;
 
     if (cancelled) return;
 
