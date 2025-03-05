@@ -2,9 +2,7 @@ import "../pollyfill/promise-with-resolvers";
 import { CreateWeakMap } from "@/object/createWeakMap";
 import { isNonNegativeNumber } from "..";
 
-interface DelayResult {
-  cancelled: boolean;
-}
+type DelayResult = boolean;
 
 export type DelayPromise = Promise<DelayResult> & {
   isRunning: boolean;
@@ -26,7 +24,7 @@ function delay(ms: number, callback?: () => void): DelayPromise {
   const { resolve, promise } = Promise.withResolvers<DelayResult>();
 
   const done = () => {
-    resolve({ cancelled: false });
+    resolve(false);
     callback?.();
   };
 
@@ -40,7 +38,7 @@ function delay(ms: number, callback?: () => void): DelayPromise {
     if (isRunning) {
       isRunning = false;
       stop();
-      resolve({ cancelled: true });
+      resolve(true);
     }
   });
 

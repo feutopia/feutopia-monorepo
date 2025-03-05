@@ -17,7 +17,7 @@ describe("delay utility", () => {
     vi.advanceTimersByTime(100);
     const result = await promise;
 
-    expect(result).toEqual({ cancelled: false });
+    expect(result).toEqual(false);
     expect(promise.isRunning).toBe(false);
   });
 
@@ -35,7 +35,7 @@ describe("delay utility", () => {
     expect(promise.isRunning).toBe(false);
 
     const result = await promise;
-    expect(result).toEqual({ cancelled: true });
+    expect(result).toEqual(true);
     expect(promise.isRunning).toBe(false);
   });
 
