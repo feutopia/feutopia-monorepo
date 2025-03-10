@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PieCharts from "./vue-ui/PieCharts/index.vue";
 import InfiniteList from "./vue-ui/InfiniteList/index.vue";
 import Dialog from "./vue-ui/Dialog/index.vue";
 import Tabs from "./vue-ui/Tabs/index.tsx";
@@ -9,6 +10,7 @@ import "./http/cancelRequest.ts";
 </script>
 
 <template>
+  <PieCharts />
   <InfiniteList />
   <div style="height: 100px"></div>
   <Dialog />
