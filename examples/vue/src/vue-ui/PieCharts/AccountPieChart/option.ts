@@ -65,7 +65,6 @@ export const generateChartOption = (
         radius: chartRadius,
         roseType: "area",
         label: {
-          show: true,
           position: "inside",
           formatter: (params) => {
             const dataItem = params.data as (typeof processedData)[number];
@@ -120,8 +119,7 @@ export const generateChartOption = (
         },
         label: {
           position: "center",
-          // formatter: "{styleRich|账户\n类型}",
-          formatter: "{styleRich|站点}",
+          formatter: "{styleRich|账户\n类型}",
           rich: {
             styleRich: {
               fontSize: 15 * scaleFactor,

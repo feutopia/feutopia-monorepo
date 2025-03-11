@@ -127,7 +127,6 @@ export const generateChartOption = (
           },
         },
         labelLine: {
-          show: true,
           length: 0,
           lineStyle: {
             color: "#fff",
@@ -147,8 +146,7 @@ export const generateChartOption = (
         },
         label: {
           position: "center",
-          // formatter: "{styleRich|渠道}",
-          formatter: "{styleRich|站点}",
+          formatter: "{styleRich|渠道}",
           rich: {
             styleRich: {
               fontSize: 16 * scaleFactor,
