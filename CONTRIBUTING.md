@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for being interested in contributing to Vue UI!Before submitting your contribution,please read through the following guide.
+Thank you for being interested in contributing to Feutopia! Before submitting your contribution,please read through the following guide.
 
 ## 🔧 Development Setup
 
@@ -8,7 +8,6 @@ Thank you for being interested in contributing to Vue UI!Before submitting your 
 
 ```bash
 git clone https://github.com/feutopia/feutopia-monorepo.git
-cd packages/vue-ui
 ```
 
 2. Install dependencies
@@ -26,7 +25,7 @@ pnpm dev
 ## 📝 Pull Request Guidelines
 
 - Checkout a topic branch from `main` branch and merge back against that branch.
-- Work in the `packages/vue-ui/src` folder and DO NOT check in `dist` in the commits.
+- Work in the `packages/**` folder and DO NOT check in `dist` in the commits.
 - If adding a new feature:
   - Add accompanying test case
   - Provide a convincing reason to add this feature

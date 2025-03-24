@@ -1,6 +1,6 @@
 # 贡献指南
 
-感谢您有兴趣为 Vue UI 做出贡献！在提交您的贡献之前，请阅读以下指南。
+感谢您有兴趣为 Feutopia 做出贡献！在提交您的贡献之前，请阅读以下指南。
 
 ## 🔧 开发环境设置
 
@@ -8,7 +8,6 @@
 
 ```bash
 git clone https://github.com/feutopia/feutopia-monorepo.git
-cd packages/vue-ui
 ```
 
 2. 安装依赖
@@ -26,7 +25,7 @@ pnpm dev
 ## 📝 Pull Request 规范
 
 - 从 `main` 分支检出一个主题分支，并在该分支上进行开发
-- 在 `packages/vue-ui/src` 文件夹中工作，不要在提交中包含 `dist` 目录
+- 在 `packages/**` 文件夹中工作，不要在提交中包含 `dist` 目录
 - 如果添加新功能：
   - 添加相应的测试用例
   - 提供添加此功能的充分理由
